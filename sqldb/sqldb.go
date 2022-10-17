@@ -1,6 +1,10 @@
 package sqldb
 
-import "database/sql"
+import (
+	"database/sql"
+
+	_ "github.com/mattn/go-sqlite3"
+)
 
 // DB is a global variable to hold db connection
 var DB *sql.DB

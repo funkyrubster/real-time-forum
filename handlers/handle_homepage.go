@@ -18,7 +18,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var post *Pitem
 
-	tpl, err := template.ParseGlob("static/templates/home.html")
+	tpl, err := template.ParseGlob("index.html")
 	if err != nil {
 		http.Error(w, "500 Internal Server Error, Parsing Error", http.StatusInternalServerError)
 		WarnMessage(w, "500 Internal Server Error, Parsing Error")

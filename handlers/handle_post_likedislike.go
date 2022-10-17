@@ -21,7 +21,6 @@ func GetLikeDislikeCountOfPost(postID int) *Plikedislike {
 func NewPostRating() *Plikedislike {
 	return &Plikedislike{}
 }
-
 // IsUserRatePost ...
 func IsThisUsersPost(uid, pid int) bool {
 	var comp int

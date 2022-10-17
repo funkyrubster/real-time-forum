@@ -8,8 +8,6 @@ import (
 	"time"
 
 	"forum/sqldb"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func AddPost(w http.ResponseWriter, r *http.Request) {
