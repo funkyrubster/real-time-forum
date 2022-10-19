@@ -55,11 +55,10 @@ html {
 
 /* Title/Desc */
 .login-container .left p.title {
-    font-weight: 500;
-    font-size: 21px;
-    line-height: 22px;
-
-    color: #868789;
+    font-weight: 300;
+    font-size: 22px;
+    line-height: 25px;
+    color: #5a5f68;
 }
 
 .login-container .left p.desc {
