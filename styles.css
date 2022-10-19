@@ -103,9 +103,11 @@ html {
 #password {
     width: 267px;
     height: 37px;
-    left: 787px;
-    top: 496px;
 
+    font-size: 16px;
+    line-height: 20px;
+
+    color: #747b88;
     background: #ffffff;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03);
     border-radius: 6px;
@@ -134,7 +136,6 @@ html {
     opacity: 1; /* Firefox */
 
     color: #a5aab5;
-    /* padding-left: 0.75rem; */
 }
 
 .login-container form input:hover,
