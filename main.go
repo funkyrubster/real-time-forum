@@ -18,6 +18,16 @@ func main() {
 
 	http.HandleFunc("/test", handlers.TestHandler)
 
+	http.HandleFunc("/", handlers.IndexHandler)      
+	http.HandleFunc("/login", handlers.LoginHandler) 
+	http.HandleFunc("/loginauth", handlers.LoginAuthHandler)
+	http.HandleFunc("/logout", handlers.Logout)
+	http.HandleFunc("/register", handlers.RegisterHandler)
+	http.HandleFunc("/registerauth", handlers.RegisterAuthHandler)
+	http.HandleFunc("/addpost", handlers.AddPost)
+	http.HandleFunc("/createpost", handlers.CreateAPost)
+	http.HandleFunc("/filter", handlers.FilterHandle)
+
 	fmt.Println("Server started at port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
@@ -32,7 +42,7 @@ func main() {
 
 // 	http.Handle("/static/", http.StripPrefix("/static/", path2))
 
-// 	http.HandleFunc("/", handlers.IndexHandler) //not created yet
+//
 
 // 	fmt.Println("Server started at port 8080")
 // 	log.Fatal(http.ListenAndServe(":8080", nil))

@@ -14,6 +14,7 @@ import (
 
 var expiresAt time.Time
 
+
 // loginHandler serves form for users to login with
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	tpl, err := template.ParseGlob("static/templates/login.html")
