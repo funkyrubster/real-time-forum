@@ -6,28 +6,75 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Login | Real-Time-Forum</title>
         <link rel="stylesheet" href="../static/css/styles.css" />
+        <script src="forum.js"></script>
         <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>
     </head>
-
     <body>
-        <div class="login-container">
-            <div class="left">
-                <img src="img/auth/illustration.svg" alt="" />
-                <p class="title">Ready to Join<br />The Discussion?</p>
-                <p class="desc">Before you get started,<br />you’ll need to login.</p>
+        <!-- User Login Div -->
+        <div id="login">
+            <div class="auth-container">
+                <!-- Illustration & Text -->
+                <div class="left">
+                    <img src="img/auth/illustration.svg" alt="" />
+                    <p class="title">Ready to Join<br />The Discussion?</p>
+                    <p class="desc">Before you get started,<br />you’ll need to login.</p>
+                </div>
+                <!-- Login UI -->
+                <div class="right">
+                    <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
+                    <p class="title">Welcome Back</p>
+                    <p class="desc">Let’s get you logged in.</p>
+                    <form action="" method="post">
+                        <input type="email" name="email" id="email" placeholder="Email Address" />
+                        <input type="password" name="password" id="password" placeholder="Password" />
+                        <button type="submit" name="login" id="login">Login</button>
+                        <p class="sign-up-text">Don’t have an account yet?</p>
+                        <p class="sign-up-link" onclick="showRegistrationUI()">Sign Up</p>
+                    </form>
+                </div>
             </div>
+        </div>
 
-            <div class="right">
-                <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
-                <p class="title">Welcome Back</p>
-                <p class="desc">Let’s get you logged in.</p>
-                <form action="" method="post">
-                    <input type="email" name="email" id="email" placeholder="Email Address" />
-                    <input type="password" name="password" id="password" placeholder="Password" />
-                    <button type="submit" name="login" id="login">Login</button>
-                    <p class="sign-up-text">Don’t have an account yet?</p>
-                    <p class="sign-up-link">Sign Up</p>
-                </form>
+        <!-- User Registration Div -->
+        <div id="registration">
+            <div class="auth-container">
+                <!-- Illustration & Text -->
+                <div class="left">
+                    <img src="img/auth/illustration.svg" alt="" />
+                    <p class="title">Ready to Join<br />The Discussion?</p>
+                    <p class="desc">Before you get started,<br />you’ll need to login.</p>
+                </div>
+                <!-- Registration UI -->
+                <div class="right">
+                    <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
+                    <p class="title">Registration</p>
+                    <p class="desc">Let’s get you started.</p>
+                    <form action="" method="post">
+                        <div class="name-wrapper">
+                            <input type="text" name="first_name" id="first_name" placeholder="First Name" />
+                            <input type="text" name="last_name" id="last_name" placeholder="Last Name" />
+                        </div>
+                        <input type="email" id="email" placeholder="Email Address" />
+                        <div class="age-username-wrapper">
+                            <input type="text" name="username" id="username" placeholder="Username" />
+                            <input type="text" name="age" id="age" placeholder="Age" />
+                        </div>
+                        <div class="password-gender-wrapper">
+                            <input type="password" name="password" id="password" placeholder="Password" />
+                            <!-- <input id="gender" placeholder="Gender" /> -->
+                            <select id="gender" name="gender">
+                                <option selected disabled hidden>Gender</option>
+                                <option value="male" class="gender">Male</option>
+                                <option value="female" class="gender">Female</option>
+                            </select>
+                        </div>
+                        <div class="submit">
+                            <button type="submit" name="register" id="register">Register</button>
+                        </div>
+                    </form>
+                    <p class="sign-up-text">Already have an account?</p>
+                    <p class="sign-up-link" onclick="showLoginUI()">Sign In</p>
+                </div>
             </div>
         </div>
     </body>
