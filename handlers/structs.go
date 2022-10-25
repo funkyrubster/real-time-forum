@@ -9,10 +9,16 @@ var tpl *template.Template
 
 type User struct {
 	UserID       int
+	Nickname     string
+	Age          int
+	Gender       string
+	Firstname    string
+	Lastname     string
 	Email        string
-	Username     string
 	passwordhash string
-	CreationDate time.Time
+	// Username     string
+
+	// CreationDate time.Time
 }
 
 var user_session Cookie
@@ -39,19 +45,15 @@ type Cookie struct {
 }
 
 type Pitem struct {
-	PostID       int
-	AuthorID     string
-	Author       string
-	Title        string
-	Text         string
-	Category1    string
-	Category2    string
-	Category3    string
-	Category4    string
-	Likes        int
-	Dislikes     int
-	CreationDate time.Time
-	Comments     []Comm
+	PostID    int
+	Nickname  string
+	Title     string
+	Text      string
+	Category1 string
+	Category2 string
+	Category3 string
+	Category4 string
+	Comments  []Comm
 }
 
 type Category struct {
@@ -61,29 +63,8 @@ type Category struct {
 }
 
 type Comm struct {
-	CommentID    int
-	PostID       int
-	AuthorID     int
-	Author       string
-	Text         string
-	Likes        int
-	Dislikes     int
-	CreationDate time.Time
-}
-
-type Plikedislike struct {
-	PostID       int
-	UserID       int
-	Like         bool
-	Likecount    int
-	Dislikecount int
-}
-
-type Clikedislike struct {
-	CommentID    int
-	PostID       int
-	UserID       int
-	Like         bool
-	Likecount    int
-	Dislikecount int
+	CommentID int
+	PostID    int
+	Nickname  string
+	Text      string
 }
