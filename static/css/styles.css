@@ -11,18 +11,6 @@ html {
     font-family: "Sunflower", sans-serif;
 }
 
-body {
-    animation: transitionIn 0.75s;
-}
-
-#login {
-    animation: transitionIn 0.75s;
-}
-
-#register {
-    animation: transitionIn 0.75s;
-}
-
 .auth-container,
 .auth-container .left,
 .auth-container .right,
@@ -239,6 +227,20 @@ select:focus {
     outline: none;
 }
 
+.auth-container form input:hover,
+select:hover {
+    transform: scale(102%);
+    transition-duration: 0.3s;
+    transition-property: transform;
+}
+
+.auth-container form #login:hover,
+#register:hover {
+    transform: scale(103%);
+    transition-duration: 0.3s;
+    transition-property: transform;
+}
+
 /* Login/Register Buttons */
 .auth-container form #login,
 #register {
@@ -349,7 +351,46 @@ select:focus {
     grid-area: 5 / 1 / 6 / 2;
 }
 
-/* Keyframes */
+/* Animations */
+.animate {
+    animation-duration: 0.5s;
+    animation-delay: 0.2s;
+    animation-name: animate-fade;
+    animation-timing-function: cubic-bezier(0.26, 0.53, 0.74, 1.48);
+    animation-fill-mode: backwards;
+}
+
+/* Fade In */
+.animate.fade {
+    animation-name: animate-fade;
+    animation-timing-function: ease;
+}
+
+/* Slide In */
+.animate.slide {
+    animation-name: animate-slide;
+}
+
+@keyframes animate-slide {
+    0% {
+        opacity: 0;
+        transform: translate(0, 20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes animate-fade {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 @keyframes transitionIn {
     from {
         opacity: 0;
