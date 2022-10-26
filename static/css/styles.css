@@ -156,7 +156,7 @@ select {
 }
 
 .auth-container form #email {
-    background: url("/img/auth/email-logo.svg") no-repeat 16.25rem center;
+    background: url("../img/auth/email-logo.svg") no-repeat 16.25rem center;
     background-color: #ffffff;
     width: 290px;
     margin-bottom: 10px;
@@ -164,7 +164,7 @@ select {
 
 .auth-container form #username {
     width: 220px;
-    background: url("/img/auth/username-logo.svg") no-repeat 11.95rem center;
+    background: url("/static/img/auth/username-logo.svg") no-repeat 11.95rem center;
     background-color: #ffffff;
 }
 
@@ -174,14 +174,14 @@ select {
 }
 
 #registration .auth-container form #password {
-    background: url("/img/auth/password-logo.svg") no-repeat 8.65rem center;
+    background: url("/static/img/auth/password-logo.svg") no-repeat 8.65rem center;
     background-color: #ffffff;
     width: 166px;
 }
 
 .auth-container form #gender {
     width: 114px;
-    background: url("/img/auth/dropdown-logo.svg") no-repeat 5.38rem center;
+    background: url("/static/img/auth/dropdown-logo.svg") no-repeat 5.38rem center;
     background-color: #ffffff;
     border: none;
 }
@@ -196,14 +196,14 @@ select {
 
 #login .auth-container form #email {
     width: 275px;
-    background: url("/img/auth/email-logo.svg") no-repeat 15.4rem center;
+    background: url("/static/img/auth/email-logo.svg") no-repeat 15.4rem center;
     background-color: #ffffff;
     margin-bottom: 0.65rem;
 }
 
 #login .auth-container form #password {
     width: 275px;
-    background: url("/img/auth/password-logo.svg") no-repeat 15.4rem center;
+    background: url("/static/img/auth/password-logo.svg") no-repeat 15.4rem center;
     background-color: #ffffff;
     margin-bottom: 1.5rem;
 }

@@ -19,7 +19,7 @@ func main() {
 	database.CreateDB()
 
 	path2 := http.FileServer(http.Dir("static"))
-	http.Handle("/static/", http.StripPrefix("/static/", path2))
+	http.Handle("/static/", http.StripPrefix("/static/", path2)) //this handle the folder static
 
 	setUpRoutes()
 	// http.HandleFunc("/", handlers.IndexHandler)
