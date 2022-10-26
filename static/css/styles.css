@@ -156,7 +156,7 @@ select {
 }
 
 .auth-container form #email {
-    background: url("../img/auth/email-logo.svg") no-repeat 16.25rem center;
+    background: url("/static/img/auth/email-logo.svg") no-repeat 16.25rem center;
     background-color: #ffffff;
     width: 290px;
     margin-bottom: 10px;
