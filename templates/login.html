@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login | Real-Time-Forum</title>
+        <link rel="stylesheet" href="../static/css/styles.css" />
+        <script src="../static/forum.js"></script>
+        <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>
+    </head>
+    <body>
+        <!-- User Login Div -->
+        <div class="animate" id="login">
+            <div class="auth-container">
+                <!-- Illustration & Text -->
+                <div class="left">
+                    <img src="../static/img/auth/illustration.svg" alt="" />
+                    <p class="title">Ready to Join<br />The Discussion?</p>
+                    <p class="desc">Before you get started,<br />you’ll need to login.</p>
+                </div>
+                <!-- Login UI -->
+                <div class="right">
+                    <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
+                    <p class="title">Welcome Back</p>
+                    <p class="desc">Let’s get you logged in.</p>
+                    <form action="" method="post">
+                        <input type="email" name="email" id="email" placeholder="Email Address" />
+                        <input type="password" name="password" id="password" placeholder="Password" />
+                        <button class="animate slide" type="submit" name="login" id="login">Login</button>
+                        <p class="sign-up-text">Don’t have an account yet?</p>
+                        <a href="../templates/register.html">
+                            <p class="sign-up-link">Sign Up</p>
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

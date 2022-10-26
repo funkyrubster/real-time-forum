@@ -6,41 +6,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Login | Real-Time-Forum</title>
         <link rel="stylesheet" href="../static/css/styles.css" />
-        <script src="./static/forum.js"></script>
+        <script src="../static/forum.js"></script>
         <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>
     </head>
     <body>
-        <!-- User Login Div -->
-        <div class="animate" id="login">
-            <div class="auth-container">
-                <!-- Illustration & Text -->
-                <div class="left">
-                    <img src="./static/img/auth/illustration.svg" alt="" />
-                    <p class="title">Ready to Join<br />The Discussion?</p>
-                    <p class="desc">Before you get started,<br />you’ll need to login.</p>
-                </div>
-                <!-- Login UI -->
-                <div class="right">
-                    <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
-                    <p class="title">Welcome Back</p>
-                    <p class="desc">Let’s get you logged in.</p>
-                    <form action="" method="post">
-                        <input type="email" name="email" id="email" placeholder="Email Address" />
-                        <input type="password" name="password" id="password" placeholder="Password" />
-                        <button class="animate slide" type="submit" name="login" id="login">Login</button>
-                        <p class="sign-up-text">Don’t have an account yet?</p>
-                        <p class="sign-up-link" onclick="showRegistrationUI()">Sign Up</p>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <!-- User Registration Div -->
         <div class="animate" id="registration">
             <div class="auth-container">
                 <!-- Illustration & Text -->
                 <div class="left">
-                    <img src="/static/img/auth/illustration.svg" alt="" />
+                    <img src="../static/img/auth/illustration.svg" alt="" />
                     <p class="title">Ready to Join<br />The Discussion?</p>
                     <p class="desc">Before you get started,<br />you’ll need to login.</p>
                 </div>
@@ -73,7 +48,9 @@
                         </div>
                     </form>
                     <p class="sign-up-text">Already have an account?</p>
-                    <p class="sign-up-link" onclick="showLoginUI()">Sign In</p>
+                    <a href="../templates/login.html">
+                        <p class="sign-up-link" onclick="showLoginUI()">Sign In</p>
+                    </a>
                 </div>
             </div>
         </div>

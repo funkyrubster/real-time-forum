@@ -11,6 +11,10 @@ html {
     font-family: "Sunflower", sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+
 .auth-container,
 .auth-container .left,
 .auth-container .right,
@@ -282,7 +286,7 @@ select:hover {
 
 /* ==================== REGISTRATION DIV ==================== */
 #registration {
-    display: none;
+    display: flex;
 }
 
 #registration .auth-container .left {
