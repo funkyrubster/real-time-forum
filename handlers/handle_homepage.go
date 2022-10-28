@@ -15,10 +15,10 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		PostScroll []*PostRaw
 	}
 	// var post *Pitem
-	tpl, err := template.ParseGlob("index.html")
+	tpl, err := template.ParseFiles("../templates/login.html")
 	if err != nil {
 		http.Error(w, "500 Internal Server Error, Parsing Error", http.StatusInternalServerError)
-		WarnMessage(w, "500 Internal Server Error, Parsing Error")
+		//WarnMessage(w, "500 Internal Server Error, Parsing Error")
 		return
 	}
 	if r.URL.Path != "/" {
