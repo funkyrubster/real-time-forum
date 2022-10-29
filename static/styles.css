@@ -285,7 +285,7 @@ select:hover {
 
 /* --------------------------- REGISTRATION DIV --------------------------- */
 #registration {
-    display: flex;
+    display: none;
 }
 
 #registration .auth-container .left {
