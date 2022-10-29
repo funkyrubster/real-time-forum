@@ -31,10 +31,9 @@
                         <input type="password" name="password" id="password" placeholder="Password" />
                         <button class="animate slide" type="submit" name="login" id="login">Login</button>
                         <p class="sign-up-text">Don’t have an account yet?</p>
-                        <a href="../templates/register.html">
-                            <p class="sign-up-link">Sign Up</p>
-                        </a>
+                        <p class="sign-up-link" onclick="showRegistrationUI()">Sign Up</p>
                     </form>
+                    <button onclick="showChat()" href="chat.html">Show Chat</button>
                 </div>
             </div>
         </div>
@@ -73,17 +72,22 @@
                             </select>
                         </div>
                         <div class="submit animate slide">
-                            <button type="submit" name="register" id="register">Register</button>
+                            <button class="animate slide" type="submit" name="register" id="register">Register</button>
                         </div>
                     </form>
                     <p class="sign-up-text">Already have an account?</p>
-                    <a href="../templates/login.html">
-                        <p class="sign-up-link" onclick="showLoginUI()">Sign In</p>
-                    </a>
+                    <p class="sign-up-link" onclick="showLoginUI()">Sign In</p>
                 </div>
             </div>
         </div>
 
         <!--------------------------- PRIVATE MESSAGING --------------------------->
+        <div id="chat">
+            <div id="log"></div>
+            <form id="form">
+                <input type="submit" value="Send" />
+                <input type="text" id="msg" size="64" autofocus />
+            </form>
+        </div>
     </body>
 </html>
