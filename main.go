@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"real-time-forum/chat"
@@ -159,15 +160,24 @@ func main() {
     for _, table := range []string{"users", "posts", "comments", "categories", "sessions"} {
         checkTablesExist(database, table)
     }
-
     fmt.Println("All tables exist in database.")
+    defer database.Close()
+
+    // Start hosting web server
+    fileServer := http.FileServer(http.Dir("static")) // serve content from the static directory
+    http.Handle("/static/", http.StripPrefix("/static/", fileServer))   // redirect any requests to the root URL to the static directory
+    http.Handle("/", fileServer) 
+    if err := http.ListenAndServe(":8080", nil); err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println("Server started at http://localhost:8080")
+    
 
     // Insert user details to database
-    query, err := database.Prepare("INSERT INTO users(username, email, firstname, lastname, age, gender) values('username','email@example.com','firstname','lastname',20,'male')")
-    checkErr(err)
-    _, err = query.Exec()
-    checkErr(err)
+    // query, err := database.Prepare("INSERT INTO users(username, email, firstname, lastname, age, gender) values('username','email@example.com','firstname','lastname',20,'male')")
+    // checkErr(err)
+    // _, err = query.Exec()
+    // checkErr(err)
 
-    defer database.Close()
-	fetchUserRecords(database)
+	// fetchUserRecords(database)
 }
