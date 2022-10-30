@@ -58,6 +58,7 @@ func checkTablesExist(db *sql.DB, table string) {
                 "userID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
                 "username" TEXT NOT NULL UNIQUE,
                 "email" TEXT NOT NULL,
+                "password" TEXT NOT NULL,
                 "firstname" TEXT,
                 "lastname" TEXT,
                 "age" INTEGER NOT NULL, 
@@ -146,6 +147,11 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+    // Only true if the provided email and username is not already in the database
+    emailValid := false
+    usernameValid := false
+
+    // Get the form values
     firstname := r.FormValue("first_name")
     lastname := r.FormValue("last_name")
     email := r.FormValue("email")
@@ -154,26 +160,41 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
     password := r.FormValue("password")
     gender := r.FormValue("gender")
 
-    fmt.Println("First Name: " + firstname)
-    fmt.Println("Last Name: " + lastname)
-    fmt.Println("Email: " + email)
-    fmt.Println("Username: " + username)
-    fmt.Println("Age: " + age)
-    fmt.Println("Password: " + password)
-    fmt.Println("Gender: " + gender)
-}
+    // Open database connection
+	database, _ := sql.Open("sqlite3", "database.db")
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Method != "POST" {
-        http.Redirect(w, r, "/", http.StatusFound)
-        return
+    // We need to check if there's already a user with the same username or email
+
+    // Email check
+    row := database.QueryRow("select email from users where email= ?", email)
+    temp := ""
+    row.Scan(&temp)
+    if temp == "" {
+        fmt.Println("Email is available")
+        emailValid = true
     }
 
-    email := r.FormValue("email")
-    password := r.FormValue("password")
+    // Username check
+    row = database.QueryRow("select username from users where username= ?", username)
+    temp = ""
+    row.Scan(&temp)
+    if temp == "" {
+        fmt.Println("Username is available")
+        usernameValid = true
+    }
 
-    fmt.Println("Email: " + email)
-    fmt.Println("Password: " + password)
+    // If both email and username are valid, we can insert the user into the database
+    if emailValid && usernameValid {
+        // Insert user into database
+        query, err := database.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + username + "','" + email + "','" + password + "','" + firstname + "','" + lastname + "'," + age + ",'" + gender + "')")
+        checkErr(err)
+        _, err = query.Exec()
+        checkErr(err)
+
+        fmt.Println("User successfully registered into users table")
+    } else {
+        fmt.Println("Error: Email or username already exists.")
+    }
 }
 
 func main() {
@@ -197,24 +218,24 @@ func main() {
         checkTablesExist(database, table)
     }
     fmt.Println("All tables exist in database.")
+
+    query, err := database.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('test','test@test.com', 'test', 'test', 'test', 20, 'test')")
+    checkErr(err)
+    _, err = query.Exec()
+    checkErr(err)
+
     defer database.Close()
 
     // Start hosting web server
     fileServer := http.FileServer(http.Dir("static")) // serve content from the static directory
     http.Handle("/static/", http.StripPrefix("/static/", fileServer))   // redirect any requests to the root URL to the static directory
     http.Handle("/", fileServer) 
-    http.HandleFunc("/login", loginHandler)
+    // http.HandleFunc("/login", loginHandler)
     http.HandleFunc("/register", registrationHandler)
     fmt.Println("Server started at http://localhost:8080")
     if err := http.ListenAndServe(":8080", nil); err != nil {
         log.Fatal(err)
     }
-    
-    // Insert user details to database
-    // query, err := database.Prepare("INSERT INTO users(username, email, firstname, lastname, age, gender) values('username','email@example.com','firstname','lastname',20,'male')")
-    // checkErr(err)
-    // _, err = query.Exec()
-    // checkErr(err)
 
 	// fetchUserRecords(database)
 }
