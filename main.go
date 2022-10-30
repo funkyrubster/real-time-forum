@@ -170,7 +170,6 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
     temp := ""
     row.Scan(&temp)
     if temp == "" {
-        fmt.Println("Email is available")
         emailValid = true
     }
 
@@ -179,7 +178,6 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
     temp = ""
     row.Scan(&temp)
     if temp == "" {
-        fmt.Println("Username is available")
         usernameValid = true
     }
 
@@ -191,9 +189,46 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
         _, err = query.Exec()
         checkErr(err)
 
-        fmt.Println("User successfully registered into users table")
+        fmt.Println("User successfully registered into users table.")
     } else {
         fmt.Println("Error: Email or username already exists.")
+    }
+}
+
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != "POST" {
+        http.Redirect(w, r, "/", http.StatusFound)
+        return
+    }
+
+    // Only true if the provided email and username is not already in the database
+    emailFound := false
+    usernameFound := false
+
+    // Get the form values
+    email := r.FormValue("email")
+    password := r.FormValue("password")
+
+    // Open database connection
+	database, _ := sql.Open("sqlite3", "database.db")
+
+    // We need to check if both the email and password exist in the users table on the same row
+    rows, _ := database.Query("SELECT email, password FROM users")
+    var tempEmail string
+    var tempPassword string
+
+    for rows.Next() {
+        rows.Scan(&tempEmail, &tempPassword)
+        if tempEmail == email && tempPassword == password {
+            emailFound = true
+            usernameFound = true
+        }
+    }
+
+    if emailFound && usernameFound {
+        fmt.Println("User successfully logged in.")
+    } else {
+        fmt.Println("Error: Email or password is incorrect.")
     }
 }
 
@@ -219,20 +254,15 @@ func main() {
     }
     fmt.Println("All tables exist in database.")
 
-    query, err := database.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('test','test@test.com', 'test', 'test', 'test', 20, 'test')")
-    checkErr(err)
-    _, err = query.Exec()
-    checkErr(err)
-
     defer database.Close()
 
     // Start hosting web server
     fileServer := http.FileServer(http.Dir("static")) // serve content from the static directory
     http.Handle("/static/", http.StripPrefix("/static/", fileServer))   // redirect any requests to the root URL to the static directory
     http.Handle("/", fileServer) 
-    // http.HandleFunc("/login", loginHandler)
+    http.HandleFunc("/login", loginHandler)
     http.HandleFunc("/register", registrationHandler)
-    fmt.Println("Server started at http://localhost:8080")
+    fmt.Println("Server started at http://localhost:8080.")
     if err := http.ListenAndServe(":8080", nil); err != nil {
         log.Fatal(err)
     }
