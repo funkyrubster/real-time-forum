@@ -232,7 +232,7 @@ select:focus {
 
 .auth-container form input:hover,
 select:hover {
-    transform: scale(1.01);
+    transform: scale(1.005);
     transition-duration: 0.3s ease-in-out;
     transition-property: transform;
 }

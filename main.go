@@ -140,6 +140,42 @@ func checkTablesExist(db *sql.DB, table string) {
     }
 }
 
+func registrationHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != "POST" {
+        http.Redirect(w, r, "/", http.StatusFound)
+        return
+    }
+
+    firstname := r.FormValue("first_name")
+    lastname := r.FormValue("last_name")
+    email := r.FormValue("email")
+    username := r.FormValue("username")
+    age := r.FormValue("age")
+    password := r.FormValue("password")
+    gender := r.FormValue("gender")
+
+    fmt.Println("First Name: " + firstname)
+    fmt.Println("Last Name: " + lastname)
+    fmt.Println("Email: " + email)
+    fmt.Println("Username: " + username)
+    fmt.Println("Age: " + age)
+    fmt.Println("Password: " + password)
+    fmt.Println("Gender: " + gender)
+}
+
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != "POST" {
+        http.Redirect(w, r, "/", http.StatusFound)
+        return
+    }
+
+    email := r.FormValue("email")
+    password := r.FormValue("password")
+
+    fmt.Println("Email: " + email)
+    fmt.Println("Password: " + password)
+}
+
 func main() {
     // Check if database exists
     if _, err := os.Stat("database.db"); os.IsNotExist(err) {
@@ -167,12 +203,13 @@ func main() {
     fileServer := http.FileServer(http.Dir("static")) // serve content from the static directory
     http.Handle("/static/", http.StripPrefix("/static/", fileServer))   // redirect any requests to the root URL to the static directory
     http.Handle("/", fileServer) 
+    http.HandleFunc("/login", loginHandler)
+    http.HandleFunc("/register", registrationHandler)
+    fmt.Println("Server started at http://localhost:8080")
     if err := http.ListenAndServe(":8080", nil); err != nil {
         log.Fatal(err)
     }
-    fmt.Println("Server started at http://localhost:8080")
     
-
     // Insert user details to database
     // query, err := database.Prepare("INSERT INTO users(username, email, firstname, lastname, age, gender) values('username','email@example.com','firstname','lastname',20,'male')")
     // checkErr(err)
