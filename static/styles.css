@@ -354,6 +354,142 @@ select:hover {
     grid-area: 5 / 1 / 6 / 2;
 }
 
+/* --------------------------- HOME PAGE --------------------------- */
+
+/* NAVBAR */
+.nav {
+    margin: auto;
+    width: 100vw;
+    height: 76px;
+    left: 0px;
+    top: 0px;
+
+    background: #fcfcfd;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.03);
+    padding: 0 2rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav p {
+    font-family: "Bambino New";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 22px;
+    color: #1e3a5f;
+
+    padding-left: 0.75rem;
+}
+
+.nav .logo-text-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* MAIN */
+.main {
+    margin: 2rem;
+    background: rgb(255, 141, 141);
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* LEFT */
+
+/* Mini profile */
+.left .mini-profile {
+    width: 210px;
+    height: 74px;
+    left: 40px;
+    top: 124px;
+
+    background: #ffffff;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.mini-profile p.name {
+    font-family: "Bambino New";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+
+    color: #1e3a5f;
+}
+
+.mini-profile p.username {
+    font-family: "Bambino New";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: -0.05em;
+
+    color: #76889d;
+}
+
+/* Navigation menu */
+.nav-menu {
+    width: 210px;
+    height: 272px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    background: #ffffff;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+    border-radius: 10px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 0.1px solid #1e3a5f42;
+    gap: 0.6rem;
+    padding: 0.85rem;
+}
+
+.nav-item:nth-last-child(1) {
+    border-bottom: none;
+}
+
+.nav-item p {
+    font-family: "Bambino New";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19px;
+
+    color: #4b607c;
+}
+
+/* Trending topics */
+.trending {
+    width: 208px;
+    height: 300px;
+
+    background: #ffffff;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+    border-radius: 10px;
+}
+
 /* --------------------------- CHAT --------------------------- */
 #chat {
     display: flex;

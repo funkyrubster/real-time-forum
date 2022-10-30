@@ -56,7 +56,7 @@
                             <input type="text" name="first_name" id="first_name" placeholder="First Name" />
                             <input type="text" name="last_name" id="last_name" placeholder="Last Name" />
                         </div>
-                        <input type="text" name="email" id="email" placeholder="Email Address" />
+                        <input type="email" name="email" id="email" placeholder="Email Address" />
                         <div class="age-username-wrapper">
                             <input type="text" name="username" id="username" placeholder="Username" />
                             <input type="text" name="age" id="age" placeholder="Age" />
@@ -77,6 +77,64 @@
                     <!-- https://stackoverflow.com/questions/63903272/activate-css-animation-when-visible -->
                     <p class="sign-up-link" onclick="showLoginUI()">Sign In</p>
                 </div>
+            </div>
+        </div>
+
+        <!--------------------------- HOME PAGE --------------------------->
+
+        <!-- Navbar -->
+        <div class="nav">
+            <div class="logo-text-wrap">
+                <img src="img/logo.svg" alt="" />
+                <p>Social Club</p>
+            </div>
+            <img src="img/profile.png" alt="" />
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Left-section -->
+            <div class="left">
+                <!-- Mini profile -->
+                <div class="mini-profile">
+                    <img src="img/profile.png" width="40px" alt="" />
+                    <div class="name-username-wrap">
+                        <p class="name">Loretta Turner</p>
+                        <p class="username">@lorettaturner</p>
+                    </div>
+                </div>
+
+                <!-- Navigation menu -->
+                <div class="nav-menu">
+                    <!-- Home -->
+                    <div class="nav-item" id="home">
+                        <img src="img/nav-menu/home-icon.svg" alt="" />
+                        <p>Home</p>
+                    </div>
+                    <!-- My profile -->
+                    <div class="nav-item" id="my-profile">
+                        <img src="img/nav-menu/profile-icon.svg" alt="" />
+                        <p>My Profile</p>
+                    </div>
+                    <!-- My posts -->
+                    <div class="nav-item" id="my-posts">
+                        <img src="img/nav-menu/posts-icon.svg" alt="" />
+                        <p>My Posts</p>
+                    </div>
+                    <!-- My likes -->
+                    <div class="nav-item" id="my-likes">
+                        <img src="img/nav-menu/likes-icon.svg" alt="" />
+                        <p>My Likes</p>
+                    </div>
+                    <!-- Settings -->
+                    <div class="nav-item" id="settings">
+                        <img src="img/nav-menu/settings-icon.svg" alt="" />
+                        <p>Settings</p>
+                    </div>
+                </div>
+
+                <!-- Trending Topics -->
+                <div class="trending"></div>
             </div>
         </div>
 

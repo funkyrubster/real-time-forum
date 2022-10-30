@@ -218,7 +218,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
     enteredEmail := strings.Contains(email, "@")
 
     if enteredEmail {
-        fmt.Println("Entered email: ", email)
         // Check if email and password exist in users table on the same row
         rows, _ := database.Query("SELECT email, password FROM users")
         var tempEmail string
@@ -226,8 +225,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
         for rows.Next() {
             rows.Scan(&tempEmail, &tempPassword)
-            fmt.Println("User entered - Email: " + tempEmail + " Password: " + tempPassword)
-            fmt.Println("Database - Email: " + email + " Password: " + password)
             if tempEmail == email && tempPassword == password {
                 emailPassCombinationValid = true
             }
@@ -235,15 +232,12 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
     } else {
         // Check if username and password exist in users table on the same row
         if !emailPassCombinationValid {
-            fmt.Println("Entered username: ", username)
             rows, _ := database.Query("SELECT username, password FROM users")
             var tempUsername string
             var tempPassword string
 
             for rows.Next() {
                 rows.Scan(&tempUsername, &tempPassword)
-                fmt.Println("User entered - Username: " + tempUsername + " Password: " + tempPassword)
-                fmt.Println("Database - Username: " + username + " Password: " + password)
                 if tempUsername == username && tempPassword == password {
                     userPassCombinationValid = true
                 }
