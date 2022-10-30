@@ -9,6 +9,7 @@ import (
 	"os"
 	"real-time-forum/chat"
 	"real-time-forum/handlers"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -201,31 +202,56 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    // Only true if the provided email and username is not already in the database
-    emailFound := false
-    usernameFound := false
+    // Only true if email/username and password match is found in the database
+    emailPassCombinationValid := false
+    userPassCombinationValid := false
 
     // Get the form values
-    email := r.FormValue("email")
+    email := r.FormValue("emailusername")
+    username := r.FormValue("emailusername")
     password := r.FormValue("password")
 
     // Open database connection
 	database, _ := sql.Open("sqlite3", "database.db")
 
-    // We need to check if both the email and password exist in the users table on the same row
-    rows, _ := database.Query("SELECT email, password FROM users")
-    var tempEmail string
-    var tempPassword string
+    // Check if user entered an email or username
+    enteredEmail := strings.Contains(email, "@")
 
-    for rows.Next() {
-        rows.Scan(&tempEmail, &tempPassword)
-        if tempEmail == email && tempPassword == password {
-            emailFound = true
-            usernameFound = true
+    if enteredEmail {
+        fmt.Println("Entered email: ", email)
+        // Check if email and password exist in users table on the same row
+        rows, _ := database.Query("SELECT email, password FROM users")
+        var tempEmail string
+        var tempPassword string
+
+        for rows.Next() {
+            rows.Scan(&tempEmail, &tempPassword)
+            fmt.Println("User entered - Email: " + tempEmail + " Password: " + tempPassword)
+            fmt.Println("Database - Email: " + email + " Password: " + password)
+            if tempEmail == email && tempPassword == password {
+                emailPassCombinationValid = true
+            }
+        }
+    } else {
+        // Check if username and password exist in users table on the same row
+        if !emailPassCombinationValid {
+            fmt.Println("Entered username: ", username)
+            rows, _ := database.Query("SELECT username, password FROM users")
+            var tempUsername string
+            var tempPassword string
+
+            for rows.Next() {
+                rows.Scan(&tempUsername, &tempPassword)
+                fmt.Println("User entered - Username: " + tempUsername + " Password: " + tempPassword)
+                fmt.Println("Database - Username: " + username + " Password: " + password)
+                if tempUsername == username && tempPassword == password {
+                    userPassCombinationValid = true
+                }
+            }
         }
     }
 
-    if emailFound && usernameFound {
+    if emailPassCombinationValid || userPassCombinationValid {
         fmt.Println("User successfully logged in.")
     } else {
         fmt.Println("Error: Email or password is incorrect.")
