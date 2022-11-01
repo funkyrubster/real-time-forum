@@ -1,27 +1,26 @@
 package handlers
 
 import (
-	"html/template"
 	"time"
 )
 
-var tpl *template.Template
+// var tpl *template.Template
 
 type User struct {
-	UserID       int
-	Nickname     string
-	Age          int
-	Gender       string
-	Firstname    string
-	Lastname     string
-	Email        string
-	passwordhash string
+	UserID    int
+	Nickname  string
+	Age       string
+	Gender    string
+	Firstname string
+	Lastname  string
+	Email     string
+	Password string
 	// Username     string
 
 	// CreationDate time.Time
 }
 
-var user_session Cookie
+// var user_session Cookie
 
 var CurrentUser User
 
@@ -30,13 +29,13 @@ var Warning struct {
 }
 
 // each session contains the username of the user and the time at which it expires
-type Session struct {
-	UserID      int
-	username    string
-	sessionName string
-	sessionUUID string
-	expiry      time.Time
-}
+// type Session struct {
+// 	UserID      int
+// 	username    string
+// 	sessionName string
+// 	sessionUUID string
+// 	expiry      time.Time
+// }
 
 type Cookie struct {
 	Name    string
