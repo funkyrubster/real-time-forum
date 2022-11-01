@@ -11,6 +11,19 @@ function showLoginUI() {
     document.querySelector("#registration").style.display = "none";
 }
 
+// LOGOUT
+function toggleLogoutMenu() {
+    document.querySelector("#logout-menu").classList.toggle("hidden");
+}
+
+// We need to check how many posts are in the posts container so we can add margin for scrollbar
+setInterval(function () {
+    if (document.querySelector("body > div.main > div.mid > div.posts-wrap").children().length >= 4) {
+        console.log("There are at least 4 posts");
+        document.querySelector("body > div.main > div.mid > div.posts-wrap").style.margin = "0 0.5rem 0 0";
+    }
+}, 1000);
+
 // CHAT
 function showChat() {
     // Shows #chat and hides #login and #registration
