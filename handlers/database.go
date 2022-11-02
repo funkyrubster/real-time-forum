@@ -12,19 +12,6 @@ type Forum struct {
 	 *sql.DB
 }
 
-
-// func (forum *Forum) CreateUser(user User){
-// 	// Insert user into database
-// 	query, err1 := forum.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + user.Nickname + "','" + user.Email + "','" + user.Password+ "','" + user.Firstname+ "','" + user.Lastname + "'," + user.Age + ",'" + user.Gender + "')")
-// 	if err1 != nil {
-// 		log.Fatal(err1)
-// 	}
-// 	_, err1 = query.Exec()
-// 			fmt.Println(err1)
-// 			defer query.Close()
-// }
-
-
 // ------------------ check if the table exist if not, create one 
 
 func CheckTablesExist(db *sql.DB, table string) {
