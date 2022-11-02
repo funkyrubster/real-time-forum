@@ -9,7 +9,7 @@ import (
 )
 
 type Forum struct {
-	*sql.DB
+	 *sql.DB
 }
 
 
@@ -27,7 +27,6 @@ type Forum struct {
 
 // ------------------ check if the table exist if not, create one 
 
-
 func CheckTablesExist(db *sql.DB, table string) {
 	_, table_check := db.Query("select * from " + table + ";")
 	if table_check != nil {
@@ -44,6 +43,9 @@ func CheckTablesExist(db *sql.DB, table string) {
 					"lastname" TEXT,
 					"age" INTEGER NOT NULL, 
 					"gender" TEXT NOT NULL
+					CHECK (length("username") >= 3 AND length("username") <= 20)
+					CHECK (("email") LIKE '%_@__%.__%')
+					CHECK (length("password") >= 8)
 					);`
 					// "passwordhash" BLOB NOT NULL
 
@@ -131,3 +133,4 @@ func CheckTablesExist(db *sql.DB, table string) {
 	}
 	}
 }
+
