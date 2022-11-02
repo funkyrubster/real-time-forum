@@ -2,6 +2,7 @@ package chat
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -52,8 +53,8 @@ var upgrader = websocket.Upgrader{
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
-	hub *Hub
-
+	hub    *Hub
+	userID string
 	// The websocket connection.
 	conn *websocket.Conn
 
@@ -82,6 +83,7 @@ func (c *Client) ReadPump() {
 			}
 			break
 		}
+		fmt.Print(string(message))
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		c.hub.broadcast <- message
 	}
@@ -133,6 +135,8 @@ func (c *Client) WritePump() {
 	}
 }
 
+var connection map[string]websocket.Conn
+
 // serveWs handles websocket requests from the peer.
 func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -140,7 +144,8 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+
+	client := &Client{hub: hub, userID: "cookie userID", conn: conn, send: make(chan []byte, 256)}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
@@ -182,6 +187,7 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
+			connection[client.userID] = *client.conn
 			h.clients[client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {

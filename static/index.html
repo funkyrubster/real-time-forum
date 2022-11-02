@@ -9,7 +9,7 @@
         <script src="app.js"></script>
         <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>
     </head>
-    <body>
+    <body onload=showLoginUI()>
         <!--------------------------- AUTHENTICATION --------------------------->
         <!-- User Login Div -->
         <div class="animate" id="login">
@@ -32,7 +32,7 @@
                         <p class="sign-up-text">Don’t have an account yet?</p>
                         <p class="sign-up-link" onclick="showRegistrationUI()">Sign Up</p>
                     </form>
-                    <button onclick="showChat()" href="chat.html">Show Chat (just for testing)</button>
+                    <button onclick="showChat()">Show Chat (just for testing)</button>
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
         </div>
 
         <!--------------------------- HOME PAGE --------------------------->
-
+        <div id="mainContainer">
         <!-- Navbar -->
         <div class="nav">
             <div class="logo-text-wrap">
@@ -146,5 +146,6 @@
                 <input type="text" id="msg" size="64" autofocus />
             </form>
         </div>
+    </div>
     </body>
 </html>
