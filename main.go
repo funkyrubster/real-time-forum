@@ -10,6 +10,7 @@ import (
 	"real-time-forum/chat"
 	"real-time-forum/handlers"
 	"strings"
+	"text/template"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -247,12 +248,15 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
     if emailPassCombinationValid || userPassCombinationValid {
         fmt.Println("User successfully logged in.")
+        showFeed(w, r)
     } else {
         fmt.Println("Error: Email or password is incorrect.")
     }
 }
 
-func main() {
+var tpl *template.Template
+
+func main() {    
     // Check if database exists
     if _, err := os.Stat("database.db"); os.IsNotExist(err) {
         fmt.Println("Database does not exist, creating...")
@@ -277,15 +281,25 @@ func main() {
     defer database.Close()
 
     // Start hosting web server
-    fileServer := http.FileServer(http.Dir("static")) // serve content from the static directory
-    http.Handle("/static/", http.StripPrefix("/static/", fileServer))   // redirect any requests to the root URL to the static directory
+    fileServer := http.FileServer(http.Dir("static")) // serve content from static directory
+    http.Handle("/static/", http.StripPrefix("/static/", fileServer)) // redirect any requests to the root URL to the static directory
     http.Handle("/", fileServer) 
     http.HandleFunc("/login", loginHandler)
     http.HandleFunc("/register", registrationHandler)
+    http.HandleFunc("/feed", showFeed)
     fmt.Println("Server started at http://localhost:8080.")
     if err := http.ListenAndServe(":8080", nil); err != nil {
         log.Fatal(err)
     }
 
 	// fetchUserRecords(database)
+}
+
+// After the user successfully logins in, they will be sent to /feed
+func showFeed(w http.ResponseWriter, r *http.Request) {
+    tpl, err := template.ParseFiles("static/index.html")
+    checkErr(err)
+
+    // We need to fetch the user's records from the database and display them on the feed
+    tpl.Execute(w, "NAME")
 }
