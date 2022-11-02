@@ -34,7 +34,6 @@ func CheckTablesExist(db *sql.DB, table string) {
 					CHECK (("email") LIKE '%_@__%.__%')
 					CHECK (length("password") >= 8)
 					);`
-					// "passwordhash" BLOB NOT NULL
 
 			users, errUser := db.Prepare(users_table)
 			if errUser != nil {
