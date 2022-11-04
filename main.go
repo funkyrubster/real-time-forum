@@ -8,6 +8,7 @@ import (
 	"os"
 	"real-time-forum/chat"
 	"strings"
+	"text/template"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -232,25 +233,25 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if emailPassCombinationValid || userPassCombinationValid {
-		fmt.Println("User successfully logged in.")
-	} else {
-		fmt.Println("Error: Email or password is incorrect.")
-	}
+    if emailPassCombinationValid || userPassCombinationValid {
+        fmt.Println("User successfully logged in.")
+    } else {
+        fmt.Println("Error: Email or password is incorrect.")
+    }
 }
 
 func main() {
-	// Check if database exists
-	if _, err := os.Stat("database.db"); os.IsNotExist(err) {
-		fmt.Println("Database does not exist, creating...")
-		// Create database
-		db, err := os.Create("database.db")
-		checkErr(err)
-		db.Close()
-		defer db.Close()
-	} else {
-		fmt.Println("Database exists, skipping creation.")
-	}
+    // Check if database exists
+    if _, err := os.Stat("database.db"); os.IsNotExist(err) {
+        fmt.Println("Database does not exist, creating...")
+        // Create database
+        db, err := os.Create("database.db")
+        checkErr(err)
+        db.Close()
+        defer db.Close()
+    } else {
+        fmt.Println("Database exists, skipping creation.")
+    }
 
 	// Now we know the database exists, we can open it
 	database, _ := sql.Open("sqlite3", "database.db")
@@ -263,21 +264,16 @@ func main() {
 
 	defer database.Close()
 
-	// Start hosting web server
-	fileServer := http.FileServer(http.Dir("static"))                 // serve content from the static directory
-	http.Handle("/static/", http.StripPrefix("/static/", fileServer)) // redirect any requests to the root URL to the static directory
-	http.Handle("/", fileServer)
-	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/register", registrationHandler)
-	hub := chat.NewHub()
-	go hub.Run()
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		chat.ServeWs(hub, w, r)
-	})
-	fmt.Println("Server started at http://localhost:8080.")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
-	}
+    // Start hosting web server
+    fileServer := http.FileServer(http.Dir("static")) // serve content from the static directory
+    http.Handle("/static/", http.StripPrefix("/static/", fileServer))   // redirect any requests to the root URL to the static directory
+    http.Handle("/", fileServer) 
+    http.HandleFunc("/login", loginHandler)
+    http.HandleFunc("/register", registrationHandler)
+    fmt.Println("Server started at http://localhost:8080.")
+    if err := http.ListenAndServe(":8080", nil); err != nil {
+        log.Fatal(err)
+    }
 
 	// fetchUserRecords(database)
 }

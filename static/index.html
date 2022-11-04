@@ -88,7 +88,9 @@
                 <img src="img/logo.svg" alt="" />
                 <p>Social Club</p>
             </div>
-            <img src="img/profile.png" alt="" />
+            <div class="profile-image">
+                <img src="img/profile.png" onclick="toggleLogoutMenu()" />
+            </div>
         </div>
 
         <!-- Main Content -->
@@ -99,17 +101,17 @@
                 <div class="mini-profile">
                     <img src="img/profile.png" width="40px" alt="" />
                     <div class="name-username-wrap">
-                        <p class="name">Loretta Turner</p>
+                        <p class="name">{{.}}</p>
                         <p class="username">@lorettaturner</p>
                     </div>
                 </div>
 
                 <!-- Navigation menu -->
                 <div class="nav-menu">
-                    <!-- Home -->
-                    <div class="nav-item" id="home">
+                    <!-- Feed -->
+                    <div class="nav-item" id="feed">
                         <img src="img/nav-menu/home-icon.svg" alt="" />
-                        <p>Home</p>
+                        <p>Feed</p>
                     </div>
                     <!-- My profile -->
                     <div class="nav-item" id="my-profile">
@@ -135,6 +137,299 @@
 
                 <!-- Trending Topics -->
                 <div class="trending"></div>
+            </div>
+
+            <!-- Mid Section -->
+            <div class="mid">
+                <!-- Create A Post -->
+                <div class="create-post">
+                    <img src="img/profile.png" width="50px" alt="" />
+                    <input id="post-body" type="text" placeholder="What's new, Loretta?" />
+                    <input id="submit" type="submit" value="Create Post" />
+                </div>
+
+                <!-- Posts -->
+                <div class="posts-wrap">
+                    <div class="post">
+                        <!-- Header -->
+                        <div class="header">
+                            <!-- Profile Details -->
+                            <div class="author-category-wrap">
+                                <img src="img/profile.png" width="40px" alt="" />
+                                <div class="name-timestamp-wrap">
+                                    <p class="name">Loretta Turner</p>
+                                    <p class="timestamp">1 hour ago</p>
+                                </div>
+                            </div>
+
+                            <!-- Category & Option Button -->
+                            <div class="category-option-wrap">
+                                <div class="category">#Travel</div>
+                                <img src="img/post-options.svg" alt="" />
+                            </div>
+                        </div>
+
+                        <!-- Post Body -->
+                        <div class="body">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur,
+                                ultrices mauris. Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh
+                                nibh, at maximus ante fermentum sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In
+                                iaculis arcu eros, eget tempus orci facilisis id. Praesent ornare leo, non loremset...
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="footer">
+                            <!-- Comment, Like, Dislike -->
+                            <div class="actions">
+                                <img src="img/comments-icon.svg" alt="" />
+                                <img src="img/like-icon.svg" alt="" />
+                                <img src="img/dislike-icon.svg" alt="" />
+                            </div>
+
+                            <!-- Comment, Like & Dislike Statistics -->
+                            <div class="stats">
+                                <div class="stat-wrapper">
+                                    <img src="img/post/comments-icon.svg" width="17px" alt="" />
+                                    <p>6</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                                    <p>27</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/dislikes-icon.svg" width="17px" alt="" />
+                                    <p>4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post">
+                        <!-- Header -->
+                        <div class="header">
+                            <!-- Profile Details -->
+                            <div class="author-category-wrap">
+                                <img src="img/profile.png" width="40px" alt="" />
+                                <div class="name-timestamp-wrap">
+                                    <p class="name">Loretta Turner</p>
+                                    <p class="timestamp">1 hour ago</p>
+                                </div>
+                            </div>
+
+                            <!-- Category & Option Button -->
+                            <div class="category-option-wrap">
+                                <div class="category">#Travel</div>
+                                <img src="img/post-options.svg" alt="" />
+                            </div>
+                        </div>
+
+                        <!-- Post Body -->
+                        <div class="body">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur,
+                                ultrices mauris. Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh
+                                nibh, at maximus ante fermentum sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In
+                                iaculis arcu eros, eget tempus orci facilisis id. Praesent ornare leo, non loremset...
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="footer">
+                            <!-- Comment, Like, Dislike -->
+                            <div class="actions">
+                                <img src="img/comments-icon.svg" alt="" />
+                                <img src="img/like-icon.svg" alt="" />
+                                <img src="img/dislike-icon.svg" alt="" />
+                            </div>
+
+                            <!-- Comment, Like & Dislike Statistics -->
+                            <div class="stats">
+                                <div class="stat-wrapper">
+                                    <img src="img/post/comments-icon.svg" width="17px" alt="" />
+                                    <p>6</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                                    <p>27</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/dislikes-icon.svg" width="17px" alt="" />
+                                    <p>4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post">
+                        <!-- Header -->
+                        <div class="header">
+                            <!-- Profile Details -->
+                            <div class="author-category-wrap">
+                                <img src="img/profile.png" width="40px" alt="" />
+                                <div class="name-timestamp-wrap">
+                                    <p class="name">Loretta Turner</p>
+                                    <p class="timestamp">1 hour ago</p>
+                                </div>
+                            </div>
+
+                            <!-- Category & Option Button -->
+                            <div class="category-option-wrap">
+                                <div class="category">#Travel</div>
+                                <img src="img/post-options.svg" alt="" />
+                            </div>
+                        </div>
+
+                        <!-- Post Body -->
+                        <div class="body">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur,
+                                ultrices mauris. Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh
+                                nibh, at maximus ante fermentum sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In
+                                iaculis arcu eros, eget tempus orci facilisis id. Praesent ornare leo, non loremset...
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="footer">
+                            <!-- Comment, Like, Dislike -->
+                            <div class="actions">
+                                <img src="img/comments-icon.svg" alt="" />
+                                <img src="img/like-icon.svg" alt="" />
+                                <img src="img/dislike-icon.svg" alt="" />
+                            </div>
+
+                            <!-- Comment, Like & Dislike Statistics -->
+                            <div class="stats">
+                                <div class="stat-wrapper">
+                                    <img src="img/post/comments-icon.svg" width="17px" alt="" />
+                                    <p>6</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                                    <p>27</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/dislikes-icon.svg" width="17px" alt="" />
+                                    <p>4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post">
+                        <!-- Header -->
+                        <div class="header">
+                            <!-- Profile Details -->
+                            <div class="author-category-wrap">
+                                <img src="img/profile.png" width="40px" alt="" />
+                                <div class="name-timestamp-wrap">
+                                    <p class="name">Loretta Turner</p>
+                                    <p class="timestamp">1 hour ago</p>
+                                </div>
+                            </div>
+
+                            <!-- Category & Option Button -->
+                            <div class="category-option-wrap">
+                                <div class="category">#Travel</div>
+                                <img src="img/post-options.svg" alt="" />
+                            </div>
+                        </div>
+
+                        <!-- Post Body -->
+                        <div class="body">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur,
+                                ultrices mauris. Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh
+                                nibh, at maximus ante fermentum sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In
+                                iaculis arcu eros, eget tempus orci facilisis id. Praesent ornare leo, non loremset...
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="footer">
+                            <!-- Comment, Like, Dislike -->
+                            <div class="actions">
+                                <img src="img/comments-icon.svg" alt="" />
+                                <img src="img/like-icon.svg" alt="" />
+                                <img src="img/dislike-icon.svg" alt="" />
+                            </div>
+
+                            <!-- Comment, Like & Dislike Statistics -->
+                            <div class="stats">
+                                <div class="stat-wrapper">
+                                    <img src="img/post/comments-icon.svg" width="17px" alt="" />
+                                    <p>6</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                                    <p>27</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/dislikes-icon.svg" width="17px" alt="" />
+                                    <p>4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post">
+                        <!-- Header -->
+                        <div class="header">
+                            <!-- Profile Details -->
+                            <div class="author-category-wrap">
+                                <img src="img/profile.png" width="40px" alt="" />
+                                <div class="name-timestamp-wrap">
+                                    <p class="name">Loretta Turner</p>
+                                    <p class="timestamp">1 hour ago</p>
+                                </div>
+                            </div>
+
+                            <!-- Category & Option Button -->
+                            <div class="category-option-wrap">
+                                <div class="category">#Travel</div>
+                                <img src="img/post-options.svg" alt="" />
+                            </div>
+                        </div>
+
+                        <!-- Post Body -->
+                        <div class="body">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur,
+                                ultrices mauris. Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh
+                                nibh, at maximus ante fermentum sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In
+                                iaculis arcu eros, eget tempus orci facilisis id. Praesent ornare leo, non loremset...
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="footer">
+                            <!-- Comment, Like, Dislike -->
+                            <div class="actions">
+                                <img src="img/comments-icon.svg" alt="" />
+                                <img src="img/like-icon.svg" alt="" />
+                                <img src="img/dislike-icon.svg" alt="" />
+                            </div>
+
+                            <!-- Comment, Like & Dislike Statistics -->
+                            <div class="stats">
+                                <div class="stat-wrapper">
+                                    <img src="img/post/comments-icon.svg" width="17px" alt="" />
+                                    <p>6</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                                    <p>27</p>
+                                </div>
+                                <div class="stat-wrapper">
+                                    <img src="img/post/dislikes-icon.svg" width="17px" alt="" />
+                                    <p>4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
