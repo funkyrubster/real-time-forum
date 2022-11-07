@@ -6,16 +6,16 @@ import (
 
 // var tpl *template.Template
 
-// type User struct {
-// 	UserID    int
-// 	Nickname  string
-// 	Age       string
-// 	Gender    string
-// 	Firstname string
-// 	Lastname  string
-// 	Email     string
-// 	Password string
-// 	// Username     string
+type User struct {
+	Nickname  string `json:"username"`
+	Age       string `json:"age"`
+	Gender    string `json:"gender"`
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+}
+
 
 // 	// CreationDate time.Time
 // }
