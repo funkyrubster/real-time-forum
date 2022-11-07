@@ -10,16 +10,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type User struct {
-	Nickname  string `json:"username"`
-	Age       string `json:"age"`
-	Gender    string `json:"gender"`
-	Firstname string `json:"firstName"`
-	Lastname  string `json:"lastName"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-}
-
 func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles("static/index.html")
@@ -34,11 +24,15 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
+
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Print(r.Body)
-  
+
+	fmt.Print(r.Body)  
+
 	// Create user type of User struct
 	var user User
+
 	json.NewDecoder(r.Body).Decode(&user)
 
 	fmt.Println("hi from golang", user)
@@ -51,7 +45,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	usernameValid := false
 
 	
-	// // We need to check if there's already a user with the same username or email
+  // We need to check if there's already a user with the same username or email
 
 	// Email check
 	row := data.DB.QueryRow("select email from users where email= ?", user.Email)
