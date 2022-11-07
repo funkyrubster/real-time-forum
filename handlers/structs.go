@@ -6,19 +6,19 @@ import (
 
 // var tpl *template.Template
 
-type User struct {
-	UserID    int
-	Nickname  string
-	Age       string
-	Gender    string
-	Firstname string
-	Lastname  string
-	Email     string
-	Password string
-	// Username     string
+// type User struct {
+// 	UserID    int
+// 	Nickname  string
+// 	Age       string
+// 	Gender    string
+// 	Firstname string
+// 	Lastname  string
+// 	Email     string
+// 	Password string
+// 	// Username     string
 
-	// CreationDate time.Time
-}
+// 	// CreationDate time.Time
+// }
 
 // var user_session Cookie
 
