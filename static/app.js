@@ -18,10 +18,10 @@ function toggleLogoutMenu() {
 
 // We need to check how many posts are in the posts container so we can add margin for scrollbar
 setInterval(function () {
-    if (document.querySelector("body > div.main > div.mid > div.posts-wrap").children().length >= 4) {
-        console.log("There are at least 4 posts");
-        document.querySelector("body > div.main > div.mid > div.posts-wrap").style.margin = "0 0.5rem 0 0";
-    }
+    // if (document.querySelector("body > div.main > div.mid > div.posts-wrap").children().length >= 4) {
+    //     console.log("There are at least 4 posts");
+    //     document.querySelector("body > div.main > div.mid > div.posts-wrap").style.margin = "0 0.5rem 0 0";
+    // }
 }, 1000);
 
 // CHAT
@@ -76,3 +76,44 @@ function showChat() {
         appendLog(item);
     }
 }
+
+
+
+function login(){
+    let emailusername = document.getElementById('emailusername').value
+    console.log('emailusername', emailusername)
+    let password = document.getElementById('password').value;
+    let formData = new FormData()
+    formData.append('emailusername', emailusername)
+    formData.append('password', password)
+
+
+    fetch("http://localhost:8080/login", {
+        method: 'POST',
+        body: formData
+    }).then(response => response.text())
+    .then(response => {
+        console.log("res1", response);
+        alert("Login Success")
+    })
+}
+// showLoginUI() ;
+//     const data = JSON.parse(localStorage.getItem("data"));
+//     let isSuccessful = false;
+  
+//     for (let index = 0; index < data.length; index++) {
+//       if (
+//         this.state.email === data[index].email &&
+//         this.state.password === data[index].password
+//       ) {
+//         isSuccessful = true;
+//         break;
+//       }
+//     }
+  
+//     if (isSuccessful) {
+//       alert("login successful");
+//     } else {
+//       alert("login failed");
+//     }
+//set the timer to disappear after successful login/logout
