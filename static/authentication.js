@@ -35,10 +35,6 @@ const loginData = document.getElementById("login-form");
 loginData.addEventListener("submit", function(){
   let user = {
     username: document.getElementById("username").value,
-    age: document.getElementById("age").value,
-    gender: document.getElementById("gender").value,
-    firstname: document.getElementById("firstName").value,
-    lastname: document.getElementById("lastName").value,
     email: document.getElementById("email").value,
     password: document.getElementById("password").value,
   }
