@@ -1,35 +1,57 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Redirect(w, r, "/", http.StatusFound)
+type User struct {
+	Nickname  string `json:"username"`
+	Age       string `json:"age"`
+	Gender    string `json:"gender"`
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+}
+
+func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
+
+	t, err := template.ParseFiles("static/index.html")
+	if err != nil {
+		http.Error(w, "500 Internal error", http.StatusInternalServerError)
 		return
 	}
 
-	// Only true if the provided email and username is not already in the database
+	if err := t.Execute(w, ""); err != nil {
+		http.Error(w, "500 Internal error", http.StatusInternalServerError)
+		return
+	}
+}
+
+func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Print(r.Body)
+  
+	// Create user type of User struct
+	var user User
+	json.NewDecoder(r.Body).Decode(&user)
+
+	fmt.Println("hi from golang", user)
+	w.Header().Set("Content-type","application/text")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
+	
+	// // Only true if the provided email and username is not already in the database
 	emailValid := false
 	usernameValid := false
 
-	// Create user type of User struct
-	var user User
-
-	// Get the form values
-	user.Firstname = r.FormValue("first_name")
-	user.Lastname = r.FormValue("last_name")
-	user.Email = r.FormValue("email")
-	user.Nickname = r.FormValue("username")
-	user.Age = r.FormValue("age")
-	user.Password = r.FormValue("password")
-	user.Gender = r.FormValue("gender")
-
-	// We need to check if there's already a user with the same username or email
+	
+	// // We need to check if there's already a user with the same username or email
 
 	// Email check
 	row := data.DB.QueryRow("select email from users where email= ?", user.Email)
@@ -40,7 +62,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Username check
-	row = data.DB.QueryRow("select username from users where username= ?", user.Firstname)
+	row = data.DB.QueryRow("select username from users where username= ?", user.Nickname)
 	temp = ""
 	row.Scan(&temp)
 	if temp == "" {
@@ -75,13 +97,14 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method != "POST" {
-		http.Redirect(w, r, "/", http.StatusFound)
-		return
-	}
-
 	// Create user type of User struct
 	var user User
+
+	json.NewDecoder(r.Body).Decode(&user)
+
+	w.Header().Set("Content-type","application/text")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
 
 	// Only true if email/username and password match is found in the database
 	emailPassCombinationValid := false
@@ -90,11 +113,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var passwordHash string
 	var tempEmail string
 	var tempUser string
-
-	// Get the form values
-	user.Email = r.FormValue("emailusername")
-	user.Nickname = r.FormValue("emailusername")
-	user.Password = r.FormValue("password")
 
 	// Check if email and password exist in users table on the same row
 	rows := data.DB.QueryRow("SELECT email, password FROM users")

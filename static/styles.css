@@ -150,11 +150,11 @@ select {
     margin-bottom: 10px;
 }
 
-.auth-container form #first_name {
+.auth-container form #firstName {
     width: 140px;
 }
 
-.auth-container form #last_name {
+.auth-container form #lastName {
     width: 140px;
 }
 
