@@ -6,6 +6,17 @@ import (
 
 // var tpl *template.Template
 
+type RegisterData struct {
+	Nickname  string `json:"username"`
+	Age       string `json:"age"`
+	Gender    string `json:"gender"`
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+}
+
+
 type User struct {
 	Nickname  string `json:"username"`
 	Age       string `json:"age"`
@@ -17,12 +28,19 @@ type User struct {
 }
 
 
+
+type LoginData struct {
+	Username  string `json:"username"`
+	Password  string `json:"password"`
+}
+
+
 // 	// CreationDate time.Time
 // }
 
 // var user_session Cookie
 
-var CurrentUser User
+// var CurrentUser User
 
 var Warning struct {
 	Warn string
