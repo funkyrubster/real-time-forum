@@ -36,7 +36,6 @@ const loginData = document.getElementById("login-form");
 loginData.addEventListener("submit", function(){
   let user = {
     username: document.getElementById("username").value,
-    email: document.getElementById("email").value,
     password: document.getElementById("password").value,
   }
 

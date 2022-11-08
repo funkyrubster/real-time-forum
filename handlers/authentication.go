@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -24,28 +25,27 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
-
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Print(r.Body)  
+	fmt.Print(r.Body)
 
 	// Create user type of User struct
 	var user User
 
+// use web soc to read the information 
+
 	json.NewDecoder(r.Body).Decode(&user)
 
 	fmt.Println("hi from golang", user)
-	w.Header().Set("Content-type","application/text")
+	w.Header().Set("Content-type", "application/text")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
-	
+
 	// // Only true if the provided email and username is not already in the database
 	emailValid := false
 	usernameValid := false
 
-	
-  // We need to check if there's already a user with the same username or email
+	// We need to check if there's already a user with the same username or email
 
 	// Email check
 	row := data.DB.QueryRow("select email from users where email= ?", user.Email)
@@ -96,7 +96,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&user)
 
-	w.Header().Set("Content-type","application/text")
+	w.Header().Set("Content-type", "application/text")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 
@@ -108,19 +108,25 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var tempEmail string
 	var tempUser string
 
-	// Check if email and password exist in users table on the same row
-	rows := data.DB.QueryRow("SELECT email, password FROM users")
-	err := rows.Scan(&tempEmail, &passwordHash)
-	fmt.Println("hash from db:", passwordHash)
-	if err != nil {
-		fmt.Println("error selecting Hash in db by Username")
-		return
-	}
-	// func CompareHashAndPassword(hashedPassword, password []byte) error
-	err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(user.Password))
+	// Check if user entered an email or username
+	enteredEmail := strings.Contains(user.Nickname, "@")
 
-	if err == nil {
-		emailPassCombinationValid = true
+	if enteredEmail {
+
+		// Check if email and password exist in users table on the same row
+		rows := data.DB.QueryRow("SELECT email, password FROM users")
+		err := rows.Scan(&tempEmail, &passwordHash)
+		fmt.Println("hash from db:", passwordHash)
+		if err != nil {
+			fmt.Println("error selecting Hash in db by Username")
+			return
+		}
+		// func CompareHashAndPassword(hashedPassword, password []byte) error
+		err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(user.Password))
+
+		if err == nil {
+			emailPassCombinationValid = true
+		}
 	} else {
 
 		// Check if username and password exist in users table on the same row
@@ -137,6 +143,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if emailPassCombinationValid || userPassCombinationValid {
 			fmt.Println("User successfully logged in.")
+			// send it with web soc and
 		} else {
 			fmt.Println("Error: Email or password is incorrect.")
 		}
