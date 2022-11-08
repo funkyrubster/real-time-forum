@@ -19,7 +19,7 @@ signUpData.addEventListener("submit", function(){
     body: JSON.stringify(user),
   };
 
-  let fetchRes = fetch("/register", options);
+  let fetchRes = fetch('http://localhost:8080/register', options);
   fetchRes
     .then((d) => {
       return d.text();
