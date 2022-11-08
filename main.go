@@ -34,8 +34,8 @@ func main() {
 	http.HandleFunc("/", databaseHandler.Home)
 	http.HandleFunc("/login", databaseHandler.LoginHandler)
 	http.HandleFunc("/register", databaseHandler.RegistrationHandler)
-	fmt.Println("Server started at http://localhost:9000.")
-	if err := http.ListenAndServe(":9000", nil); err != nil {
+	fmt.Println("Server started at http://localhost:8080.")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
 
