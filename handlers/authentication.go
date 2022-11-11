@@ -25,22 +25,22 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Print(r.Body)
-
+	fmt.Println(r.Body)
 	// Create user type of User struct
-	var user User
+	var user RegisterData
 
 // use web soc to read the information 
 
 	json.NewDecoder(r.Body).Decode(&user)
-	fmt.Println("password:",user.Password)
+
 
 	fmt.Println("hi from golang", user)
 	w.Header().Set("Content-type", "application/text")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("ok"))
+	// use to send message to js w.Write([]byte("ok"))
 
 	// // Only true if the provided email and username is not already in the database
 	emailValid := false
@@ -57,27 +57,28 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Username check
-	row = data.DB.QueryRow("select username from users where username= ?", user.Nickname)
+	row = data.DB.QueryRow("select username from users where username= ?", user.Username)
 	temp = ""
 	row.Scan(&temp)
 	if temp == "" {
 		usernameValid = true
 	}
 
-	// create hash from password
-
-	var passwordHash []byte
-
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	if err != nil {
-		fmt.Println("bcrypt err:", err)
-	return	
-	}
-
+	
+	
 	// If both email and username are valid, we can insert the user into the database
 	if emailValid && usernameValid {
+		
+		var passwordHash []byte
+		
+		// create hash from password
+		passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		if err != nil {
+			fmt.Println("bcrypt err:", err)
+		return	
+		}
 		// Insert user into database
-		query, err1 := data.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + user.Nickname + "','" + user.Email + "','" + string(passwordHash) + "','" + user.Firstname + "','" + user.Lastname + "'," + user.Age + ",'" + user.Gender + "')")
+		query, err1 := data.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + user.Username + "','" + user.Email + "','" + string(passwordHash) + "','" + user.Firstname + "','" + user.Lastname + "'," + user.Age + ",'" + user.Gender + "')")
 		if err1 != nil {
 			log.Fatal(err1)
 		}
@@ -93,9 +94,11 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Create user type of User struct
-	var user User
+	var user LoginData
 
 	json.NewDecoder(r.Body).Decode(&user)
+
+	fmt.Println(user)
 
 	w.Header().Set("Content-type", "application/text")
 	w.WriteHeader(http.StatusOK)
@@ -106,8 +109,8 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	userPassCombinationValid := false
 
 	// Check if user entered an email or username
-	enteredEmail := strings.Contains(user.Nickname, "@")
-	fmt.Println(user.Nickname)
+	enteredEmail := strings.Contains(user.Username, "@")
+	fmt.Println(user.Username)
 	fmt.Println(user.Password)
 	
 	if enteredEmail {
@@ -123,13 +126,13 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			rows.Scan(&tempEmail, &passwordHash)
 			fmt.Println(passwordHash)
 			fmt.Println(tempEmail)
+		
      err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(user.Password))
-		 if err != nil && tempEmail == user.Nickname{
+		 if err != nil && tempEmail == user.Username{
 				fmt.Println("look here")
 			emailPassCombinationValid = true
 			fmt.Println(emailPassCombinationValid)
 		}
-	
 	}
 	} else{
 		// Check if username and password exist in users table on the same row
@@ -137,18 +140,21 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			var tempUser string
 			var passwordHash string
 			rows, _ := data.DB.Query("SELECT username, password FROM users")
+			fmt.Println(user.Username,user.Password)
 			for rows.Next(){
 				rows.Scan(&tempUser, &passwordHash)
 				err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(user.Password))
-		if err != nil && tempUser == user.Nickname  {
+		if err != nil && tempUser == user.Username  {
 			userPassCombinationValid = true
 		}
 	}
 }
 		if emailPassCombinationValid || userPassCombinationValid {
 			fmt.Println("User successfully logged in.")
+
 			// send it with web soc and
 		} else {
 			fmt.Println("Error: Email or password is incorrect.")
 		}
 }
+
