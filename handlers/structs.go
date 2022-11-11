@@ -1,42 +1,59 @@
 package handlers
 
 import (
-	"html/template"
 	"time"
 )
 
-var tpl *template.Template
+// var tpl *template.Template
 
-type User struct {
-	UserID       int
-	Nickname     string
-	Age          int
-	Gender       string
-	Firstname    string
-	Lastname     string
-	Email        string
-	passwordhash string
-	// Username     string
-
-	// CreationDate time.Time
+type RegisterData struct {
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Email     string `json:"email"`
+	Username  string `json:"newusername"`
+	Age       string `json:"age"`
+	Gender    string `json:"gender"`
+	Password  string `json:"newpassword"`
 }
 
-var user_session Cookie
 
-var CurrentUser User
+type User struct {
+	Username  string `json:"username"`
+	Age       string `json:"age"`
+	Gender    string `json:"gender"`
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+}
+
+
+
+type LoginData struct {
+	Username  string `json:"username"`
+	Password  string `json:"password"`
+}
+
+
+// 	// CreationDate time.Time
+// }
+
+// var user_session Cookie
+
+// var CurrentUser User
 
 var Warning struct {
 	Warn string
 }
 
 // each session contains the username of the user and the time at which it expires
-type Session struct {
-	UserID      int
-	username    string
-	sessionName string
-	sessionUUID string
-	expiry      time.Time
-}
+// type Session struct {
+// 	UserID      int
+// 	username    string
+// 	sessionName string
+// 	sessionUUID string
+// 	expiry      time.Time
+// }
 
 type Cookie struct {
 	Name    string
