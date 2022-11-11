@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login | Real-Time-Forum</title>
     <link rel="stylesheet" href="./static/styles.css" />
-    <script src="./static/app.js"></script>
-    <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>
   </head>
   <body>
     <!--------------------------- AUTHENTICATION --------------------------->
@@ -35,7 +33,7 @@
           <form action="javascript:void(0)" id="login-form">
             <input
               type="text"
-              name="emailusername"
+              name="username"
               id="username"
               placeholder="Email/Username"
             />
@@ -85,13 +83,13 @@
             <div class="name-wrapper">
               <input
                 type="text"
-                name="first_name"
+                name="firstName"
                 id="firstName"
                 placeholder="First Name"
               />
               <input
                 type="text"
-                name="last_name"
+                name="lastName"
                 id="lastName"
                 placeholder="Last Name"
               />
@@ -105,8 +103,8 @@
             <div class="age-username-wrapper">
               <input
                 type="text"
-                name="username"
-                id="username"
+                name="newusername"
+                id="newusername"
                 placeholder="Username"
               />
               <input type="text" name="age" id="age" placeholder="Age" />
@@ -114,8 +112,8 @@
             <div class="password-gender-wrapper">
               <input
                 type="password"
-                name="password"
-                id="password"
+                name="newpassword"
+                id="newpassword"
                 placeholder="Password"
               />
               <select id="gender" name="gender">
@@ -562,6 +560,9 @@
         <input type="text" id="msg" size="64" autofocus />
       </form>
     </div>
-    <script src="./static/authentication.js"></script>
+    <script src="../static/js/app.js"></script>
+    <script src="../static/js/websocket.js"></script>
+    <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>
+    <script src="../static/js/authentication.js"></script>
   </body>
 </html>

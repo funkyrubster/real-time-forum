@@ -2,14 +2,18 @@ const signUpData = document.getElementById("sign-up-form");
 
 signUpData.addEventListener("submit", function(){
   let user = {
-    username: document.getElementById("username").value,
-    age: document.getElementById("age").value,
-    gender: document.getElementById("gender").value,
     firstname: document.getElementById("firstName").value,
     lastname: document.getElementById("lastName").value,
     email: document.getElementById("email").value,
-    password: document.getElementById("password").value,
+    newusername: document.getElementById("newusername").value,
+    age: document.getElementById("age").value,
+    gender: document.getElementById("gender").value,
+    newpassword: document.getElementById("newpassword").value,
   };
+
+console.log(user);
+
+
 
   let options = {
     method: "POST",
@@ -25,10 +29,10 @@ signUpData.addEventListener("submit", function(){
       return d.text();
     })
     .then((data) => {
+      
       console.log(data);
     });
 });
-
 
 
 const loginData = document.getElementById("login-form");
@@ -47,7 +51,7 @@ loginData.addEventListener("submit", function(){
     body: JSON.stringify(user),
   };
 
-  let fetchRes = fetch("/login", options);
+  let fetchRes = fetch("http://localhost:8080/login", options);
   fetchRes
     .then((d) => {
       return d.text();

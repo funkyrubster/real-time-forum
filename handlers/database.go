@@ -12,6 +12,7 @@ type Forum struct {
 	 *sql.DB
 }
 
+
 // ------------------ check if the table exist if not, create one 
 
 func CheckTablesExist(db *sql.DB, table string) {
@@ -23,16 +24,13 @@ func CheckTablesExist(db *sql.DB, table string) {
 			fmt.Println("Creating users table...")
 			users_table := `CREATE TABLE IF NOT EXISTS users (
 					"userID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-					"username" TEXT NOT NULL UNIQUE,
+					"username" TEXT NOT NULL,
 					"email" TEXT NOT NULL,
 					"password" TEXT NOT NULL,
 					"firstname" TEXT,
 					"lastname" TEXT,
 					"age" INTEGER NOT NULL, 
 					"gender" TEXT NOT NULL
-					CHECK (length("username") >= 3 AND length("username") <= 20)
-					CHECK (("email") LIKE '%_@__%.__%')
-					CHECK (length("password") >= 8)
 					);`
 
 			users, errUser := db.Prepare(users_table)
@@ -119,4 +117,16 @@ func CheckTablesExist(db *sql.DB, table string) {
 	}
 	}
 }
+
+
+func Connect(db *sql.DB) *Forum {
+	// Check all required tables exist in database, and create them if they don't
+	for _, table := range []string{"users", "posts", "comments", "categories", "sessions"} {
+		CheckTablesExist(db, table)
+	}
+		return &Forum{
+		DB: db,
+	}
+}
+
 

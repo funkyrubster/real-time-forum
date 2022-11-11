@@ -165,7 +165,7 @@ select {
     margin-bottom: 10px;
 }
 
-.auth-container form #username {
+.auth-container form #newusername {
     width: 220px;
     background: url("img/auth/username-logo.svg") no-repeat 11.95rem center;
     background-color: #ffffff;
@@ -176,7 +176,7 @@ select {
     text-align: center;
 }
 
-#registration .auth-container form #password {
+#registration .auth-container form #newpassword {
     background: url("img/auth/password-logo.svg") no-repeat 8.65rem center;
     background-color: #ffffff;
     width: 166px;
@@ -197,7 +197,7 @@ select {
     text-overflow: "";
 }
 
-#login .auth-container form #emailusername {
+#login .auth-container form #username {
     width: 275px;
     background: url("img/auth/email-logo.svg") no-repeat 15.4rem center;
     background-color: #ffffff;

@@ -7,18 +7,18 @@ import (
 // var tpl *template.Template
 
 type RegisterData struct {
-	Nickname  string `json:"username"`
-	Age       string `json:"age"`
-	Gender    string `json:"gender"`
 	Firstname string `json:"firstName"`
 	Lastname  string `json:"lastName"`
 	Email     string `json:"email"`
-	Password  string `json:"password"`
+	Username  string `json:"newusername"`
+	Age       string `json:"age"`
+	Gender    string `json:"gender"`
+	Password  string `json:"newpassword"`
 }
 
 
 type User struct {
-	Nickname  string `json:"username"`
+	Username  string `json:"username"`
 	Age       string `json:"age"`
 	Gender    string `json:"gender"`
 	Firstname string `json:"firstName"`
