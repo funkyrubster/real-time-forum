@@ -140,8 +140,8 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if emailPassCombinationValid || userPassCombinationValid {
 		fmt.Println("User successfully logged in.")
-
-		// send it with web soc and
+		// send message to js
+		// set web soc
 	} else {
 		fmt.Println("Error: Email or password is incorrect.")
 	}

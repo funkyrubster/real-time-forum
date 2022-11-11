@@ -11,10 +11,6 @@ signUpData.addEventListener("submit", function(){
     newpassword: document.getElementById("newpassword").value,
   };
 
-console.log(user);
-
-
-
   let options = {
     method: "POST",
     headers: {
@@ -26,6 +22,7 @@ console.log(user);
   let fetchRes = fetch('http://localhost:8080/register', options);
   fetchRes
     .then((d) => {
+      // goes to login page 
       return d.text();
     })
     .then((data) => {
@@ -33,6 +30,7 @@ console.log(user);
       console.log(data);
     });
 });
+
 
 
 const loginData = document.getElementById("login-form");
@@ -54,6 +52,8 @@ loginData.addEventListener("submit", function(){
   let fetchRes = fetch("http://localhost:8080/login", options);
   fetchRes
     .then((d) => {
+      // check with backend if ok 
+      // goes to homepage 
       return d.text();
     })
     .then((data) => {
