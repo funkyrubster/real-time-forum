@@ -18,3 +18,8 @@ function showChat() {
     document.querySelector("#login").style.display = "none";
     document.querySelector("#registration").style.display = "none";
 }
+
+
+function showHomePage() {
+    document.querySelector(".auth-container").style.display = "none";
+}
