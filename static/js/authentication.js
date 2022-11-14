@@ -21,9 +21,16 @@ signUpData.addEventListener("submit", function(){
 
   let fetchRes = fetch('http://localhost:8080/register', options);
   fetchRes
-    .then((d) => {
+    .then((response) => {
+      if (response.status == "200"){
+        showAllCongrats()
+        showLoginUI()
+      }
+      else{
+        console.log("Email or username already exists");
+      }
       // if regestration ok send to login form 
-      return d.text();
+      return response.text();
     })
     .then((data) => {
       
@@ -50,9 +57,18 @@ loginData.addEventListener("submit", function(){
 
   let fetchRes = fetch("http://localhost:8080/login", options);
   fetchRes
-    .then((d) => {
+    .then((response) => {
+      console.log(response.status);
+      if (response.status == '200'){
+        showAlertOK()
+        showHomePage()
+        console.log("ok!");
+      }
+      else {
+        console.log("its not ok");
+      }
       //if login ok send to homepage 
-      return d.text();
+      return response.text();
     })
     .then((data) => {
       console.log(data);
