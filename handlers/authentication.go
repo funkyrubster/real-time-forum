@@ -28,14 +28,10 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println(r.Body)
-	// Create user type of User struct
+	// Create user type of RegisterData struct
 	var user RegisterData
 
-// use web soc to read the information 
-
 	json.NewDecoder(r.Body).Decode(&user)
-
 
 	fmt.Println("hi from golang", user)
 	w.Header().Set("Content-type", "application/text")
@@ -55,7 +51,6 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	if temp == "" {
 		emailValid = true
 	}
-
 	// Username check
 	row = data.DB.QueryRow("select username from users where username= ?", user.Username)
 	temp = ""
@@ -63,9 +58,6 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	if temp == "" {
 		usernameValid = true
 	}
-
-	
-	
 	// If both email and username are valid, we can insert the user into the database
 	if emailValid && usernameValid {
 		
@@ -77,6 +69,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("bcrypt err:", err)
 		return	
 		}
+		
 		// Insert user into database
 		query, err1 := data.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + user.Username + "','" + user.Email + "','" + string(passwordHash) + "','" + user.Firstname + "','" + user.Lastname + "'," + user.Age + ",'" + user.Gender + "')")
 		if err1 != nil {
@@ -91,9 +84,11 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
+
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
-	// Create user type of User struct
+	// Create user type of LoginData struct
 	var user LoginData
 
 	json.NewDecoder(r.Body).Decode(&user)
@@ -115,8 +110,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	
 	if enteredEmail {
 		fmt.Println(enteredEmail)
-		fmt.Println("here")
-		fmt.Println(user)
 		// Check if email and password exist in users table on the same row
 		var passwordHash string
 		row := data.DB.QueryRow("SELECT password FROM users WHERE email = ?", user.Username)
