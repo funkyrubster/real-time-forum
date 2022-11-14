@@ -28,7 +28,7 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(r.Body)
-	// Create user type of User struct
+	// Create user type of RegisterData struct
 	var user RegisterData
 
 	// use web soc to read the information
@@ -37,8 +37,6 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("hi from golang", user)
 	w.Header().Set("Content-type", "application/text")
-	w.WriteHeader(http.StatusOK)
-	// use to send message to js w.Write([]byte("ok"))
 
 	// // Only true if the provided email and username is not already in the database
 	emailValid := false
@@ -82,14 +80,16 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err1)
 
 		fmt.Println("User successfully registered into users table.")
+		w.WriteHeader(http.StatusOK)		
 	} else {
+		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println("Error: Email or username already exists.")
 	}
 }
 
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
-	// Create user type of User struct
+	// Create user type of LoginData struct
 	var user LoginData
 
 	json.NewDecoder(r.Body).Decode(&user)
@@ -97,18 +97,16 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 
 	w.Header().Set("Content-type", "application/text")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("ok"))
-
+	
 	// Only true if email/username and password match is found in the database
 	emailPassCombinationValid := false
 	userPassCombinationValid := false
-
+	
 	// Check if user entered an email or username
 	enteredEmail := strings.Contains(user.Username, "@")
 	fmt.Println(user.Username)
 	fmt.Println(user.Password)
-
+	
 	if enteredEmail {
 		fmt.Println(enteredEmail)
 		fmt.Println("here")
@@ -140,9 +138,13 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if emailPassCombinationValid || userPassCombinationValid {
 		fmt.Println("User successfully logged in.")
-		// send message to js
+		// send response to js
+		w.WriteHeader(http.StatusOK)
+	  w.Write([]byte("ok"))			
 		// set web soc
-	} else {
-		fmt.Println("Error: Email or password is incorrect.")
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Println("Error: Email or password is incorrect.")
+		}
 	}
-}
+	

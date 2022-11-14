@@ -21,14 +21,20 @@ signUpData.addEventListener("submit", function(){
 
   let fetchRes = fetch('http://localhost:8080/register', options);
   fetchRes
-    .then((d) => {
-      // goes to login page 
-      return d.text();
-    })
-    .then((data) => {
-      
-      console.log(data);
-    });
+  .then((response) => {
+    if (response.status == '200'){
+     // show alert pop up  successfully created account
+      showLoginUI()
+    }
+    else{
+      // pop up unsuccessfull
+      console.log("Email or username already exists");
+    }
+    return response.text();
+  })
+  .then((data) => {
+    console.log(data);
+  });
 });
 
 
@@ -51,13 +57,19 @@ loginData.addEventListener("submit", function(){
 
   let fetchRes = fetch("http://localhost:8080/login", options);
   fetchRes
-    .then((d) => {
-      // check with backend if ok 
-      // goes to homepage 
-      return d.text();
-    })
-    .then((data) => {
-      console.log(data);
-    });
+  .then((response) => {
+    if (response.status == "200"){
+      // add alert login ok
+      showFeed()
+    }
+    else{
+      // add alert  not ok
+      console.log("not ok");
+    }
+    return response.text();
+  })
+  .then((data) => {
+    
+    console.log(data);
+  });
 });
- 
