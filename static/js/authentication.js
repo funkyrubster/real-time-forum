@@ -24,10 +24,12 @@ signUpData.addEventListener("submit", function(){
   .then((response) => {
     if (response.status == '200'){
      // show alert pop up  successfully created account
+     alert("You have registered successfully")
       showLoginUI()
     }
     else{
       // pop up unsuccessfull
+      alert("Email or username already exists")
       console.log("Email or username already exists");
     }
     return response.text();
@@ -60,10 +62,12 @@ loginData.addEventListener("submit", function(){
   .then((response) => {
     if (response.status == "200"){
       // add alert login ok
+      alert("You have successfully logged in")
       showFeed()
     }
     else{
       // add alert  not ok
+      alert("You inputted incorrect details")
       console.log("not ok");
     }
     return response.text();
