@@ -11,10 +11,6 @@ signUpData.addEventListener("submit", function(){
     newpassword: document.getElementById("newpassword").value,
   };
 
-console.log(user);
-
-
-
   let options = {
     method: "POST",
     headers: {
@@ -26,6 +22,7 @@ console.log(user);
   let fetchRes = fetch('http://localhost:8080/register', options);
   fetchRes
     .then((d) => {
+      // if regestration ok send to login form 
       return d.text();
     })
     .then((data) => {
@@ -54,6 +51,7 @@ loginData.addEventListener("submit", function(){
   let fetchRes = fetch("http://localhost:8080/login", options);
   fetchRes
     .then((d) => {
+      //if login ok send to homepage 
       return d.text();
     })
     .then((data) => {
