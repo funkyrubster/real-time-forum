@@ -25,7 +25,10 @@ signUpData.addEventListener("submit", function () {
   let fetchRes = fetch("http://localhost:8080/register", options);
   fetchRes
     .then((response) => {
-      if (response.status == "200") {
+      if (response.status == "406") {
+        // show alert pop up  successfully created account
+        notyf.error("Please fill in all required fields.");
+      } else if (response.status == "200") {
         // show alert pop up  successfully created account
         notyf.success("You have successfully registered.");
         showLoginUI();
