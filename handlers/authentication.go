@@ -14,9 +14,6 @@ import (
 func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles("static/index.html")
-
-	
-
 	if err != nil {
 		http.Error(w, "500 Internal error", http.StatusInternalServerError)
 		return
@@ -37,7 +34,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&user)
 
 	fmt.Println("hi from golang", user)
-	w.Header().Set("Content-type", "application/text")
+	w.Header().Set("Content-type", "application/json")
 	// use to send message to js w.Write([]byte("ok"))
 	
 	// // Only true if the provided email and username is not already in the database
@@ -88,19 +85,21 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		}
 }
 
+type UserProfile struct{
+	User LoginData
 
+}
 
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Create user type of LoginData struct
+
 	var user LoginData
 
 	json.NewDecoder(r.Body).Decode(&user)
 
 	fmt.Println(user)
 
-	w.Header().Set("Content-type", "application/text")
-	
 	// Only true if email/username and password match is found in the database
 	emailPassCombinationValid := false
 	userPassCombinationValid := false
@@ -138,12 +137,20 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			if emailPassCombinationValid || userPassCombinationValid {
+
+
+				//  get user return struct with user data
+
+
 				fmt.Println("User successfully logged in.")
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte("ok"))			
+				w.Header().Set("Content-type", "application/json")
+				_ = json.NewEncoder(w).Encode(user) 	
+				// fmt.Println(user)
 				// send it with web soc and
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
+			w.Header().Set("Content-type", "application/json")
 			fmt.Println("Error: Email or password is incorrect.")
 		}
 }

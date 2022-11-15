@@ -1,10 +1,11 @@
 package handlers
 
-import (
-	"time"
-)
 
-// var tpl *template.Template
+// type UserProfile struct {
+// User LoginData 
+// Post []PostFeed 
+// Comments []Comment
+// }
 
 type RegisterData struct {
 	Firstname string `json:"firstName"`
@@ -17,71 +18,26 @@ type RegisterData struct {
 }
 
 
-type User struct {
-	Username  string `json:"username"`
-	Age       string `json:"age"`
-	Gender    string `json:"gender"`
-	Firstname string `json:"firstName"`
-	Lastname  string `json:"lastName"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-}
-
-
-
 type LoginData struct {
+	
 	Username  string `json:"username"`
 	Password  string `json:"password"`
 }
 
-
-// 	// CreationDate time.Time
-// }
-
-// var user_session Cookie
-
-// var CurrentUser User
-
-var Warning struct {
-	Warn string
-}
-
-// each session contains the username of the user and the time at which it expires
-// type Session struct {
-// 	UserID      int
-// 	username    string
-// 	sessionName string
-// 	sessionUUID string
-// 	expiry      time.Time
-// }
-
-type Cookie struct {
-	Name    string
-	Value   string
-	Expires time.Time
-}
-
-type Pitem struct {
-	PostID    int
-	Nickname  string
+type PostFeed struct {
+	PostID    int `json:"postid"`
+	Username  string
 	Title     string
-	Text      string
-	Category1 string
-	Category2 string
-	Category3 string
-	Category4 string
-	Comments  []Comm
+	Content   string
+	Category  string
+	CreatedAt string
 }
 
-type Category struct {
-	CategoryID    int
-	Catergoryname string
-	PostID        Pitem
-}
 
-type Comm struct {
+type Comment struct {
 	CommentID int
 	PostID    int
-	Nickname  string
-	Text      string
+	UserId    string
+	Content   string
+	CreatedAt string
 }

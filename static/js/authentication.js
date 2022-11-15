@@ -1,3 +1,6 @@
+let data, nickname
+
+
 const signUpData = document.getElementById("sign-up-form");
 
 signUpData.addEventListener("submit", function(){
@@ -32,13 +35,12 @@ signUpData.addEventListener("submit", function(){
       alert("Email or username already exists")
       console.log("Email or username already exists");
     }
-    return response.text();
+    return response.json();
   })
   .then((data) => {
-    console.log(data);
+   console.log(data);
   });
 });
-
 
 
 const loginData = document.getElementById("login-form");
@@ -70,11 +72,15 @@ loginData.addEventListener("submit", function(){
       alert("You inputted incorrect details")
       console.log("not ok");
     }
-    return response.text();
+    return response.json()  // converted to object
   })
   .then((data) => {
-    
-    console.log(data);
+    nickname = document.querySelector("#name").innerHTML = data.username
+    console.log(data.username);
+    // console.log(data.username);  
+  })
+  .catch((err) => {
+    console.log(err);
   });
-});
+})
 

@@ -16,5 +16,5 @@ function showChat() {
 
 function showFeed() {
     document.querySelector(".auth-container").style.display = "none";
-    document.querySelector("main").style.display = "block";
+    // document.querySelector("main").style.display = "block";
 }
