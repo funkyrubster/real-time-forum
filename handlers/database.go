@@ -13,6 +13,35 @@ type Forum struct {
 }
 
 
+func (data *Forum) GetUser() ([]UserProfile){
+user := []UserProfile{}
+rows, err := data.DB.Query(`SELECT * FROM users`)
+if err != nil {
+	log.Fatal(err)
+}
+
+var username string 
+var firstname string 
+var lastname string 
+var email string 
+var age string 
+
+
+for rows.Next(){
+	err:= rows.Scan(&username, &firstname, &lastname, &email, &age, )
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+return user
+}
+
+
+
+
+
+
 // ------------------ check if the table exist if not, create one 
 
 func CheckTablesExist(db *sql.DB, table string) {
