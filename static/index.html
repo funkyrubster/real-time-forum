@@ -5,7 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login | Real-Time-Forum</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="./static/styles.css" />
+=======
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
+    <link rel="stylesheet" href="../static/styles.css" />
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
   </head>
   <body>
     <!--------------------------- AUTHENTICATION --------------------------->
@@ -20,6 +25,7 @@
         </div>
         <!-- Login UI -->
         <div class="right">
+<<<<<<< HEAD
           <lord-icon
             src="https://cdn.lordicon.com/rqqkvjqf.json"
             trigger="loop"
@@ -45,14 +51,28 @@
             />
             <button class="animate slide" type="submit" name="login" id="login">
             <!-- <button onclick="showChat()" href="chat.html"> -->
+=======
+          <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
+          <p class="title">Welcome Back</p>
+          <p class="desc">Let’s get you logged in.</p>
+          <form action="javascript:void(0)" id="login-form">
+            <input type="text" name="username" id="username" placeholder="Email/Username" />
+            <input type="password" name="password" id="password" placeholder="Password" />
+            <button class="animate slide" type="submit" name="login" id="login">
+              <!-- <button onclick="showChat()" href="chat.html"> -->
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
               Login
             </button>
             <p class="sign-up-text">Don’t have an account yet?</p>
             <p class="sign-up-link" onclick="showRegistrationUI()">Sign Up</p>
           </form>
+<<<<<<< HEAD
           <button onclick="showChat()" href="chat.html">
             Show Chat (just for testing)
           </button>
+=======
+          <button onclick="showFeed()">Show Chat (just for testing)</button>
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
         </div>
       </div>
     </div>
@@ -68,6 +88,7 @@
         </div>
         <!-- Registration UI -->
         <div class="right">
+<<<<<<< HEAD
           <lord-icon
             src="https://cdn.lordicon.com/rqqkvjqf.json"
             trigger="loop"
@@ -76,11 +97,15 @@
             style="width: 75px; height: 75px"
           >
           </lord-icon>
+=======
+          <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
           <p class="title">Registration</p>
           <p class="desc">Let’s get you started.</p>
 
           <form action="javascript:void(0)" id="sign-up-form">
             <div class="name-wrapper">
+<<<<<<< HEAD
               <input
                 type="text"
                 name="firstName"
@@ -116,6 +141,18 @@
                 id="newpassword"
                 placeholder="Password"
               />
+=======
+              <input type="text" name="firstName" id="firstName" placeholder="First Name" />
+              <input type="text" name="lastName" id="lastName" placeholder="Last Name" />
+            </div>
+            <input type="email" name="email" id="email" placeholder="Email Address" />
+            <div class="age-username-wrapper">
+              <input type="text" name="newusername" id="newusername" placeholder="Username" />
+              <input type="text" name="age" id="age" placeholder="Age" />
+            </div>
+            <div class="password-gender-wrapper">
+              <input type="password" name="newpassword" id="newpassword" placeholder="Password" />
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
               <select id="gender" name="gender">
                 <option selected disabled hidden>Gender</option>
                 <option value="male" class="gender">Male</option>
@@ -123,6 +160,7 @@
               </select>
             </div>
             <div class="submit animate slide">
+<<<<<<< HEAD
               <button
                 class="animate slide"
                 type="submit"
@@ -131,6 +169,9 @@
               >
                 Register
               </button>
+=======
+              <button class="animate slide" type="submit" name="register" id="register">Register</button>
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
             </div>
           </form>
           <p class="sign-up-text">Already have an account?</p>
@@ -142,6 +183,7 @@
 
     <!--------------------------- HOME PAGE --------------------------->
 
+<<<<<<< HEAD
     <!-- Navbar -->
     <div class="nav">
       <div class="logo-text-wrap">
@@ -223,9 +265,90 @@
                 <div class="name-timestamp-wrap">
                   <p class="name">Loretta Turner</p>
                   <p class="timestamp">1 hour ago</p>
+=======
+    <main>
+      <div class="nav">
+        <div class="logo-text-wrap">
+          <img src="../static/img/logo.svg" alt="" />
+          <p>Social Club</p>
+        </div>
+        <div class="profile-image">
+          <img src="../static/img/profile.png" onclick="toggleLogoutMenu()" />
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main">
+        <!-- Left-section -->
+        <div class="left">
+          <!-- Mini profile -->
+          <div class="mini-profile">
+            <img src="../static/img/profile.png" width="40px" alt="" />
+            <div class="name-username-wrap">
+              <p class="name">{{.}}</p>
+              <p class="username">@lorettaturner</p>
+            </div>
+          </div>
+
+          <!-- Navigation menu -->
+          <div class="nav-menu">
+            <!-- Feed -->
+            <div class="nav-item" id="feed">
+              <img src="../static/img/nav-menu/home-icon.svg" alt="" />
+              <p>Feed</p>
+            </div>
+            <!-- My profile -->
+            <div class="nav-item" id="my-profile">
+              <img src="../static/img/nav-menu/profile-icon.svg" alt="" />
+              <p>My Profile</p>
+            </div>
+            <!-- My posts -->
+            <div class="nav-item" id="my-posts">
+              <img src="../static/img/nav-menu/posts-icon.svg" alt="" />
+              <p>My Posts</p>
+            </div>
+            <!-- My likes -->
+            <div class="nav-item" id="my-likes">
+              <img src="../static/img/nav-menu/likes-icon.svg" alt="" />
+              <p>My Likes</p>
+            </div>
+            <!-- Settings -->
+            <div class="nav-item" id="settings">
+              <img src="../static/img/nav-menu/settings-icon.svg" alt="" />
+              <p>Settings</p>
+            </div>
+          </div>
+
+          <!-- Trending Topics -->
+          <div class="trending"></div>
+        </div>
+
+        <!-- Mid Section -->
+        <div class="mid">
+          <!-- Create A Post -->
+          <div class="create-post">
+            <img src="../static/img/profile.png" width="50px" alt="" />
+            <input id="post-body" type="text" placeholder="What's new, Loretta?" />
+            <input id="submit" type="submit" value="Create Post" />
+          </div>
+
+          <!-- Posts -->
+          <div class="posts-wrap">
+            <div class="post">
+              <!-- Header -->
+              <div class="header">
+                <!-- Profile Details -->
+                <div class="author-category-wrap">
+                  <img src="../static/img/profile.png" width="40px" alt="" />
+                  <div class="name-timestamp-wrap">
+                    <p class="name">Loretta Turner</p>
+                    <p class="timestamp">1 hour ago</p>
+                  </div>
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
                 </div>
               </div>
 
+<<<<<<< HEAD
               <!-- Category & Option Button -->
               <div class="category-option-wrap">
                 <div class="category">#Travel</div>
@@ -544,13 +667,283 @@
                 <div class="stat-wrapper">
                   <img src="../static/img/post/dislikes-icon.svg" width="17px" alt="" />
                   <p>4</p>
+=======
+                <!-- Category & Option Button -->
+                <div class="category-option-wrap">
+                  <div class="category">#Travel</div>
+                  <img src="../static/img/post-options.svg" alt="" />
+                </div>
+              </div>
+
+              <!-- Post Body -->
+              <div class="body">
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris.
+                  Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum
+                  sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In iaculis arcu eros, eget tempus orci facilisis id.
+                  Praesent ornare leo, non loremset...
+                </p>
+              </div>
+
+              <!-- Footer -->
+              <div class="footer">
+                <!-- Comment, Like, Dislike -->
+                <div class="actions">
+                  <img src="../static/img/comments-icon.svg" alt="" />
+                  <img src="../static/img/like-icon.svg" alt="" />
+                  <img src="../static/img/dislike-icon.svg" alt="" />
+                </div>
+
+                <!-- Comment, Like & Dislike Statistics -->
+                <div class="stats">
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/comments-icon.svg" width="17px" alt="" />
+                    <p>6</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                    <p>27</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/dislikes-icon.svg" width="17px" alt="" />
+                    <p>4</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="post">
+              <!-- Header -->
+              <div class="header">
+                <!-- Profile Details -->
+                <div class="author-category-wrap">
+                  <img src="../static/img/profile.png" width="40px" alt="" />
+                  <div class="name-timestamp-wrap">
+                    <p class="name">Loretta Turner</p>
+                    <p class="timestamp">1 hour ago</p>
+                  </div>
+                </div>
+
+                <!-- Category & Option Button -->
+                <div class="category-option-wrap">
+                  <div class="category">#Travel</div>
+                  <img src="../static/img/post-options.svg" alt="" />
+                </div>
+              </div>
+
+              <!-- Post Body -->
+              <div class="body">
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris.
+                  Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum
+                  sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In iaculis arcu eros, eget tempus orci facilisis id.
+                  Praesent ornare leo, non loremset...
+                </p>
+              </div>
+
+              <!-- Footer -->
+              <div class="footer">
+                <!-- Comment, Like, Dislike -->
+                <div class="actions">
+                  <img src="../static/img/comments-icon.svg" alt="" />
+                  <img src="../static/img/like-icon.svg" alt="" />
+                  <img src="../static/img/dislike-icon.svg" alt="" />
+                </div>
+
+                <!-- Comment, Like & Dislike Statistics -->
+                <div class="stats">
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/comments-icon.svg" width="17px" alt="" />
+                    <p>6</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                    <p>27</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/dislikes-icon.svg" width="17px" alt="" />
+                    <p>4</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="post">
+              <!-- Header -->
+              <div class="header">
+                <!-- Profile Details -->
+                <div class="author-category-wrap">
+                  <img src="../static/img/profile.png" width="40px" alt="" />
+                  <div class="name-timestamp-wrap">
+                    <p class="name">Loretta Turner</p>
+                    <p class="timestamp">1 hour ago</p>
+                  </div>
+                </div>
+
+                <!-- Category & Option Button -->
+                <div class="category-option-wrap">
+                  <div class="category">#Travel</div>
+                  <img src="../static/img/post-options.svg" alt="" />
+                </div>
+              </div>
+
+              <!-- Post Body -->
+              <div class="body">
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris.
+                  Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum
+                  sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In iaculis arcu eros, eget tempus orci facilisis id.
+                  Praesent ornare leo, non loremset...
+                </p>
+              </div>
+
+              <!-- Footer -->
+              <div class="footer">
+                <!-- Comment, Like, Dislike -->
+                <div class="actions">
+                  <img src="../static/img/comments-icon.svg" alt="" />
+                  <img src="../static/img/like-icon.svg" alt="" />
+                  <img src="../static/img/dislike-icon.svg" alt="" />
+                </div>
+
+                <!-- Comment, Like & Dislike Statistics -->
+                <div class="stats">
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/comments-icon.svg" width="17px" alt="" />
+                    <p>6</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                    <p>27</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/dislikes-icon.svg" width="17px" alt="" />
+                    <p>4</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="post">
+              <!-- Header -->
+              <div class="header">
+                <!-- Profile Details -->
+                <div class="author-category-wrap">
+                  <img src="../static/img/profile.png" width="40px" alt="" />
+                  <div class="name-timestamp-wrap">
+                    <p class="name">Loretta Turner</p>
+                    <p class="timestamp">1 hour ago</p>
+                  </div>
+                </div>
+
+                <!-- Category & Option Button -->
+                <div class="category-option-wrap">
+                  <div class="category">#Travel</div>
+                  <img src="../static/img/post-options.svg" alt="" />
+                </div>
+              </div>
+
+              <!-- Post Body -->
+              <div class="body">
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris.
+                  Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum
+                  sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In iaculis arcu eros, eget tempus orci facilisis id.
+                  Praesent ornare leo, non loremset...
+                </p>
+              </div>
+
+              <!-- Footer -->
+              <div class="footer">
+                <!-- Comment, Like, Dislike -->
+                <div class="actions">
+                  <img src="../static/img/comments-icon.svg" alt="" />
+                  <img src="../static/img/like-icon.svg" alt="" />
+                  <img src="../static/img/dislike-icon.svg" alt="" />
+                </div>
+
+                <!-- Comment, Like & Dislike Statistics -->
+                <div class="stats">
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/comments-icon.svg" width="17px" alt="" />
+                    <p>6</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                    <p>27</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/dislikes-icon.svg" width="17px" alt="" />
+                    <p>4</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="post">
+              <!-- Header -->
+              <div class="header">
+                <!-- Profile Details -->
+                <div class="author-category-wrap">
+                  <img src="../static/img/profile.png" width="40px" alt="" />
+                  <div class="name-timestamp-wrap">
+                    <p class="name">Loretta Turner</p>
+                    <p class="timestamp">1 hour ago</p>
+                  </div>
+                </div>
+
+                <!-- Category & Option Button -->
+                <div class="category-option-wrap">
+                  <div class="category">#Travel</div>
+                  <img src="../static/img/post-options.svg" alt="" />
+                </div>
+              </div>
+
+              <!-- Post Body -->
+              <div class="body">
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit ur at. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris.
+                  Maecenas vitae enmattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum
+                  sit amet. Pellentes at at at commodo lacus at sodales sodales. Quisque sagittis orci ut diam condimentum, vel euismod placerat. In iaculis arcu eros, eget tempus orci facilisis id.
+                  Praesent ornare leo, non loremset...
+                </p>
+              </div>
+
+              <!-- Footer -->
+              <div class="footer">
+                <!-- Comment, Like, Dislike -->
+                <div class="actions">
+                  <img src="../static/img/comments-icon.svg" alt="" />
+                  <img src="../static/img/like-icon.svg" alt="" />
+                  <img src="../static/img/dislike-icon.svg" alt="" />
+                </div>
+
+                <!-- Comment, Like & Dislike Statistics -->
+                <div class="stats">
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/comments-icon.svg" width="17px" alt="" />
+                    <p>6</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" alt="" />
+                    <p>27</p>
+                  </div>
+                  <div class="stat-wrapper">
+                    <img src="../static/img/post/dislikes-icon.svg" width="17px" alt="" />
+                    <p>4</p>
+                  </div>
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+<<<<<<< HEAD
     </div>
+=======
+    </main>
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
 
     <!--------------------------- PRIVATE MESSAGING --------------------------->
     <div id="chat">
@@ -560,6 +953,10 @@
         <input type="text" id="msg" size="64" autofocus />
       </form>
     </div>
+<<<<<<< HEAD
+=======
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+>>>>>>> 6a698139129fb421214a25ddf42564246b01067d
     <script src="../static/js/app.js"></script>
     <script src="../static/js/websocket.js"></script>
     <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>

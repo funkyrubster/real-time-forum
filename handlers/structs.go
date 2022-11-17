@@ -1,11 +1,11 @@
 package handlers
 
 
-// type UserProfile struct {
-// User LoginData 
-// Post []PostFeed 
-// Comments []Comment
-// }
+type UserProfile struct {
+User LoginData 
+Post []PostFeed 
+Comments []Comment
+}
 
 type RegisterData struct {
 	Firstname string `json:"firstName"`
