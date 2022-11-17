@@ -30,10 +30,10 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	var user RegisterData
 
 	// Only proceed if all fields are filled
-	if len(user.Firstname) == 0 || len(user.Lastname) == 0 || len(user.Email) == 0 || len(user.Username) == 0 || len(user.Age) == 0 || len(user.Gender) == 0 || len(user.Password) == 0 {
-		w.WriteHeader(http.StatusNotAcceptable)
-		fmt.Println("Error: User did not fill all fields")
-	} else {
+	// if len(user.Firstname) == 0 || len(user.Lastname) == 0 || len(user.Email) == 0 || len(user.Username) == 0 || len(user.Age) == 0 || len(user.Gender) == 0 || len(user.Password) == 0 {
+	// 	w.WriteHeader(http.StatusNotAcceptable)
+	// 	fmt.Println("Error: User did not fill all fields")
+	// } else {
 		// use web soc to read the information
 
 		json.NewDecoder(r.Body).Decode(&user)
@@ -81,15 +81,14 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			_, err1 = query.Exec()
 			fmt.Println(err1)
-
 			fmt.Println("User successfully registered into users table.")
 			w.WriteHeader(http.StatusOK)		
+			
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Println("Error: Email or username already exists.")
 		}
 	}
-}
 
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
