@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"strings"
 
+	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
-
 	t, err := template.ParseFiles("static/index.html")
 	if err != nil {
 		http.Error(w, "500 Internal error", http.StatusInternalServerError)
@@ -83,7 +83,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err1)
 
 			fmt.Println("User successfully registered into users table.")
-			w.WriteHeader(http.StatusOK)		
+			w.WriteHeader(http.StatusOK)
 		} else {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Println("Error: Email or username already exists.")
@@ -92,6 +92,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	var sess UserSession
 
 	// Create user type of LoginData struct
 	var user LoginData
@@ -101,16 +102,16 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 
 	w.Header().Set("Content-type", "application/text")
-	
+
 	// Only true if email/username and password match is found in the database
 	emailPassCombinationValid := false
 	userPassCombinationValid := false
-	
+
 	// Check if user entered an email or username
 	enteredEmail := strings.Contains(user.Username, "@")
 	fmt.Println(user.Username)
 	fmt.Println(user.Password)
-	
+
 	if enteredEmail {
 		fmt.Println(enteredEmail)
 		fmt.Println("here")
@@ -140,15 +141,102 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 			userPassCombinationValid = true
 		}
 	}
+	var usID int = 5
 	if emailPassCombinationValid || userPassCombinationValid {
 		fmt.Println("User successfully logged in.")
+
+		row := data.DB.QueryRow("SELECT userID FROM users WHERE username = ?;", user.Username)
+		err := row.Scan(&usID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(usID)
+		fmt.Println(user.Username)
+		sess.userID = usID
+		sess.max_age = 18000
+		sess.session = uuid.NewV4().String()
+
+		// Finally, we set the client cookie for "session_token" as the session token we just generated
+		// we also set an expiry time of 120 minutes
+		http.SetCookie(w, &http.Cookie{
+			Name:   "session_token",
+			Value:  sess.session,
+			MaxAge: 900,
+		})
+		// insert into session
+		data.InsertSession(sess)
+
 		// send response to js
 		w.WriteHeader(http.StatusOK)
-	  w.Write([]byte("ok"))			
+		w.Write([]byte("ok"))
 		// set web soc
-		} else {
-			w.WriteHeader(http.StatusBadRequest)
-			fmt.Println("Error: Email or password is incorrect.")
-		}
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println("Error: Email or password is incorrect.")
 	}
-	
+}
+
+// InsertSession ...
+func (data *Forum) InsertSession(sess UserSession) {
+	stmnt, err := data.DB.Prepare("INSERT INTO sessions (cookieValue, userID) VALUES (?, ?)")
+	if err != nil {
+		fmt.Println("AddSession error inserting into DB: ", err)
+	}
+	defer stmnt.Close()
+	stmnt.Exec(sess.session, sess.userID)
+}
+
+// User's cookie expires when browser is closed, delete the cookie from the database.
+func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
+	cookie := &http.Cookie{
+		Name:   "session_token",
+		Value:  "",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, cookie)
+
+	stmt, err := data.DB.Prepare("DELETE FROM session WHERE userID=?;")
+	defer stmt.Close()
+	stmt.Exec(userID)
+	if err != nil {
+		fmt.Println("DeleteSession err: ", err)
+		return err
+	}
+	return nil
+}
+
+// // logout handle
+// func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Println("LogOut Handler Here ********* ")
+// 	c, err := r.Cookie("session_token")
+// 	var logoutUser int
+
+// 	if err == nil {
+
+// 		rows, err := data.DB.Query("SELECT userID FROM sessions WHERE sessionID=?", c.Value)
+// 		if err != nil {
+// 			log.Fatal(err)
+
+// 			// fmt.Println("Logout error: ", err)
+// 		}
+// 		defer rows.Close()
+// 		for rows.Next() {
+// 			rows.Scan(&logoutUser)
+// 		}
+// 		fmt.Printf("User %d wants to logout\n", logoutUser)
+// 	}
+// 	data.DeleteSession(w, logoutUser) // ?
+// 	// fmt.Println("User logged out")
+// 	// http.Redirect(w, r, "/", http.StatusFound)
+
+// 	stmt, errUpdate := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE userID = ?;")
+// 	if errUpdate != nil {
+// 		log.Fatal("Updating Table: ", errUpdate)
+// 	}
+// 	defer stmt.Close()
+// 	stmt.Exec(false, logoutUser)
+// }
+
+// TODO
+// once login check session table for creating user list (get data for user table)
+// when logged in try to avoid loggin in another browser
