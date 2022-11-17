@@ -16,7 +16,6 @@ type RegisterData struct {
 	Password  string `json:"newpassword"`
 }
 
-
 type User struct {
 	Username  string `json:"username"`
 	Age       string `json:"age"`
@@ -27,13 +26,16 @@ type User struct {
 	Password  string `json:"password"`
 }
 
-
-
 type LoginData struct {
-	Username  string `json:"username"`
-	Password  string `json:"password"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
+type UserSession struct {
+	userID  int
+	session string
+	max_age int
+}
 
 // 	// CreationDate time.Time
 // }
