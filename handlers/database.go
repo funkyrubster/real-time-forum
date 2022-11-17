@@ -9,18 +9,17 @@ import (
 )
 
 type Forum struct {
-	 *sql.DB
+	*sql.DB
 }
 
-
-// ------------------ check if the table exist if not, create one 
+// ------------------ check if the table exist if not, create one
 
 func CheckTablesExist(db *sql.DB, table string) {
 	_, table_check := db.Query("select * from " + table + ";")
 	if table_check != nil {
-			fmt.Println("Error: " + table + " table doesn't exist in database.")
+		fmt.Println("Error: " + table + " table doesn't exist in database.")
 
-	if table == "users" {
+		if table == "users" {
 			fmt.Println("Creating users table...")
 			users_table := `CREATE TABLE IF NOT EXISTS users (
 					"userID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -30,7 +29,8 @@ func CheckTablesExist(db *sql.DB, table string) {
 					"firstname" TEXT,
 					"lastname" TEXT,
 					"age" INTEGER NOT NULL, 
-					"gender" TEXT NOT NULL
+					"gender" TEXT NOT NULL,
+					"loggedin" BOOLEAN
 					);`
 
 			users, errUser := db.Prepare(users_table)
@@ -38,9 +38,9 @@ func CheckTablesExist(db *sql.DB, table string) {
 				log.Fatal(errUser)
 			}
 			users.Exec()
-			}
-					
-	if table == "posts" {
+		}
+
+		if table == "posts" {
 			fmt.Println("Creating posts table...")
 			posts_table := `CREATE TABLE IF NOT EXISTS posts (
 					"postID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -61,9 +61,9 @@ func CheckTablesExist(db *sql.DB, table string) {
 				log.Fatal(errTable)
 			}
 			posts.Exec()
-	}
-			
-	if table == "comments" {
+		}
+
+		if table == "comments" {
 			fmt.Println("Creating comments table...")
 			comments_table := `CREATE TABLE IF NOT EXISTS comments (
 					"commentID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -81,10 +81,9 @@ func CheckTablesExist(db *sql.DB, table string) {
 				log.Fatal(errCommments)
 			}
 			comments.Exec()
-	}
+		}
 
-			
-	if table == "categories" {
+		if table == "categories" {
 			fmt.Println("Creating categories table...")
 			categories_table := `CREATE TABLE IF NOT EXISTS categories (
 					"postID" TEXT REFERENCES post(postID), 
@@ -99,14 +98,15 @@ func CheckTablesExist(db *sql.DB, table string) {
 				log.Fatal(errCategories)
 			}
 			categories.Exec()
-	}
-			
-	if table == "sessions" {
+		}
+
+		if table == "sessions" {
 			fmt.Println("Creating sessions table...")
 			sessions_table := `CREATE TABLE IF NOT EXISTS sessions (
-					"sessionID" STRING NOT NULL PRIMARY KEY, 
-					"userID" INTEGER NOT NULL,
-					FOREIGN KEY(userID)REFERENCES users(userID)
+				userID INTEGER NOT NULL,
+				cookieValue TEXT NOT NULL UNIQUE,
+				time INTEGER,
+				FOREIGN KEY(userID) REFERENCES Users(id)
 					);`
 
 			sessions, errSession := db.Prepare(sessions_table)
@@ -114,19 +114,16 @@ func CheckTablesExist(db *sql.DB, table string) {
 				log.Fatal(errSession)
 			}
 			sessions.Exec()
-	}
+		}
 	}
 }
-
 
 func Connect(db *sql.DB) *Forum {
 	// Check all required tables exist in database, and create them if they don't
 	for _, table := range []string{"users", "posts", "comments", "categories", "sessions"} {
 		CheckTablesExist(db, table)
 	}
-		return &Forum{
+	return &Forum{
 		DB: db,
 	}
 }
-
-
