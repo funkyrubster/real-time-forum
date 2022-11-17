@@ -73,7 +73,7 @@ loginData.addEventListener("submit", function () {
         notyf.error("The login details you entered are incorrect.");
         console.log("not ok");
       }
-      return response.text();
+      return response.json();
     })
     .then((data) => {
       console.log(data);
