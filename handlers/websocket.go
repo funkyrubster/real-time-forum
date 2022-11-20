@@ -36,7 +36,6 @@ func (data *Forum) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	log.Println("Client Successfully Connected...")
+	log.Println("Client successfully sonnected.")
 	reader(ws)
-
 }

@@ -28,15 +28,15 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	// Create user type of RegisterData struct
 	var user RegisterData
+	json.NewDecoder(r.Body).Decode(&user)
+
+	numChars := "0123456789"
 
 	// Only proceed if all fields are filled
-	if len(user.Firstname) == 0 || len(user.Lastname) == 0 || len(user.Email) == 0 || len(user.Username) == 0 || len(user.Age) == 0 || len(user.Gender) == 0 || len(user.Password) == 0 {
+	if len(user.Firstname) == 0 || len(user.Lastname) == 0 || len(user.Email) == 0 || len(user.Username) == 0 || (len(user.Age) == 0 || !strings.ContainsAny(user.Age, numChars)) || user.Gender == "Gender" || len(user.Password) == 0 {
 		w.WriteHeader(http.StatusNotAcceptable)
-		fmt.Println("Error: User did not fill all fields")
 	} else {
 		// use web soc to read the information
-
-		json.NewDecoder(r.Body).Decode(&user)
 
 		fmt.Println("hi from golang", user)
 		w.Header().Set("Content-type", "application/text")
