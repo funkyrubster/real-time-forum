@@ -31,10 +31,6 @@ signUpData.addEventListener("submit", function () {
     .then((response) => {
       // Handles missing fields
       if (response.status == "406") {
-        // Check age is numerical
-        // var numChars = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        // var ageOnlyNum = numChars.every((item) => user.age.includes(item));
-
         if (user.firstname == "") {
           notyf.error("Please enter your first name.");
         } else if (user.lastname == "") {

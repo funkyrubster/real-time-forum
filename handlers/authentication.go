@@ -37,8 +37,6 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotAcceptable)
 	} else {
 		// use web soc to read the information
-
-		fmt.Println("hi from golang", user)
 		w.Header().Set("Content-type", "application/text")
 
 		// // Only true if the provided email and username is not already in the database
@@ -71,7 +69,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			// create hash from password
 			passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 			if err != nil {
-				fmt.Println("bcrypt err:", err)
+				fmt.Println("Error hashing password:", err)
 				return
 			}
 			// Insert user into database
@@ -82,11 +80,11 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			_, err1 = query.Exec()
 			fmt.Println(err1)
 
-			fmt.Println("User successfully registered into users table.")
+			fmt.Println("SUCCESS: User successfully registered into users table.")
 			w.WriteHeader(http.StatusOK)
 		} else {
+			fmt.Println("ERROR: Username or email already exists.")
 			w.WriteHeader(http.StatusBadRequest)
-			fmt.Println("Error: Email or username already exists.")
 		}
 	}
 }
@@ -96,11 +94,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Create user type of LoginData struct
 	var user LoginData
-
 	json.NewDecoder(r.Body).Decode(&user)
-
-	fmt.Println(user)
-
 	w.Header().Set("Content-type", "application/text")
 
 	// Only true if email/username and password match is found in the database
@@ -109,19 +103,14 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check if user entered an email or username
 	enteredEmail := strings.Contains(user.Username, "@")
-	fmt.Println(user.Username)
-	fmt.Println(user.Password)
 
 	if enteredEmail {
-		fmt.Println(enteredEmail)
-		fmt.Println("here")
-		fmt.Println(user)
 		// Check if email and password exist in users table on the same row
 		var passwordHash string
 		row := data.DB.QueryRow("SELECT password FROM users WHERE email = ?", user.Username)
 		err := row.Scan(&passwordHash)
 		if err != nil {
-			fmt.Println("error with passwordhash")
+			fmt.Println("Error with password hash:", err)
 		}
 		err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(user.Password))
 		if err == nil {
@@ -133,8 +122,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		row := data.DB.QueryRow("SELECT password FROM users WHERE username = ?", user.Username)
 		err := row.Scan(&passwordHash)
 		if err != nil {
-			fmt.Println("error with passwordhash")
-			fmt.Println(user.Username, user.Password)
+			fmt.Println("Error with password hash:", err)
 		}
 		err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(user.Password))
 		if err == nil {
@@ -143,15 +131,15 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var usID int = 5
 	if emailPassCombinationValid || userPassCombinationValid {
-		fmt.Println("User successfully logged in.")
+		fmt.Println("User logged in successfully.")
 
 		row := data.DB.QueryRow("SELECT userID FROM users WHERE username = ?;", user.Username)
 		err := row.Scan(&usID)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(usID)
-		fmt.Println(user.Username)
+		fmt.Println("usID:", usID)
+		fmt.Println("user.Username:", user.Username)
 		sess.userID = usID
 		sess.max_age = 18000
 		sess.session = uuid.NewV4().String()
