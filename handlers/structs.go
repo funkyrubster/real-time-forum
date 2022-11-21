@@ -1,12 +1,5 @@
 package handlers
 
-
-type UserProfile struct {
-User LoginData 
-Post []PostFeed 
-Comments []Comment
-}
-
 type RegisterData struct {
 	Firstname string `json:"firstName"`
 	Lastname  string `json:"lastName"`
@@ -17,16 +10,34 @@ type RegisterData struct {
 	Password  string `json:"newpassword"`
 }
 
-
-type LoginData struct {
-	
+type User struct {
 	Username  string `json:"username"`
+	Age       string `json:"age"`
+	Gender    string `json:"gender"`
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Email     string `json:"email"`
 	Password  string `json:"password"`
 }
 
-type PostFeed struct {
-	PostID    int `json:"postid"`
-	Username  string
+type LoginData struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type UserSession struct {
+	userID  int
+	session string
+	max_age int
+}
+
+var Warning struct {
+	Warn string
+}
+
+type Pitem struct {
+	PostID    int
+	Nickname  string
 	Title     string
 	Content   string
 	Category  string
