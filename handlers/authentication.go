@@ -79,14 +79,15 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			_, err1 = query.Exec()
 			fmt.Println(err1)
-			fmt.Println("User successfully registered into users table.")
-			w.WriteHeader(http.StatusOK)		
-			
+
+			fmt.Println("SUCCESS: User successfully registered into users table.")
+			w.WriteHeader(http.StatusOK)
 		} else {
 			fmt.Println("ERROR: Username or email already exists.")
 			w.WriteHeader(http.StatusBadRequest)
 		}
 	}
+}
 
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var sess UserSession
