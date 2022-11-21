@@ -103,10 +103,10 @@ func CheckTablesExist(db *sql.DB, table string) {
 		if table == "sessions" {
 			fmt.Println("Creating sessions table...")
 			sessions_table := `CREATE TABLE IF NOT EXISTS sessions (
+				"sessionID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 				userID INTEGER NOT NULL,
 				cookieValue TEXT NOT NULL UNIQUE,
-				time INTEGER,
-				FOREIGN KEY(userID) REFERENCES Users(id)
+				FOREIGN KEY(userID) REFERENCES users(id)
 					);`
 
 			sessions, errSession := db.Prepare(sessions_table)
