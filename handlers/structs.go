@@ -31,10 +31,6 @@ type UserSession struct {
 	max_age int
 }
 
-var Warning struct {
-	Warn string
-}
-
 type Pitem struct {
 	PostID    int
 	Nickname  string
