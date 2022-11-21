@@ -9,7 +9,7 @@ import (
 )
 
 type Forum struct {
-	*sql.DB
+	DB *sql.DB
 }
 
 // ------------------ check if the table exist if not, create one
