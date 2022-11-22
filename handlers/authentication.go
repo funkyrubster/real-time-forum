@@ -7,10 +7,12 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
+
 
 func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("static/index.html")
@@ -23,7 +25,51 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "500 Internal error", http.StatusInternalServerError)
 		return
 	}
+
 }
+
+func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
+
+	var post Post
+
+	json.NewDecoder(r.Body).Decode(&post)
+
+	// w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
+	title := "test"
+	category := "test"
+	time := time.Now()
+	postCreated := time.Format("01-02-2006 15:04")
+	content := post.Content
+
+	// checks session and selects the last one (the latest one)
+	sess := data.GetSession()
+	fmt.Println(sess)
+	currentSession := sess[len(sess)-1]
+	
+	// fetches username from session
+	user := currentSession.username
+	fmt.Println(currentSession)
+
+	type postSessionStruct struct {
+		Post    []Post
+		Session UserSession
+	}
+
+	var postAndSession postSessionStruct
+
+	postAndSession.Session = currentSession
+
+	data.CreatePost(Post{
+		Username:  user,
+		Title:     title,
+		Content:   content,
+		Category:  category,
+		CreatedAt: postCreated,
+	})
+}
+
+
 
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	// Create user type of RegisterData struct
@@ -140,6 +186,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println("usID:", usID)
 		fmt.Println("user.Username:", user.Username)
+		sess.username = user.Username
 		sess.userID = usID
 		sess.max_age = 18000
 		sess.session = uuid.NewV4().String()
@@ -155,42 +202,17 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		data.InsertSession(sess)
 
 		// send response to js
+		js, err := json.Marshal(user)
+		if err != nil {
+			log.Fatal(err)
+		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+		w.Write([]byte(js))
 		// set web soc
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println("Error: Email or password is incorrect.")
 	}
-}
-
-// InsertSession ...
-func (data *Forum) InsertSession(sess UserSession) {
-	stmnt, err := data.DB.Prepare("INSERT INTO sessions (cookieValue, userID) VALUES (?, ?)")
-	if err != nil {
-		fmt.Println("AddSession error inserting into DB: ", err)
-	}
-	defer stmnt.Close()
-	stmnt.Exec(sess.session, sess.userID)
-}
-
-// User's cookie expires when browser is closed, delete the cookie from the database.
-func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
-	cookie := &http.Cookie{
-		Name:   "session_token",
-		Value:  "",
-		MaxAge: -1,
-	}
-	http.SetCookie(w, cookie)
-
-	stmt, err := data.DB.Prepare("DELETE FROM session WHERE userID=?;")
-	defer stmt.Close()
-	stmt.Exec(userID)
-	if err != nil {
-		fmt.Println("DeleteSession err: ", err)
-		return err
-	}
-	return nil
 }
 
 // // logout handle

@@ -27,6 +27,7 @@ func main() {
 	http.HandleFunc("/", data.Home)
 	http.HandleFunc("/login", data.LoginHandler)
 	http.HandleFunc("/register", data.RegistrationHandler)
+	http.HandleFunc("/post", data.Post)
 	http.HandleFunc("/ws", data.WsEndpoint)
 
 	fmt.Println("Server started at http://localhost:8080")
