@@ -545,7 +545,7 @@ select:hover {
   border-radius: 20px;
 }
 
-.create-post input#post-body {
+.create-post input#postBody {
   width: 525px;
   height: 40px;
 
@@ -556,7 +556,7 @@ select:hover {
   padding-left: 0.75rem;
 }
 
-.create-post input#post-body::placeholder {
+.create-post input#postBody::placeholder {
   font-family: "Bambino New";
   font-style: normal;
   font-weight: 600;
