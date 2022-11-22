@@ -22,7 +22,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.URL.Path != "/" {
-		WarnMessage(w, "404 Not Found")
+		// WarnMessage(w, "404 Not Found")
 		return
 	}
 	// // var AllPosts []*Pitem = ReadAllPosts()
@@ -56,11 +56,11 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // WarnMessage ...
 func WarnMessage(w http.ResponseWriter, warn string) {
-	tpl, err := template.ParseFiles("static/templates/error.html")
-	if err != nil {
-		http.Error(w, "500 Internal Server Error, Parsing Error", http.StatusInternalServerError)
-		return
-	}
-	Warning.Warn = warn
-	tpl.Execute(w, Warning)
+	// tpl, err := template.ParseFiles("static/templates/error.html")
+	// if err != nil {
+	// 	http.Error(w, "500 Internal Server Error, Parsing Error", http.StatusInternalServerError)
+	// 	return
+	// }
+	// Warning.Warn = warn
+	// tpl.Execute(w, Warning)
 }
