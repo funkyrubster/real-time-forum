@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -43,7 +44,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	sess := data.GetSession()
 	fmt.Println(sess)
 	currentSession := sess[len(sess)-1]
-	
+
 	// fetches username from session
 	user := currentSession.username
 	fmt.Println(currentSession)
@@ -65,8 +66,6 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 		CreatedAt: postCreated,
 	})
 }
-
-
 
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	// Create user type of RegisterData struct
@@ -205,35 +204,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println("Error: Email or password is incorrect.")
 	}
-}
-
-// InsertSession ...
-func (data *Forum) InsertSession(sess UserSession) {
-	stmnt, err := data.DB.Prepare("INSERT INTO sessions (cookieValue, userID) VALUES (?, ?)")
-	if err != nil {
-		fmt.Println("AddSession error inserting into DB: ", err)
-	}
-	defer stmnt.Close()
-	stmnt.Exec(sess.session, sess.userID)
-}
-
-// User's cookie expires when browser is closed, delete the cookie from the database.
-func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
-	cookie := &http.Cookie{
-		Name:   "session_token",
-		Value:  "",
-		MaxAge: -1,
-	}
-	http.SetCookie(w, cookie)
-
-	stmt, err := data.DB.Prepare("DELETE FROM session WHERE userID=?;")
-	defer stmt.Close()
-	stmt.Exec(userID)
-	if err != nil {
-		fmt.Println("DeleteSession err: ", err)
-		return err
-	}
-	return nil
 }
 
 // // logout handle
