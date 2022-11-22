@@ -11,7 +11,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		Post *Pitem
 	}
 	var mainPage struct {
-		AuthUser   *User
+		// AuthUser   *User
 		PostScroll []*PostRaw
 	}
 	// var post *Pitem
