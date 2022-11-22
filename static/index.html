@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login | Real-Time-Forum</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="../static/styles.css" />
   </head>
   <body>
     <!--------------------------- AUTHENTICATION --------------------------->
     <!-- User Login Div -->
-    <div class="animate" id="login">
+    <div id="login" data-aos="fade-up" data-aos-delay="100">
       <div class="auth-container">
         <!-- Illustration & Text -->
         <div class="left">
@@ -39,7 +40,7 @@
     </div>
 
     <!-- User Registration Div -->
-    <div class="animate" id="registration">
+    <div id="registration">
       <div class="auth-container">
         <!-- Illustration & Text -->
         <div class="left">
@@ -449,5 +450,9 @@
     <script src="../static/js/websocket.js"></script>
     <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>
     <script src="../static/js/authentication.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
   </body>
 </html>
