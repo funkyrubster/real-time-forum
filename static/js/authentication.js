@@ -102,3 +102,29 @@ loginData.addEventListener("submit", function () {
       console.log(data);
     });
 });
+
+
+const sendPostData = function getImputValue(){
+  let post = {
+  postBody:  document.getElementById("postBody").value
+  }
+  console.log(post);
+
+let options = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(post)
+};
+
+let fetchRes = fetch("http://localhost:8080/post", options);
+fetchRes
+.then((response) => {
+  console.log(response);
+  return response.text()
+})
+// .then((data) =>{
+// // console.log(data);
+// });
+};
