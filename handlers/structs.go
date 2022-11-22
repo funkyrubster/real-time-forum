@@ -10,14 +10,20 @@ type RegisterData struct {
 	Password  string `json:"newpassword"`
 }
 
-type User struct {
+type UserProfile struct {
+	User         []RegisterData
+	CreatedPosts []Post
+	Session      []UserSession
+}
+
+type Post struct {
+	PostID    int
+	UserID    int
 	Username  string `json:"username"`
-	Age       string `json:"age"`
-	Gender    string `json:"gender"`
-	Firstname string `json:"firstName"`
-	Lastname  string `json:"lastName"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+	Title     string
+	Category  string
+	Content   string `json:"postBody"`
+	CreatedAt string
 }
 
 type LoginData struct {
@@ -26,9 +32,10 @@ type LoginData struct {
 }
 
 type UserSession struct {
-	userID  int
-	session string
-	max_age int
+	username  string
+	userID    int
+	session   string
+	max_age   int
 }
 
 type Pitem struct {
