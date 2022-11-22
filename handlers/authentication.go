@@ -13,6 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+
 func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("static/index.html")
 	if err != nil {
@@ -24,6 +25,7 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "500 Internal error", http.StatusInternalServerError)
 		return
 	}
+
 }
 
 func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +46,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	sess := data.GetSession()
 	fmt.Println(sess)
 	currentSession := sess[len(sess)-1]
-
+	
 	// fetches username from session
 	user := currentSession.username
 	fmt.Println(currentSession)
@@ -66,6 +68,8 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 		CreatedAt: postCreated,
 	})
 }
+
+
 
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	// Create user type of RegisterData struct
@@ -182,6 +186,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println("usID:", usID)
 		fmt.Println("user.Username:", user.Username)
+		sess.username = user.Username
 		sess.userID = usID
 		sess.max_age = 18000
 		sess.session = uuid.NewV4().String()
@@ -197,8 +202,12 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		data.InsertSession(sess)
 
 		// send response to js
+		js, err := json.Marshal(user)
+		if err != nil {
+			log.Fatal(err)
+		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
+		w.Write([]byte(js))
 		// set web soc
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
