@@ -4,15 +4,98 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver connects go with sql
 )
 
 type Forum struct {
-	DB *sql.DB
+	*sql.DB
 }
 
-// ------------------ check if the table exist if not, create one
+//----------------------- CREATE POST-------------------------//
+
+func (data *Forum) CreatePost(post Post) {
+	stmt, err := data.DB.Prepare("INSERT INTO posts (username, title, content, category, creationDate) VALUES (?, ?, ?, ?, ?);")
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = stmt.Exec(post.Username, post.Title, post.Content, post.Category, post.CreatedAt)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+
+// ------------------CREATE SESSION	----------------------//
+
+
+// InsertSession ...
+func (data *Forum) InsertSession(sess UserSession) {
+	stmnt, err := data.DB.Prepare("INSERT INTO sessions (cookieValue, userID, username) VALUES (?, ?, ?)")
+	if err != nil {
+		fmt.Println("AddSession error inserting into DB: ", err)
+	}
+	defer stmnt.Close()
+	stmnt.Exec(sess.session, sess.userID, sess.username)
+}
+
+
+// -------------- DELETE SESSION------------------	//
+
+
+// User's cookie expires when browser is closed, delete the cookie from the database.
+func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
+	cookie := &http.Cookie{
+		Name:   "session_token",
+		Value:  "",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, cookie)
+
+	stmt, err := data.DB.Prepare("DELETE FROM session WHERE userID=?;")
+	// defer stmt.Close()
+	stmt.Exec(userID)
+	if err != nil {
+		fmt.Println("DeleteSession err: ", err)
+		return err
+	}
+	return nil
+}
+
+// -------------- GET SESSION ----------------//
+
+func (data *Forum) GetSession()([]UserSession){
+
+	session := []UserSession{}
+
+	rows, err := data.DB.Query(`SELECT * FROM sessions`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var userID int
+	var cookieValue string 
+	var userName string 
+
+for rows.Next(){
+	err := rows.Scan(&userID,&cookieValue,&userName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	session = append(session, UserSession{
+		userID: userID,
+		session: cookieValue,
+		username: userName,
+
+	})
+}
+return session
+}
+
+
+
+// ---------------- CREATE TABLES ----------------//
 
 func CheckTablesExist(db *sql.DB, table string) {
 	_, table_check := db.Query("select * from " + table + ";")
@@ -44,16 +127,11 @@ func CheckTablesExist(db *sql.DB, table string) {
 			fmt.Println("Creating posts table...")
 			posts_table := `CREATE TABLE IF NOT EXISTS posts (
 					"postID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-					"authorID" INTEGER NOT NULL,
-					"author" TEXT NOT NULL,
+					"username" TEXT REFERENCES sesssion(userID),
 					"title" TEXT NOT NULL, 
-					"text" TEXT NOT NULL, 
-					"category1" TEXT NOT NULL,
-					"category2" TEXT NOT NULL,
-					"category3" TEXT NOT NULL,
-					"category4" TEXT NOT NULL,
-					"creationDate" TIMESTAMP,
-					FOREIGN KEY(authorID)REFERENCES users(userID)
+					"content" TEXT NOT NULL, 
+					"category" TEXT NOT NULL,
+					"creationDate" TIMESTAMP
 					);`
 
 			posts, errTable := db.Prepare(posts_table)
@@ -103,10 +181,10 @@ func CheckTablesExist(db *sql.DB, table string) {
 		if table == "sessions" {
 			fmt.Println("Creating sessions table...")
 			sessions_table := `CREATE TABLE IF NOT EXISTS sessions (
-				"sessionID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 				userID INTEGER NOT NULL,
 				cookieValue TEXT NOT NULL UNIQUE,
-				FOREIGN KEY(userID) REFERENCES users(id)
+				username TEXT REFERENCES users(username),
+				FOREIGN KEY(userID) REFERENCES Users(userID)
 					);`
 
 			sessions, errSession := db.Prepare(sessions_table)
@@ -117,6 +195,8 @@ func CheckTablesExist(db *sql.DB, table string) {
 		}
 	}
 }
+
+//--------------- CONNECT WITH MAIN.GO----------------//
 
 func Connect(db *sql.DB) *Forum {
 	// Check all required tables exist in database, and create them if they don't
