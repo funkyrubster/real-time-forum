@@ -25,6 +25,49 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
+
+	var post Post
+
+	json.NewDecoder(r.Body).Decode(&post)
+
+	// w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
+	title := "test"
+	category := "test"
+	time := time.Now()
+	postCreated := time.Format("01-02-2006 15:04")
+	content := post.Content
+
+	// checks session and selects the last one (the latest one)
+	sess := data.GetSession()
+	fmt.Println(sess)
+	currentSession := sess[len(sess)-1]
+	
+	// fetches username from session
+	user := currentSession.username
+	fmt.Println(currentSession)
+
+	type postSessionStruct struct {
+		Post    []Post
+		Session UserSession
+	}
+
+	var postAndSession postSessionStruct
+
+	postAndSession.Session = currentSession
+
+	data.CreatePost(Post{
+		Username:  user,
+		Title:     title,
+		Content:   content,
+		Category:  category,
+		CreatedAt: postCreated,
+	})
+}
+
+
+
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	// Create user type of RegisterData struct
 	var user RegisterData
