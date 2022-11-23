@@ -44,11 +44,11 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 
 	// checks session and selects the last one (the latest one)
 	sess := data.GetSession()
+
 	currentSession := sess[len(sess)-1]
 	
 	// fetches username from session
 	user := currentSession.username
-	// fmt.Println(currentSession)
 
 	type postSessionStruct struct {
 		Post    []Post
@@ -66,8 +66,8 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 		Category:  category,
 		CreatedAt: postCreated,
 	})
+	
 }
-
 
 
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
