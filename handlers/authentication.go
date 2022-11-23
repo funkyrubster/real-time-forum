@@ -200,8 +200,14 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		// insert into session
 		data.InsertSession(sess)
 
+		userInfo := data.GetUserProfile(user.Username)
+		// posts := data.GetPosts(user.Username)
+
+		// fmt.Println("posts:",posts)
+	 
+		fmt.Println(userInfo)
 		// send response to js
-		js, err := json.Marshal(user)
+		js, err := json.Marshal(userInfo)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -213,7 +219,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error: Email or password is incorrect.")
 	}
 }
-
 // // logout handle
 // func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 // 	fmt.Println("LogOut Handler Here ********* ")
