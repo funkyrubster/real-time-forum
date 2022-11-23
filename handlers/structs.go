@@ -48,27 +48,12 @@ type UserSession struct {
 	max_age   int
 }
 
-type Pitem struct {
-	PostID    int
-	Nickname  string
-	Title     string
-	Text      string
-	Category1 string
-	Category2 string
-	Category3 string
-	Category4 string
-	Comments  []Comm
-}
 
-type Category struct {
-	CategoryID    int
-	Catergoryname string
-	PostID        Pitem
-}
-
-type Comm struct {
+type Comment struct {
 	CommentID int
 	PostID    int
-	Nickname  string
-	Text      string
+	UserId    string
+	Content   string
+	CreatedAt string
 }
+
