@@ -31,11 +31,6 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	var password string
 	var age int
 	var gender string
-	var content string
-	var creationDate string
-	var title string
-	var category string
-	var postID int
 
 	for rows.Next() {
 		err := rows.Scan(&userID, &nickname, &email, &password, &firstname, &lastname, &age, &gender)
@@ -43,17 +38,6 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 			log.Fatal(err)
 		}
 
-		rows, err := data.DB.Query(`SELECT * FROM posts where username= ?`, username)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		for rows.Next() {
-			err := rows.Scan(&postID, &nickname, &title, &content, &category, &creationDate)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
 		user = UserProfile{
 			User: User{
 				Username:  nickname,
@@ -61,11 +45,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 				Lastname:  lastname,
 				Email:     email,
 			},
-			CreatedPosts: Post{
-				Title:     title,
-				Content:   content,
-				CreatedAt: creationDate,
-			},
+			CreatedPosts: data.GetPosts(username),
 		}
 	}
 	return user
@@ -88,40 +68,30 @@ func (data *Forum) CreatePost(post Post) {
 
 func (data *Forum) GetPosts(username string) []Post {
 
-  var post Post 
-	var posts []Post
+	var posts []Post // slice of Post 
+
+
 
 	rows, err := data.DB.Query(`SELECT * FROM posts WHERE username =?`, username)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var content string 
-	var creationDate string 
-	var title  string 
-	var category string 
-	var postID int
-	var nickname string 
-
 	for rows.Next() {
-		err := rows.Scan(&postID, &nickname, &title, &content, &category, &creationDate)
+	  var post Post  // just a struct 
+		err := rows.Scan(&post.PostID, &post.Username, &post.Title, &post.Content, &post.Category, &post.CreatedAt)
 		if err != nil {
 			log.Fatal(err)
 		}
-		post = Post {
-			PostID: postID,
-			Username: nickname,
-			Title: title,
-			Content: content,
-			Category: category,
-			CreatedAt: creationDate,
-
-		}
+		// post = Post{
+		// 	// CreatedAt: post.CreatedAt,
+		// 	// Comments: //get commnets func,
+		// }
+		posts = append(posts, post)
 	}
-	posts = append([]Post{post}, posts...)
-	
 
 	return posts
+	
 
 }
 
