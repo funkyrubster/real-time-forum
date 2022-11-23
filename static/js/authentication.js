@@ -99,9 +99,9 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
+      console.log("heres the data:", data);
       updateUserDetails(data);
-      displayPosts();
+      displayPosts(data);
     })
     .catch(function (err) {
       console.log(err);
@@ -115,19 +115,23 @@ loginData.addEventListener("submit", function () {
   }
 });
 
-function displayPosts() {
+function displayPosts(data) {
   postsWrap = document.querySelector(".posts-wrap");
-  postCount = 5;
 
-  for (let i = 0; i < postCount; i++) {
-    postsWrap.innerHTML += `
+  for (let i = 0; i < data.CreatedPosts.length; i++) {
+    postsWrap.innerHTML +=
+      `
     <div class="post">
       <div class="header">
         <div class="author-category-wrap">
           <img src="../static/img/profile.png" width="40px" />
           <div class="name-timestamp-wrap">
-            <p class="name">FIRSTNAME LASTNAME</p>
-            <p class="timestamp">TIMESTAMP</p>
+            <p class="name">` +
+      data.CreatedPosts[i].username +
+      `</p>
+            <p class="timestamp">` +
+      data.CreatedPosts[i].CreatedAt +
+      `</p>
           </div>
         </div>
 
@@ -140,7 +144,9 @@ function displayPosts() {
 
       <!-- Post Body -->
       <div class="body">
-        <p>POST BODY</p>
+        <p>` +
+      data.CreatedPosts[i].postBody +
+      `</p>
       </div>
 
       <!-- Footer -->
