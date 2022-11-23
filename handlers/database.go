@@ -54,11 +54,11 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 //----------------------- CREATE POST-------------------------//
 
 func (data *Forum) CreatePost(post Post) {
-	stmt, err := data.DB.Prepare("INSERT INTO posts (username, title, content, category, creationDate) VALUES (?, ?, ?, ?, ?);")
+	stmt, err := data.DB.Prepare("INSERT INTO posts (username, content, creationDate) VALUES (?, ?, ?);")
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = stmt.Exec(post.Username, post.Title, post.Content, post.Category, post.CreatedAt)
+	_, err = stmt.Exec(post.Username, post.Content, post.CreatedAt)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -79,7 +79,7 @@ func (data *Forum) GetPosts(username string) []Post {
 
 	for rows.Next() {
 	  var post Post  // just a struct 
-		err := rows.Scan(&post.PostID, &post.Username, &post.Title, &post.Content, &post.Category, &post.CreatedAt)
+		err := rows.Scan(&post.PostID, &post.Username, &post.Content,&post.CreatedAt)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -189,9 +189,7 @@ func CheckTablesExist(db *sql.DB, table string) {
 			posts_table := `CREATE TABLE IF NOT EXISTS posts (
 					"postID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 					"username" TEXT REFERENCES sesssion(userID),
-					"title" TEXT NOT NULL, 
 					"content" TEXT NOT NULL, 
-					"category" TEXT NOT NULL,
 					"creationDate" TIMESTAMP
 					);`
 
