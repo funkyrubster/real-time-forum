@@ -98,12 +98,26 @@ loginData.addEventListener("submit", function () {
       }
       return response.json();
     })
-    .then((data) => {
+    .then(function (data){
       console.log(data);
+      appendDataToHTML(data);
+    })
+     .catch(function (err) {
+      console.log(err);
     });
-});
+      
+    function appendDataToHTML(data){
+       const nickname = document.querySelector('p.username').innerHTML = `@` + data.User.username;
 
+       const firstLastName = document.querySelector('p.name').innerHTML = data.User.firstName
+        // + " "+ data.User.lastName;
 
+       console.log(firstLastName, nickname);
+    }
+    
+  
+  })
+    
 
 const sendPostData = function getImputValue(){
   let post = {

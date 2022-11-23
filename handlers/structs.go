@@ -10,10 +10,17 @@ type RegisterData struct {
 	Password  string `json:"newpassword"`
 }
 
+type User struct {
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Email     string `json:"email"`
+	Username  string `json:"username"`
+}
+
+
 type UserProfile struct {
-	User         []RegisterData
-	CreatedPosts []Post
-	Session      []UserSession
+	User         User
+	CreatedPosts Post
 }
 
 type Post struct {
