@@ -1,9 +1,8 @@
-let socket
+let socket;
 
 const createWebsocket = () => {
   return new WebSocket("ws://localhost:8080/ws");
 };
-
 
 function showRegistrationUI() {
   document.querySelector("#registration").style.display = "flex";
@@ -24,7 +23,6 @@ function showChat() {
 function showFeed() {
   document.querySelector(".auth-container").style.display = "none";
   document.querySelector("main").style.display = "block";
-  socket = createWebsocket()
-  console.log("socket mainpage", socket)
+  socket = createWebsocket();
+  console.log("socket mainpage", socket);
 }
-
