@@ -100,18 +100,78 @@ loginData.addEventListener("submit", function () {
     })
     .then(function (data) {
       console.log(data);
-      appendDataToHTML(data);
+      updateUserDetails(data);
+      displayPosts();
     })
     .catch(function (err) {
       console.log(err);
     });
 
-  function appendDataToHTML(data) {
+  // Concatenates the user's details within the HTML
+  function updateUserDetails(data) {
     document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
     document.querySelector("p.username").innerHTML = `@` + data.User.username;
     document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
   }
 });
+
+function displayPosts() {
+  postsWrap = document.querySelector(".posts-wrap");
+  postCount = 5;
+
+  for (let i = 0; i < postCount; i++) {
+    postsWrap.innerHTML += `
+    <div class="post">
+      <div class="header">
+        <div class="author-category-wrap">
+          <img src="../static/img/profile.png" width="40px" />
+          <div class="name-timestamp-wrap">
+            <p class="name">FIRSTNAME LASTNAME</p>
+            <p class="timestamp">TIMESTAMP</p>
+          </div>
+        </div>
+
+        <!-- Category & Option Button -->
+        <div class="category-option-wrap">
+          <div class="category">#HASHTAG</div>
+          <img src="../static/img/post-options.svg" />
+        </div>
+      </div>
+
+      <!-- Post Body -->
+      <div class="body">
+        <p>POST BODY</p>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <!-- Comment, Like, Dislike -->
+        <div class="actions">
+          <img src="../static/img/comments-icon.svg" />
+          <img src="../static/img/like-icon.svg" />
+          <img src="../static/img/dislike-icon.svg" />
+        </div>
+
+        <!-- Comment, Like & Dislike Statistics -->
+        <div class="stats">
+          <div class="stat-wrapper">
+            <img src="../static/img/post/comments-icon.svg" width="17px" />
+            <p>NUM</p>
+          </div>
+          <div class="stat-wrapper">
+            <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" />
+            <p>NUM</p>
+          </div>
+          <div class="stat-wrapper">
+            <img src="../static/img/post/dislikes-icon.svg" width="17px" />
+            <p>NUM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+  }
+}
 
 const sendPostData = function getImputValue() {
   let post = {

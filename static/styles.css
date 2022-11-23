@@ -683,7 +683,6 @@ input#postBody {
 .post .body {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .post .body p {
