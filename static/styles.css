@@ -546,7 +546,7 @@ select:hover {
 }
 
 .create-post input#postBody {
-  width: 525px;
+  width: 545px;
   height: 40px;
 
   background: linear-gradient(90deg, #f5f5f5 0%, #ffffff 100%);
@@ -556,7 +556,8 @@ select:hover {
   padding-left: 0.75rem;
 }
 
-.create-post input#postBody::placeholder {
+.create-post input#postBody::placeholder,
+input#postBody {
   font-family: "Bambino New";
   font-style: normal;
   font-weight: 600;
@@ -571,7 +572,8 @@ select:hover {
   width: 108px;
   height: 36px;
 
-  background: #a6b3c1;
+  cursor: pointer;
+  background: #1677f2;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 8px;
   border: none;
