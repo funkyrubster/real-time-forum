@@ -36,8 +36,6 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 
 	// w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
-	title := "test"
-	category := "test"
 	time := time.Now()
 	content := post.Content
 
@@ -60,9 +58,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 
 	data.CreatePost(Post{
 		Username:  user,
-		Title:     title,
 		Content:   content,
-		Category:  category,
 		CreatedAt: time,
 	})
 	
