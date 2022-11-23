@@ -1,5 +1,7 @@
 package handlers
 
+import "time"
+
 type RegisterData struct {
 	Firstname string `json:"firstName"`
 	Lastname  string `json:"lastName"`
@@ -9,6 +11,7 @@ type RegisterData struct {
 	Gender    string `json:"gender"`
 	Password  string `json:"newpassword"`
 }
+
 type User struct {
 	Firstname string `json:"firstName"`
 	Lastname  string `json:"lastName"`
@@ -19,9 +22,8 @@ type User struct {
 
 type UserProfile struct {
 	User         User
-	CreatedPosts Post
+	CreatedPosts []Post
 }
-
 
 type Post struct {
 	PostID    int
@@ -30,7 +32,8 @@ type Post struct {
 	Title     string
 	Category  string
 	Content   string `json:"postBody"`
-	CreatedAt string
+	CreatedAt time.Time
+	Comments []Comment
 }
 
 type LoginData struct {
