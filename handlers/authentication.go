@@ -39,7 +39,6 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	title := "test"
 	category := "test"
 	time := time.Now()
-	postCreated := time.Format("01-02-2006 15:04")
 	content := post.Content
 
 	// checks session and selects the last one (the latest one)
@@ -64,7 +63,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 		Title:     title,
 		Content:   content,
 		Category:  category,
-		CreatedAt: postCreated,
+		CreatedAt: time,
 	})
 	
 }
@@ -202,10 +201,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		data.InsertSession(sess)
 
 		userInfo := data.GetUserProfile(user.Username)
-		// posts := data.GetPosts(user.Username)
-
-		// fmt.Println("posts:",posts)
-	 
+		
 		fmt.Println(userInfo)
 		// send response to js
 		js, err := json.Marshal(userInfo)
