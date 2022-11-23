@@ -48,9 +48,6 @@ type UserSession struct {
 	max_age   int
 }
 
-var Warning struct {
-	Warn string
-}
 
 type Comment struct {
 	CommentID int
