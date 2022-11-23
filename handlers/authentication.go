@@ -70,6 +70,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 }
 
 
+
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 	// Create user type of RegisterData struct
 	var user RegisterData
@@ -219,6 +220,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error: Email or password is incorrect.")
 	}
 }
+
 // // logout handle
 // func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 // 	fmt.Println("LogOut Handler Here ********* ")
