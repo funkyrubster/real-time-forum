@@ -13,6 +13,64 @@ type Forum struct {
 	*sql.DB
 }
 
+// --------------- GET USER PROFILE -------------//
+
+func (data *Forum) GetUserProfile(username string) UserProfile {
+
+	user := UserProfile{}
+
+	rows, err := data.DB.Query(`SELECT * FROM users where username= ?`, username)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var userID int
+	var firstname string
+	var lastname string
+	var email string
+	var nickname string
+	var password string
+	var age int
+	var gender string
+	var content string
+	var creationDate string
+	var title string
+	var category string
+	var postID int
+
+	for rows.Next() {
+		err := rows.Scan(&userID, &nickname, &email, &password, &firstname, &lastname, &age, &gender)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		rows, err := data.DB.Query(`SELECT * FROM posts where username= ?`, username)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for rows.Next() {
+			err := rows.Scan(&postID, &nickname, &title, &content, &category, &creationDate)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		user = UserProfile{
+			User: User{
+				Username:  nickname,
+				Firstname: firstname,
+				Lastname:  lastname,
+				Email:     email,
+			},
+			CreatedPosts: Post{
+				Title:     title,
+				Content:   content,
+				CreatedAt: creationDate,
+			},
+		}
+	}
+	return user
+}
+
 //----------------------- CREATE POST-------------------------//
 
 func (data *Forum) CreatePost(post Post) {
@@ -26,9 +84,48 @@ func (data *Forum) CreatePost(post Post) {
 	}
 }
 
+// ------------------- GET POSTS -------------------//
+
+func (data *Forum) GetPosts(username string) []Post {
+
+  var post Post 
+	var posts []Post
+
+	rows, err := data.DB.Query(`SELECT * FROM posts WHERE username =?`, username)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var content string 
+	var creationDate string 
+	var title  string 
+	var category string 
+	var postID int
+	var nickname string 
+
+	for rows.Next() {
+		err := rows.Scan(&postID, &nickname, &title, &content, &category, &creationDate)
+		if err != nil {
+			log.Fatal(err)
+		}
+		post = Post {
+			PostID: postID,
+			Username: nickname,
+			Title: title,
+			Content: content,
+			Category: category,
+			CreatedAt: creationDate,
+
+		}
+	}
+	posts = append([]Post{post}, posts...)
+	
+
+	return posts
+
+}
 
 // ------------------CREATE SESSION	----------------------//
-
 
 // InsertSession ...
 func (data *Forum) InsertSession(sess UserSession) {
@@ -40,9 +137,7 @@ func (data *Forum) InsertSession(sess UserSession) {
 	stmnt.Exec(sess.session, sess.userID, sess.username)
 }
 
-
 // -------------- DELETE SESSION------------------	//
-
 
 // User's cookie expires when browser is closed, delete the cookie from the database.
 func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
@@ -65,7 +160,7 @@ func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
 
 // -------------- GET SESSION ----------------//
 
-func (data *Forum) GetSession()([]UserSession){
+func (data *Forum) GetSession() []UserSession {
 
 	session := []UserSession{}
 
@@ -75,25 +170,22 @@ func (data *Forum) GetSession()([]UserSession){
 	}
 
 	var userID int
-	var cookieValue string 
-	var userName string 
+	var cookieValue string
+	var userName string
 
-for rows.Next(){
-	err := rows.Scan(&userID,&cookieValue,&userName)
-	if err != nil {
-		log.Fatal(err)
+	for rows.Next() {
+		err := rows.Scan(&userID, &cookieValue, &userName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		session = append(session, UserSession{
+			userID:   userID,
+			session:  cookieValue,
+			username: userName,
+		})
 	}
-	session = append(session, UserSession{
-		userID: userID,
-		session: cookieValue,
-		username: userName,
-
-	})
+	return session
 }
-return session
-}
-
-
 
 // ---------------- CREATE TABLES ----------------//
 
@@ -112,8 +204,7 @@ func CheckTablesExist(db *sql.DB, table string) {
 					"firstname" TEXT,
 					"lastname" TEXT,
 					"age" INTEGER NOT NULL, 
-					"gender" TEXT NOT NULL,
-					"loggedin" BOOLEAN
+					"gender" TEXT NOT NULL
 					);`
 
 			users, errUser := db.Prepare(users_table)
