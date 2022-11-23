@@ -98,48 +98,41 @@ loginData.addEventListener("submit", function () {
       }
       return response.json();
     })
-    .then(function (data){
+    .then(function (data) {
       console.log(data);
       appendDataToHTML(data);
     })
-     .catch(function (err) {
+    .catch(function (err) {
       console.log(err);
     });
-      
-    function appendDataToHTML(data){
-       const nickname = document.querySelector('p.username').innerHTML = `@` + data.User.username;
 
-       const firstLastName = document.querySelector('p.name').innerHTML = data.User.firstName
-        // + " "+ data.User.lastName;
-
-       console.log(firstLastName, nickname);
-    }
-    
-  
-  })
-    
-
-const sendPostData = function getImputValue(){
-  let post = {
-  postBody:  document.getElementById("postBody").value
+  function appendDataToHTML(data) {
+    document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
+    document.querySelector("p.username").innerHTML = `@` + data.User.username;
+    document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
   }
+});
+
+const sendPostData = function getImputValue() {
+  let post = {
+    postBody: document.getElementById("postBody").value
+  };
   console.log(post);
 
-let options = {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(post)
-};
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(post)
+  };
 
-let fetchRes = fetch("http://localhost:8080/post", options);
-fetchRes
-.then((response) => {
-  console.log(response);
-  return response.text()
-})
-// .then((data) =>{
-// // console.log(data);
-// });
+  let fetchRes = fetch("http://localhost:8080/post", options);
+  fetchRes.then((response) => {
+    console.log(response);
+    return response.text();
+  });
+  // .then((data) =>{
+  // // console.log(data);
+  // });
 };
