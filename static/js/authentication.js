@@ -246,6 +246,16 @@ loginData.addEventListener("submit", function () {
   }
 });
 
+// ----------------- TRENDING HASHTAGS -----------------
+function displayTrendingHashtags(data) {
+  let hashtags = data.hashtags;
+  let trendingHashtags = document.querySelector(".trending-hashtags");
+  trendingHashtags.innerHTML = "";
+  hashtags.forEach((hashtag) => {
+    trendingHashtags.innerHTML += `<a href="#" class="hashtag">#${hashtag}</a>`;
+  });
+}
+
 function displayPosts(data) {
   console.log("display posts");
   postsWrap = document.querySelector(".posts-wrap");
