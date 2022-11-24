@@ -279,15 +279,15 @@ function displayPosts(data) {
         <div class="stats">
           <div class="stat-wrapper">
             <img src="../static/img/post/comments-icon.svg" width="17px" />
-            <p>NUM</p>
+            <p>0</p>
           </div>
           <div class="stat-wrapper">
             <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" />
-            <p>NUM</p>
+            <p>0</p>
           </div>
           <div class="stat-wrapper">
             <img src="../static/img/post/dislikes-icon.svg" width="17px" />
-            <p>NUM</p>
+            <p>0</p>
           </div>
         </div>
       </div>

@@ -26,3 +26,18 @@ function showFeed() {
   socket = createWebsocket();
   console.log("socket mainpage", socket);
 }
+
+// listen for clicks on categories buttons and send the category to the server
+document.querySelectorAll(".category").forEach((category) => {
+  category.addEventListener("click", (e) => {
+    // remove selected class from all buttons
+    document.querySelectorAll(".category").forEach((category) => {
+      category.classList.remove("selected");
+    });
+    // add selected class to the clicked button
+    e.target.classList.add("selected");
+
+    socket.send(JSON.stringify({ category: e.target.id }));
+    console.log(category.id);
+  });
+});
