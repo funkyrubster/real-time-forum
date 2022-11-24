@@ -85,6 +85,21 @@ function convertDate(date) {
 // Create an instance of Notyf
 var notyf = new Notyf();
 
+// ----------------- CREATE A POST -----------------
+// listen for clicks on categories buttons and send the category to the server
+document.querySelectorAll(".category").forEach((category) => {
+  category.addEventListener("click", (e) => {
+    // remove selected class from all buttons
+    document.querySelectorAll(".category").forEach((category) => {
+      category.classList.remove("selected");
+    });
+    // add selected class to the clicked button
+    e.target.classList.add("selected");
+    // socket.send(JSON.stringify({ category: e.target.id }));
+    // console.log(category.id);
+  });
+});
+
 function checkAgeOnlyNum(age) {
   return /^[0-9]+$/.test(age);
 }
@@ -254,7 +269,9 @@ function displayPosts(data) {
 
         <!-- Category & Option Button -->
         <div class="category-option-wrap">
-          <div class="category">#HASHTAG</div>
+          <div class="category">` +
+      data.CreatedPosts[i].Hashtag +
+      `</div>
           <img src="../static/img/post-options.svg" />
         </div>
       </div>
@@ -297,7 +314,11 @@ function displayPosts(data) {
 }
 
 const sendPostData = function getImputValue() {
+  // Get the value of the hashtag with the class of selected
+  let hashtag = document.querySelector(".category.selected").innerHTML;
+
   let post = {
+    Hashtag: hashtag,
     postBody: document.getElementById("postBody").value
   };
   console.log(post);
