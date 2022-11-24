@@ -118,7 +118,7 @@ loginData.addEventListener("submit", function () {
 function displayPosts(data) {
   postsWrap = document.querySelector(".posts-wrap");
 
-  for (let i = 0; i < data.CreatedPosts.length; i++) {
+  for (let i = data.CreatedPosts.length - 1; i >= 0; i--) {
     postsWrap.innerHTML +=
       `
     <div class="post">
