@@ -74,7 +74,7 @@ lord-icon {
   box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.05);
   border-radius: 23px 0px 0px 23px;
 
-  gap: 0.5rem;
+  gap: 1.35rem;
 }
 
 .auth-container .left img {
@@ -417,13 +417,44 @@ select:hover {
   justify-content: center;
   margin: 2rem;
   /* background: rgb(255, 141, 141); */
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .left {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
+}
+
+.left .title-bg p {
+  margin: 0;
+}
+
+.left .title-bg {
+  padding: 0.35rem 1.25rem;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+
+  background: #f1f1f1;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 8px;
+  margin-bottom: -22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left p {
+  text-align: center;
+  margin-left: 0.3rem;
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 22px;
+  color: #a6b3c1;
 }
 
 /* LEFT */
@@ -507,12 +538,58 @@ select:hover {
 
 /* Trending topics */
 .trending {
-  width: 208px;
-  height: 300px;
-
+  width: 210px;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   background: #ffffff;
-  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 10px 5px rgb(0 0 0 / 1%);
   border-radius: 10px;
+  gap: 0.5rem;
+}
+
+.trending .hashtag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 173px;
+  height: 42px;
+  background: #f1f1f1;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 8px;
+  padding: 0 0.85rem;
+}
+
+.trending .hashtag p#name {
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  color: #4b607c;
+}
+
+.trending .hashtag .circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #bac4cf;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.01);
+  border-radius: 100px;
+  padding: 0.1rem 0.4rem;
+}
+
+.trending .hashtag .circle p {
+  margin: 0rem;
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  color: #ffffff;
 }
 
 /* Mid Section */
@@ -520,7 +597,7 @@ select:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 /* Create A Post */
@@ -641,7 +718,7 @@ select:hover {
 
 /* makes last post viewable */
 .post:last-child {
-  margin-bottom: 24.5rem;
+  margin-bottom: 26.35rem;
 }
 
 .post {
@@ -706,6 +783,7 @@ select:hover {
   background: linear-gradient(90deg, #f5f5f5 0%, #f1f1f1 100%);
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 8px;
+  cursor: pointer;
 
   font-family: "Bambino New";
   font-style: normal;
@@ -777,6 +855,8 @@ select:hover {
 
   color: #9aa7b6;
 }
+
+/* --------------------------- TRENDING HASHTAGS --------------------------- */
 
 /* --------------------------- CHAT --------------------------- */
 #chat {

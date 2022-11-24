@@ -27,13 +27,10 @@ type UserProfile struct {
 
 type Post struct {
 	PostID    int
-	UserID    int
 	Username  string `json:"username"`
-	Title     string
-	Category  string
 	Content   string `json:"postBody"`
+	Hashtag  string
 	CreatedAt time.Time
-	Comments []Comment
 }
 
 type LoginData struct {
