@@ -60,7 +60,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 
 	data.CreatePost(Post{
 		Username:  user,
-		Title:	title,
+		Title:     title,
 		Content:   content,
 		Category:  category,
 		CreatedAt: time,
