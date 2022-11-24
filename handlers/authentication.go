@@ -66,6 +66,34 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	
 }
 
+func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) {
+	var hashtag Hashtag
+	json.NewDecoder(r.Body).Decode(&hashtag)
+
+	w.Write([]byte("ok"))
+	hashName := hashtag.hashtagName
+	hashCount := hashtag.hashtagCount
+
+	// checks session and selects the last one (the latest one)
+	sess := data.GetSession()
+	currentSession := sess[len(sess)-1]
+
+	type hashSessionStruct struct {
+		Hashtag    []Hashtag
+		Session UserSession
+	}
+
+	var hashtagAndSession hashSessionStruct
+
+	hashtagAndSession.Session = currentSession
+
+	data.GetHashtags(Hashtag{
+		hashtagName:  hashName,
+		hashtagCount: hashCount,
+	})
+	
+}
+
 
 
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {

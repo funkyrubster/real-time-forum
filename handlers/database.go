@@ -64,6 +64,29 @@ func (data *Forum) CreatePost(post Post) {
 	}
 }
 
+//----------------------- GET HASHTAGS-------------------------//
+
+func (data *Forum) GetHashtags(hashtag Hashtag) []Hashtag {
+	var hashtags []Hashtag // slice of Post 
+
+	rows, err := data.DB.Query(`SELECT * FROM hashtags`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for rows.Next() {
+	  var hashtag Hashtag  // just a struct 
+		err := rows.Scan(&hashtag.hashtagID, &hashtag.hashtagName, &hashtag.hashtagCount)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		hashtags = append(hashtags, hashtag)
+	}
+
+	return hashtags
+}
+
 // ------------------- GET POSTS -------------------//
 
 func (data *Forum) GetPosts(username string) []Post {
@@ -221,21 +244,19 @@ func CheckTablesExist(db *sql.DB, table string) {
 			comments.Exec()
 		}
 
-		if table == "categories" {
-			fmt.Println("Creating categories table...")
-			categories_table := `CREATE TABLE IF NOT EXISTS categories (
-					"postID" TEXT REFERENCES post(postID), 
-					"golang" INTEGER,
-					"javascript" INTEGER,
-					"rust" INTEGER,
-					"python" INTEGER
-					);`
+		if table == "hashtags" {
+			fmt.Println("Creating hashtags table...")
+			hashtags_table := `CREATE TABLE IF NOT EXISTS hashtags (
+				"hashtagID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+				"hashtagName" TEXT NOT NULL,
+				"hashtagCount" INTEGER NOT NULL
+				);`
 
-			categories, errCategories := db.Prepare(categories_table)
-			if errCategories != nil {
-				log.Fatal(errCategories)
+			hashtags, errHashtags := db.Prepare(hashtags_table)
+			if errHashtags != nil {
+				log.Fatal(errHashtags)
 			}
-			categories.Exec()
+			hashtags.Exec()
 		}
 
 		if table == "sessions" {
@@ -260,7 +281,7 @@ func CheckTablesExist(db *sql.DB, table string) {
 
 func Connect(db *sql.DB) *Forum {
 	// Check all required tables exist in database, and create them if they don't
-	for _, table := range []string{"users", "posts", "comments", "categories", "sessions"} {
+	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions"} {
 		CheckTablesExist(db, table)
 	}
 	return &Forum{

@@ -33,6 +33,12 @@ type Post struct {
 	CreatedAt time.Time
 }
 
+type Hashtag struct {
+	hashtagID int
+	hashtagName string
+	hashtagCount int
+}
+
 type LoginData struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
