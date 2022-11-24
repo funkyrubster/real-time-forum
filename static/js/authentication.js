@@ -1,4 +1,5 @@
 const signUpData = document.getElementById("sign-up-form");
+let allData = {};
 
 function convertDate(date) {
   // Seperate year, day, hour and minutes
@@ -148,6 +149,39 @@ signUpData.addEventListener("submit", function () {
     });
 });
 
+function requestPostsUpdate() {
+  // Remove all posts in posts wrap
+  postsWrap = document.querySelector(".posts-wrap");
+  postsWrap.innerHTML = "";
+
+  let user = {
+    username: document.getElementById("username").value,
+    password: document.getElementById("password").value
+  };
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  };
+
+  let fetchRes = fetch("http://localhost:8080/login", options);
+  fetchRes
+    .then((response) => {
+      return response.json();
+    })
+    .then(function (data) {
+      allData = data;
+      console.log("heres the data:", data);
+      displayPosts(data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+}
+
 const loginData = document.getElementById("login-form");
 
 loginData.addEventListener("submit", function () {
@@ -180,6 +214,7 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
+      allData = data;
       console.log("heres the data:", data);
       updateUserDetails(data);
       displayPosts(data);
@@ -197,6 +232,7 @@ loginData.addEventListener("submit", function () {
 });
 
 function displayPosts(data) {
+  console.log("display posts");
   postsWrap = document.querySelector(".posts-wrap");
 
   for (let i = data.CreatedPosts.length - 1; i >= 0; i--) {
@@ -279,6 +315,7 @@ const sendPostData = function getImputValue() {
     console.log(response);
     if (response.status == "200") {
       notyf.success("Your post was created successfully.");
+      requestPostsUpdate();
     } else {
       notyf.error("Your post failed to send.");
     }
