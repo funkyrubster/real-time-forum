@@ -277,6 +277,11 @@ const sendPostData = function getImputValue() {
   let fetchRes = fetch("http://localhost:8080/post", options);
   fetchRes.then((response) => {
     console.log(response);
+    if (response.status == "200") {
+      notyf.success("Your post was created successfully.");
+    } else {
+      notyf.error("Your post failed to send.");
+    }
     return response.text();
   });
   // .then((data) =>{
