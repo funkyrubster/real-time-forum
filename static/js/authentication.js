@@ -164,6 +164,34 @@ signUpData.addEventListener("submit", function () {
     });
 });
 
+function requestHashtagsUpdate() {
+  console.log("requesting hashtags update");
+  // Remove all posts in posts wrap
+  hashtagsWrap = document.querySelector(".trending");
+  hashtagsWrap.innerHTML = "";
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  };
+
+  let fetchRes = fetch("http://localhost:8080/hashtag", options);
+  fetchRes
+    .then((response) => {
+      return response.json();
+    })
+    .then(function (data) {
+      allData = data;
+      console.log("heres the hashtags:", data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+}
+
 function requestPostsUpdate() {
   // Remove all posts in posts wrap
   postsWrap = document.querySelector(".posts-wrap");
@@ -191,6 +219,7 @@ function requestPostsUpdate() {
       allData = data;
       console.log("heres the data:", data);
       displayPosts(data);
+      requestPostsUpdate(data);
     })
     .catch(function (err) {
       console.log(err);
@@ -233,6 +262,7 @@ loginData.addEventListener("submit", function () {
       console.log("heres the data:", data);
       updateUserDetails(data);
       displayPosts(data);
+      requestHashtagsUpdate();
     })
     .catch(function (err) {
       console.log(err);
@@ -248,16 +278,17 @@ loginData.addEventListener("submit", function () {
 
 // ----------------- TRENDING HASHTAGS -----------------
 function displayTrendingHashtags(data) {
-  let hashtags = data.hashtags;
-  let trendingHashtags = document.querySelector(".trending-hashtags");
-  trendingHashtags.innerHTML = "";
-  hashtags.forEach((hashtag) => {
-    trendingHashtags.innerHTML += `<a href="#" class="hashtag">#${hashtag}</a>`;
-  });
+  console.log("displaying trending hashtags");
+  console.log(data);
+  // let hashtags = data.hashtags;
+  // let trendingHashtags = document.querySelector(".trending-hashtags");
+  // trendingHashtags.innerHTML = "";
+  // hashtags.forEach((hashtag) => {
+  //   trendingHashtags.innerHTML += `<a href="#" class="hashtag">#${hashtag}</a>`;
+  // });
 }
 
 function displayPosts(data) {
-  console.log("display posts");
   postsWrap = document.querySelector(".posts-wrap");
 
   for (let i = data.CreatedPosts.length - 1; i >= 0; i--) {
@@ -356,3 +387,31 @@ const sendPostData = function getImputValue() {
   // // console.log(data);
   // });
 };
+
+loginData.addEventListener("submit", function () {
+  let user = {
+    username: document.getElementById("username").value,
+    password: document.getElementById("password").value
+  };
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  };
+
+  let fetchRes = fetch("http://localhost:8080/hashtag", options);
+  fetchRes
+    .then((response) => {
+      return response.json();
+    })
+    .then(function (data) {
+      allData = data;
+      console.log("heres the hashtags:", data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+});

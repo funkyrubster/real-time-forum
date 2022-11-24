@@ -80,10 +80,10 @@ func (data *Forum) GetHashtags(hashtag Hashtag) []Hashtag {
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		hashtags = append(hashtags, hashtag)
 	}
-
+	fmt.Println(hashtags)
+	fmt.Println("now returning hashtags")
 	return hashtags
 }
 
@@ -257,6 +257,29 @@ func CheckTablesExist(db *sql.DB, table string) {
 				log.Fatal(errHashtags)
 			}
 			hashtags.Exec()
+
+			fmt.Println("Inserting hashtags into hashtags table...")
+			stmt, err := db.Prepare("INSERT INTO hashtags (hashtagName, hashtagCount) VALUES (?, ?);")
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// create a slice of string
+			hashtagSlice := make([]string, 6)
+			hashtagSlice[0] = "#Tech"
+			hashtagSlice[1] = "#Food"
+			hashtagSlice[2] = "#Art"
+			hashtagSlice[3] = "#Sports"
+			hashtagSlice[4] = "#Fitness"
+			hashtagSlice[5] = "#Misc"
+
+			// insert all hashtags into hashtags table
+			for _, hashtag := range hashtagSlice {
+				_, err = stmt.Exec(hashtag, 0)
+				if err != nil {
+					log.Fatal(err)
+				}
+			}
 		}
 
 		if table == "sessions" {

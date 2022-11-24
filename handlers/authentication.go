@@ -70,6 +70,7 @@ func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) {
 	var hashtag Hashtag
 	json.NewDecoder(r.Body).Decode(&hashtag)
 
+	w.Write([]byte(hashtag.hashtagName))
 	w.Write([]byte("ok"))
 	hashName := hashtag.hashtagName
 	hashCount := hashtag.hashtagCount
