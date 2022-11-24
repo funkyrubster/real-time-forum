@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"real-time-forum/chat"
 	"real-time-forum/handlers"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -28,11 +27,11 @@ func main() {
 	http.HandleFunc("/", data.Home)
 	http.HandleFunc("/login", data.LoginHandler)
 	http.HandleFunc("/register", data.RegistrationHandler)
-
-	hub := chat.NewHub()
+	http.HandleFunc("/post", data.Post)
+	hub := handlers.NewHub(data)
 	go hub.Run()
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		chat.ServeWs(hub, w, r)
+		data.ServeWs(hub, w, r)
 	})
 
 	fmt.Println("Server started at http://localhost:8080")
