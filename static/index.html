@@ -147,8 +147,21 @@
           <!-- Create A Post -->
           <div class="create-post">
             <img src="../static/img/profile.png" width="50px" alt="" />
-            <input id="postBody" name="postBody" type="text" />
-            <input id="submit" type="submit" value="Create Post" onclick="sendPostData();" />
+            <textarea id="postBody" name="postBody" rows="4" cols="50" placeholder="What’s new, Loretta?"></textarea>
+            <div class="category-post-wrap">
+              <!-- radio button options -->
+              <div class="categories">
+                <div class="category" id="tech">#Tech</div>
+                <div class="category" id="food">#Food</div>
+                <div class="category" id="art">#Art</div>
+                <div class="category" id="sports">#Sports</div>
+                <div class="category" id="fitness">#Fitness</div>
+                <div class="category" id="travel">#Travel</div>
+                <div class="category" id="misc">#Misc</div>
+              </div>
+
+              <input id="submit" type="submit" value="Create Post" onclick="sendPostData();" />
+            </div>
           </div>
 
           <!-- Posts -->
