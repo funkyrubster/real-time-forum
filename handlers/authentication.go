@@ -69,32 +69,35 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	
 }
 
-// TODO: Rewrite this function to allow for hashtag count updates
-func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) {
-	var hashtag Hashtag
-	json.NewDecoder(r.Body).Decode(&hashtag)
+func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) Hashtag {
+	// Used to store the user's profile information
+	hashtags := Hashtag{}
 
-	w.Write([]byte(hashtag.hashtagName))
-	w.Write([]byte("ok"))
-	hashName := hashtag.hashtagName
-	hashCount := hashtag.hashtagCount
-
-	sess := data.GetSession()
-	currentSession := sess[len(sess)-1]
-
-	type hashSessionStruct struct {
-		Hashtag    []Hashtag
-		Session UserSession
+	rows, err := data.DB.Query(`SELECT * FROM hashtags`)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	var hashtagAndSession hashSessionStruct
-	hashtagAndSession.Session = currentSession
+	// Used to store hashtag data so we can add it to struct later on
+	var hashtagID int
+	var hashtagName string
+	var hashtagCount int
 
-	data.GetHashtags(Hashtag{
-		hashtagName:  hashName,
-		hashtagCount: hashCount,
-	})
-	
+	// Scans through each column in the 'users' row and stores the data in the variables above
+	for rows.Next() {
+		err := rows.Scan(&hashtagID, &hashtagName, &hashtagCount)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// This contains the specific user's data as well as all of their posts
+		hashtags = Hashtag{
+			hashtagID:    hashtagID,
+			hashtagName:  hashtagName,
+			hashtagCount: hashtagCount,
+		}
+	}
+	return hashtags
 }
 
 // Handles the registration of new users - validates the data and adds it to the 'users' table in database
@@ -230,8 +233,8 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("usID:", usID)
-		fmt.Println("user.Username:", user.Username)
+		// fmt.Println("usID:", usID)
+		// fmt.Println("user.Username:", user.Username)
 
 		// Creates a new session for the user
 		sess.username = user.Username
@@ -258,6 +261,14 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 		w.Write([]byte(js))
+
+		// GET HASHTAG DATA FROM DATABASE AND SEND TO CLIENT
+		// var hashtagData []HashtagData
+		// hashtagData = data.GetHashtagData()
+		// js, err = json.Marshal(hashtagData)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println("Error: Email or password is incorrect.") // Checked in authentication.js, alerts user

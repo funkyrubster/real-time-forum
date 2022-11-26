@@ -27,6 +27,7 @@ type User struct {
 type UserProfile struct {
 	User         User
 	CreatedPosts []Post
+	Hashtags	 []Hashtag
 }
 
 type Post struct {

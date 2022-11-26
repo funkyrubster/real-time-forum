@@ -28,7 +28,7 @@ func main() {
 	http.HandleFunc("/login", data.LoginHandler)
 	http.HandleFunc("/register", data.RegistrationHandler)
 	http.HandleFunc("/post", data.Post)
-	http.HandleFunc("/hashtag", data.Hashtag)
+	// http.HandleFunc("/hashtag", data.hashtag)
 	hub := handlers.NewHub(data)
 	go hub.Run()
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
