@@ -164,33 +164,33 @@ signUpData.addEventListener("submit", function () {
     });
 });
 
-function requestHashtagsUpdate() {
-  console.log("requesting hashtags update");
-  // Remove all posts in posts wrap
-  hashtagsWrap = document.querySelector(".trending");
-  hashtagsWrap.innerHTML = "";
+// function requestHashtagsUpdate() {
+//   console.log("requesting hashtags update");
+//   // Remove all posts in posts wrap
+//   hashtagsWrap = document.querySelector(".trending");
+//   hashtagsWrap.innerHTML = "";
 
-  let options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(user)
-  };
+//   let options = {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify(user)
+//   };
 
-  let fetchRes = fetch("http://localhost:8080/hashtag", options);
-  fetchRes
-    .then((response) => {
-      return response.json();
-    })
-    .then(function (data) {
-      allData = data;
-      console.log("heres the hashtags:", data);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-}
+//   let fetchRes = fetch("http://localhost:8080/hashtag", options);
+//   fetchRes
+//     .then((response) => {
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       allData = data;
+//       console.log("heres the hashtags:", data);
+//     })
+//     .catch(function (err) {
+//       console.log(err);
+//     });
+// }
 
 function requestPostsUpdate() {
   // Remove all posts in posts wrap
@@ -220,6 +220,7 @@ function requestPostsUpdate() {
       console.log("heres the data:", data);
       displayPosts(data);
       requestPostsUpdate(data);
+      displayTrendingHashtags(data);
     })
     .catch(function (err) {
       console.log(err);
@@ -277,15 +278,28 @@ loginData.addEventListener("submit", function () {
 });
 
 // ----------------- TRENDING HASHTAGS -----------------
+function fetchAndDisplayHashtags() {
+  fetch("http://localhost:8080/hashtags")
+    .then((response) => response.json())
+    .then(function (data) {
+      allData = data;
+      console.log("heres the hashtags:", data);
+      displayTrendingHashtags(data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+}
+
 function displayTrendingHashtags(data) {
   console.log("displaying trending hashtags");
   console.log(data);
-  // let hashtags = data.hashtags;
-  // let trendingHashtags = document.querySelector(".trending-hashtags");
-  // trendingHashtags.innerHTML = "";
-  // hashtags.forEach((hashtag) => {
-  //   trendingHashtags.innerHTML += `<a href="#" class="hashtag">#${hashtag}</a>`;
-  // });
+  let hashtags = data.Hashtags;
+  let trendingHashtags = document.querySelector(".trending");
+  trendingHashtags.innerHTML = "";
+  hashtags.forEach((hashtag) => {
+    trendingHashtags.innerHTML += `<a href="#" class="hashtag">#${hashtag}</a>`;
+  });
 }
 
 function displayPosts(data) {
@@ -354,6 +368,14 @@ function displayPosts(data) {
   }
 }
 
+// function displayHashtags() {
+//   let hashtagsWrap = document.querySelector(".hashtags-wrap");
+//   hashtagsWrap.innerHTML = "";
+//   for (let i = 0; i < allData.Hashtags.length; i++) {
+//     hashtagsWrap.innerHTML += `<a href="#" class="hashtag">#${allData.Hashtags[i]}</a>`;
+//   }
+// }
+
 const sendPostData = function getImputValue() {
   // Get the value of the hashtag with the class of selected
   let hashtag = document.querySelector(".category.selected").innerHTML;
@@ -388,30 +410,30 @@ const sendPostData = function getImputValue() {
   // });
 };
 
-loginData.addEventListener("submit", function () {
-  let user = {
-    username: document.getElementById("username").value,
-    password: document.getElementById("password").value
-  };
+// loginData.addEventListener("submit", function () {
+//   let user = {
+//     username: document.getElementById("username").value,
+//     password: document.getElementById("password").value
+//   };
 
-  let options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(user)
-  };
+//   let options = {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify(user)
+//   };
 
-  let fetchRes = fetch("http://localhost:8080/hashtag", options);
-  fetchRes
-    .then((response) => {
-      return response.json();
-    })
-    .then(function (data) {
-      allData = data;
-      console.log("heres the hashtags:", data);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-});
+//   let fetchRes = fetch("http://localhost:8080/hashtag", options);
+//   fetchRes
+//     .then((response) => {
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       allData = data;
+//       console.log("heres the hashtags:", data);
+//     })
+//     .catch(function (err) {
+//       console.log(err);
+//     });
+// });
