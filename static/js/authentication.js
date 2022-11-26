@@ -1,13 +1,13 @@
-const signUpData = document.getElementById("sign-up-form");
-let allData = {};
+// Used for sending notifications
+var notyf = new Notyf();
 
+// Used for converting the date to a more readable format
 function convertDate(date) {
   // Seperate year, day, hour and minutes
   let yyyy = date.slice(0, 4);
   let dd = date.slice(8, 10);
   let hh = date.slice(11, 13);
   let mm = date.slice(14, 16);
-
   // Get int for day of the week (0-6, Sunday-Saturday)
   const d = new Date(date);
   let dayInt = d.getDay();
@@ -35,7 +35,6 @@ function convertDate(date) {
       day = "Saturday";
       break;
   }
-
   // Get int for month (0-11, January-December)
   let monthInt = d.getMonth();
   let month = "";
@@ -77,33 +76,16 @@ function convertDate(date) {
       month = "December";
       break;
   }
-
   fullDate = day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
   return fullDate;
 }
 
-// Create an instance of Notyf
-var notyf = new Notyf();
+var forumData = {};
 
-// ----------------- CREATE A POST -----------------
-// listen for clicks on categories buttons and send the category to the server
-document.querySelectorAll(".category").forEach((category) => {
-  category.addEventListener("click", (e) => {
-    // remove selected class from all buttons
-    document.querySelectorAll(".category").forEach((category) => {
-      category.classList.remove("selected");
-    });
-    // add selected class to the clicked button
-    e.target.classList.add("selected");
-    // socket.send(JSON.stringify({ category: e.target.id }));
-    // console.log(category.id);
-  });
-});
-
-function checkAgeOnlyNum(age) {
-  return /^[0-9]+$/.test(age);
-}
-
+/* ---------------------------------------------------------------- */
+/*                         REGISTERING USERS                        */
+/* ---------------------------------------------------------------- */
+const signUpData = document.getElementById("sign-up-form");
 signUpData.addEventListener("submit", function () {
   let user = {
     firstname: document.getElementById("firstName").value,
@@ -164,71 +146,15 @@ signUpData.addEventListener("submit", function () {
     });
 });
 
-// function requestHashtagsUpdate() {
-//   console.log("requesting hashtags update");
-//   // Remove all posts in posts wrap
-//   hashtagsWrap = document.querySelector(".trending");
-//   hashtagsWrap.innerHTML = "";
-
-//   let options = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify(user)
-//   };
-
-//   let fetchRes = fetch("http://localhost:8080/hashtag", options);
-//   fetchRes
-//     .then((response) => {
-//       return response.json();
-//     })
-//     .then(function (data) {
-//       allData = data;
-//       console.log("heres the hashtags:", data);
-//     })
-//     .catch(function (err) {
-//       console.log(err);
-//     });
-// }
-
-function requestPostsUpdate() {
-  // Remove all posts in posts wrap
-  postsWrap = document.querySelector(".posts-wrap");
-  postsWrap.innerHTML = "";
-
-  let user = {
-    username: document.getElementById("username").value,
-    password: document.getElementById("password").value
-  };
-
-  let options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(user)
-  };
-
-  let fetchRes = fetch("http://localhost:8080/login", options);
-  fetchRes
-    .then((response) => {
-      return response.json();
-    })
-    .then(function (data) {
-      allData = data;
-      console.log("heres the data:", data);
-      displayPosts(data);
-      requestPostsUpdate(data);
-      displayTrendingHashtags(data);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
+// Used for validating age field on sign up
+function checkAgeOnlyNum(age) {
+  return /^[0-9]+$/.test(age);
 }
 
+/* ---------------------------------------------------------------- */
+/*                       AUTHENTICATING USERS                       */
+/* ---------------------------------------------------------------- */
 const loginData = document.getElementById("login-form");
-
 loginData.addEventListener("submit", function () {
   let user = {
     username: document.getElementById("username").value,
@@ -259,53 +185,109 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
-      allData = data;
-      console.log("heres the data:", data);
+      forumData = data;
       updateUserDetails(data);
       displayPosts(data);
-      requestHashtagsUpdate();
     })
     .catch(function (err) {
       console.log(err);
     });
-
-  // Concatenates the user's details within the HTML
-  function updateUserDetails(data) {
-    document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
-    document.querySelector("p.username").innerHTML = `@` + data.User.username;
-    document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
-  }
 });
 
-// ----------------- TRENDING HASHTAGS -----------------
-function fetchAndDisplayHashtags() {
-  fetch("http://localhost:8080/hashtags")
-    .then((response) => response.json())
+// Concatenates the user's details within the HTML after login
+function updateUserDetails(data) {
+  document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
+  document.querySelector("p.username").innerHTML = `@` + data.User.username;
+  document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
+}
+
+// Listen for clicks on categories buttons and send the category to the server
+document.querySelectorAll(".category").forEach((category) => {
+  category.addEventListener("click", (e) => {
+    // remove selected class from all buttons
+    document.querySelectorAll(".category").forEach((category) => {
+      category.classList.remove("selected");
+    });
+    // add selected class to the clicked button
+    e.target.classList.add("selected");
+    // socket.send(JSON.stringify({ category: e.target.id }));
+    // console.log(category.id);
+  });
+});
+
+// Sends the user's post to the server
+const createPost = function getInputValue() {
+  // Get the value of the hashtag with the class of selected
+  let hashtag = document.querySelector(".category.selected").innerHTML;
+
+  let post = {
+    postBody: document.getElementById("postBody").value,
+    Hashtag: hashtag
+  };
+  console.log(post);
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(post)
+  };
+
+  let fetchRes = fetch("http://localhost:8080/post", options);
+  fetchRes
+    .then((response) => {
+      console.log(response);
+      if (response.status == "200") {
+        notyf.success("Your post was created successfully.");
+        requestPostsUpdate();
+      } else {
+        notyf.error("Your post failed to send.");
+      }
+      return response.text();
+    })
+    .then((data) => {
+      console.log("post response data:", data);
+    });
+};
+
+function requestPostsUpdate() {
+  let user = {
+    username: document.getElementById("username").value,
+    password: document.getElementById("password").value
+  };
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  };
+  let fetchRes = fetch("http://localhost:8080/login", options);
+  fetchRes
+    .then((response) => {
+      return response.json();
+    })
     .then(function (data) {
-      allData = data;
-      console.log("heres the hashtags:", data);
-      displayTrendingHashtags(data);
+      console.log("sending data to displayPosts:", data);
+      displayPosts(data);
     })
     .catch(function (err) {
       console.log(err);
     });
 }
 
-function displayTrendingHashtags(data) {
-  console.log("displaying trending hashtags");
-  console.log(data);
-  let hashtags = data.Hashtags;
-  let trendingHashtags = document.querySelector(".trending");
-  trendingHashtags.innerHTML = "";
-  hashtags.forEach((hashtag) => {
-    trendingHashtags.innerHTML += `<a href="#" class="hashtag">#${hashtag}</a>`;
-  });
-}
-
+// Displays all posts on the feed
 function displayPosts(data) {
   postsWrap = document.querySelector(".posts-wrap");
 
+  // Clear all posts printed
+  postsWrap.innerHTML = "";
+
+  // Loop through all posts and print them, concatenating each post data
   for (let i = data.CreatedPosts.length - 1; i >= 0; i--) {
+    console.log("starting loop");
+    console.log("i:", i, "hashtag:", data.CreatedPosts[i].Hashtag);
     postsWrap.innerHTML +=
       `
     <div class="post">
@@ -321,7 +303,6 @@ function displayPosts(data) {
       `</p>
           </div>
         </div>
-
         <!-- Category & Option Button -->
         <div class="category-option-wrap">
           <div class="category">` +
@@ -330,14 +311,12 @@ function displayPosts(data) {
           <img src="../static/img/post-options.svg" />
         </div>
       </div>
-
       <!-- Post Body -->
       <div class="body">
         <p>` +
       data.CreatedPosts[i].postBody +
       `</p>
       </div>
-
       <!-- Footer -->
       <div class="footer">
         <!-- Comment, Like, Dislike -->
@@ -346,7 +325,6 @@ function displayPosts(data) {
           <img src="../static/img/like-icon.svg" />
           <img src="../static/img/dislike-icon.svg" />
         </div>
-
         <!-- Comment, Like & Dislike Statistics -->
         <div class="stats">
           <div class="stat-wrapper">
@@ -367,73 +345,3 @@ function displayPosts(data) {
     `;
   }
 }
-
-// function displayHashtags() {
-//   let hashtagsWrap = document.querySelector(".hashtags-wrap");
-//   hashtagsWrap.innerHTML = "";
-//   for (let i = 0; i < allData.Hashtags.length; i++) {
-//     hashtagsWrap.innerHTML += `<a href="#" class="hashtag">#${allData.Hashtags[i]}</a>`;
-//   }
-// }
-
-const sendPostData = function getImputValue() {
-  // Get the value of the hashtag with the class of selected
-  let hashtag = document.querySelector(".category.selected").innerHTML;
-
-  let post = {
-    Hashtag: hashtag,
-    postBody: document.getElementById("postBody").value
-  };
-  console.log(post);
-
-  let options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(post)
-  };
-
-  let fetchRes = fetch("http://localhost:8080/post", options);
-  fetchRes.then((response) => {
-    console.log(response);
-    if (response.status == "200") {
-      notyf.success("Your post was created successfully.");
-      requestPostsUpdate();
-    } else {
-      notyf.error("Your post failed to send.");
-    }
-    return response.text();
-  });
-  // .then((data) =>{
-  // // console.log(data);
-  // });
-};
-
-// loginData.addEventListener("submit", function () {
-//   let user = {
-//     username: document.getElementById("username").value,
-//     password: document.getElementById("password").value
-//   };
-
-//   let options = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify(user)
-//   };
-
-//   let fetchRes = fetch("http://localhost:8080/hashtag", options);
-//   fetchRes
-//     .then((response) => {
-//       return response.json();
-//     })
-//     .then(function (data) {
-//       allData = data;
-//       console.log("heres the hashtags:", data);
-//     })
-//     .catch(function (err) {
-//       console.log(err);
-//     });
-// });

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -117,7 +116,7 @@ func (data *Forum) ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO: userID need to be replace by the userId of the current user from the cookie
 	client := &Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256), UserId: "userId"}
-	fmt.Println("ServeWs", client.UserId, client.Conn)
+	// fmt.Println("ServeWs", client.UserId, client.Conn)
 	client.Hub.Register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in new goroutines
@@ -149,7 +148,7 @@ func (h *Hub) Run() {
 		select {
 		case client := <-h.Register:
 			h.Clients[client.UserId] = client
-			fmt.Println("Current user:", h.Clients[client.UserId])
+			// fmt.Println("Current user:", h.Clients[client.UserId])
 		case client := <-h.Unregister:
 			if _, ok := h.Clients[client.UserId]; ok {
 				delete(h.Clients, client.UserId)
