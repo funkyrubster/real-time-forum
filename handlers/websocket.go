@@ -10,22 +10,11 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 const (
-	// Time allowed to write a message to the peer.
-	writeWait = 10 * time.Second
-
-	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
-
-	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = (pongWait * 9) / 10
-
-	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	writeWait = 10 * time.Second // Time allowed to write a message to the peer.
+	pongWait = 60 * time.Second // Time allowed to read the next pong message from the peer.
+	pingPeriod = (pongWait * 9) / 10 // Send pings to peer with this period. Must be less than pongWait.
+	maxMessageSize = 512 // Maximum message size allowed from peer.
 )
 
 var (
@@ -38,24 +27,19 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-// Client is a middleman between the websocket connection and the hub.
+// Client is a middleman between the websocket connection and the hub
 type Client struct {
-	Hub *Hub
-
-	// The websocket connection.
-	Conn *websocket.Conn
-
-	// Buffered channel of outbound messages.
-	Send chan []byte
-
-	UserId string
+	Hub *Hub 
+	Conn *websocket.Conn // The websocket connection
+	Send chan []byte // Buffered channel of outbound messages
+	UserId string // The user id of the client
 }
 
-// readPump pumps messages from the websocket connection to the hub.
-//
-// The application runs readPump in a per-connection goroutine. The application
-// ensures that there is at most one reader on a connection by executing all
-// reads from this goroutine.
+/* -------- ReadPump is ran in a per-connection goroutine. -------- */
+/* --- The application ensures that there is at most one reader --- */
+/* -- on a connection by executing all reads from this goroutine -- */
+
+// Pumps messages from the websocket connection to the hub
 func (c *Client) ReadPump() {
 	defer func() {
 		c.Hub.Unregister <- c
@@ -77,11 +61,12 @@ func (c *Client) ReadPump() {
 	}
 }
 
-// writePump pumps messages from the hub to the websocket connection.
-//
-// A goroutine running writePump is started for each connection. The
-// application ensures that there is at most one writer to a connection by
-// executing all writes from this goroutine.
+
+/* -------- WritePump is called for each connection. It is -------- */
+/* --------- ensured that there is at most one writer to a -------- */
+/* ---- connection by executing all writes from this goroutine ---- */
+
+// Pumps messages from the hub to the websocket connection
 func (c *Client) WritePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
@@ -93,7 +78,7 @@ func (c *Client) WritePump() {
 		case message, ok := <-c.Send:
 			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				// The hub closed the channel.
+				// The hub closed the channel
 				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
@@ -104,7 +89,7 @@ func (c *Client) WritePump() {
 			}
 			w.Write(message)
 
-			// Add queued chat messages to the current websocket message.
+			// Add queued chat messages to the current websocket message
 			n := len(c.Send)
 			for i := 0; i < n; i++ {
 				w.Write(newline)
@@ -123,43 +108,29 @@ func (c *Client) WritePump() {
 	}
 }
 
-// serveWs handles websocket requests from the peer.
+// Handles websocket requests from the peer
 func (data *Forum) ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	//userID need to be replace by the userId of the current user from the cookie
+	// TODO: userID need to be replace by the userId of the current user from the cookie
 	client := &Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256), UserId: "userId"}
 	fmt.Println("ServeWs", client.UserId, client.Conn)
 	client.Hub.Register <- client
 
-	// Allow collection of memory referenced by the caller by doing all work in
-	// new goroutines.
+	// Allow collection of memory referenced by the caller by doing all work in new goroutines
 	go client.WritePump()
 	go client.ReadPump()
 }
 
-// Copyright 2013 The Gorilla WebSocket Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
-// Hub maintains the set of active clients and broadcasts messages to the
-// clients.
+// Hub maintains the set of active clients and broadcasts messages to the clients
 type Hub struct {
-	// Registered clients.
-	Clients map[string]*Client
-
-	// Inbound messages from the clients.
-	Broadcast chan []byte
-
-	// Register requests from the clients.
-	Register chan *Client
-
-	// Unregister requests from clients.
-	Unregister chan *Client
-	//database
+	Clients map[string]*Client // Registered clients
+	Broadcast chan []byte // Inbound messages from the clients
+	Register chan *Client // Register requests from the clients
+	Unregister chan *Client // Unregister requests from clients
 	Database *Forum
 }
 
@@ -178,7 +149,7 @@ func (h *Hub) Run() {
 		select {
 		case client := <-h.Register:
 			h.Clients[client.UserId] = client
-			fmt.Println("current User", h.Clients[client.UserId])
+			fmt.Println("Current user:", h.Clients[client.UserId])
 		case client := <-h.Unregister:
 			if _, ok := h.Clients[client.UserId]; ok {
 				delete(h.Clients, client.UserId)

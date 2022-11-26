@@ -2,6 +2,10 @@ package handlers
 
 import "time"
 
+/* ---------------------------------------------------------------- */
+/*             USED FOR CREATING VARIABLES TO STORE DATA            */
+/* ---------------------------------------------------------------- */
+
 type RegisterData struct {
 	Firstname string `json:"firstName"`
 	Lastname  string `json:"lastName"`
