@@ -13,14 +13,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-
+// Try to parse the index.html file and if it fails, log the error
 func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("static/index.html")
 	if err != nil {
 		http.Error(w, "500 Internal error", http.StatusInternalServerError)
 		return
 	}
-
 	if err := t.Execute(w, ""); err != nil {
 		http.Error(w, "500 Internal error", http.StatusInternalServerError)
 		return
@@ -28,24 +27,27 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Handles receiving the post data and adding it to the 'posts' table in the database
 func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
-
+	// Decodes posts data into post variable
 	var post Post
 
+	// Decode the JSON data from the request body into the post variable
 	json.NewDecoder(r.Body).Decode(&post)
 
 	// w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
+
+	// Convert data into variables for easier use
 	hashtag := post.Hashtag
 	time := time.Now()
 	content := post.Content
 
-	// checks session and selects the last one (the latest one)
+	// Checks session from 'sessions' table and selects the latest one
 	sess := data.GetSession()
-
 	currentSession := sess[len(sess)-1]
 	
-	// fetches username from session
+	// Fetches username from current session
 	user := currentSession.username
 
 	type postSessionStruct struct {
@@ -53,10 +55,11 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 		Session UserSession
 	}
 
+	// Creates postAndSession variable and assigns the post and session to it
 	var postAndSession postSessionStruct
-
 	postAndSession.Session = currentSession
 
+	// Inserts post into the 'posts' table of the database
 	data.CreatePost(Post{
 		Username:  user,
 		Content:   content,
@@ -66,6 +69,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	
 }
 
+// TODO: Rewrite this function to allow for hashtag count updates
 func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) {
 	var hashtag Hashtag
 	json.NewDecoder(r.Body).Decode(&hashtag)
@@ -75,7 +79,6 @@ func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) {
 	hashName := hashtag.hashtagName
 	hashCount := hashtag.hashtagCount
 
-	// checks session and selects the last one (the latest one)
 	sess := data.GetSession()
 	currentSession := sess[len(sess)-1]
 
@@ -85,7 +88,6 @@ func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var hashtagAndSession hashSessionStruct
-
 	hashtagAndSession.Session = currentSession
 
 	data.GetHashtags(Hashtag{
@@ -95,57 +97,64 @@ func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) {
 	
 }
 
-
-
+// Handles the registration of new users - validates the data and adds it to the 'users' table in database
 func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
-	// Create user type of RegisterData struct
+	// Decodes registration data into user variable
 	var user RegisterData
 	json.NewDecoder(r.Body).Decode(&user)
 
+	// Used in conjunction with the 'strings.ContainsAny' function to ensure the age entered is strictly numeric
 	numChars := "0123456789"
 
-	// Only proceed if all fields are filled
+	// Ensures all required fields are filled out, and that the age is strictly numeric
 	if len(user.Firstname) == 0 || len(user.Lastname) == 0 || len(user.Email) == 0 || len(user.Username) == 0 || (len(user.Age) == 0 || !strings.ContainsAny(user.Age, numChars)) || user.Gender == "Gender" || len(user.Password) == 0 {
+		// This HTTP status code is then checked in authentication.js and the user is alerted to the missing/invalid fields
 		w.WriteHeader(http.StatusNotAcceptable)
 	} else {
-		// use web soc to read the information
+		// Uses web socket to read the information
 		w.Header().Set("Content-type", "application/text")
 
-		// // Only true if the provided email and username is not already in the database
+		// These are initially false, and are only set to true if the email/username is not found in the database (registration is available and will not overwrite existing data)
 		emailValid := false
 		usernameValid := false
 
-		// We need to check if there's already a user with the same username or email
+		/* ---------------------------------------------------------------- */
+		/*       CHECKING IF EMAIL/USERNAME ALREADY EXISTS IN DATABASE      */
+		/* ---------------------------------------------------------------- */
 
-		// Email check
+
+		/* --- Queries through each table, checks if data already exists -- */
+
+		// EMAIL CHECK
 		row := data.DB.QueryRow("select email from users where email= ?", user.Email)
-		temp := ""
+		temp := "" // If email is not found, temp variable will remain empty
 		row.Scan(&temp)
 		if temp == "" {
 			emailValid = true
 		}
 
-		// Username check
+		// USERNAME CHECK
 		row = data.DB.QueryRow("select username from users where username= ?", user.Username)
-		temp = ""
+		temp = "" // If username is not found, temp variable will remain empty
 		row.Scan(&temp)
 		if temp == "" {
 			usernameValid = true
 		}
 
-		// If both email and username are valid, we can insert the user into the database
+		// If both email and username are valid, we can successfully register the user into the database
 		if emailValid && usernameValid {
-
+			// Generates hash from password
 			var passwordHash []byte
-
-			// create hash from password
 			passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 			if err != nil {
 				fmt.Println("Error hashing password:", err)
 				return
 			}
-			// Insert user into database
+
+			// Inserts registration data into the 'users' table of the database
 			query, err1 := data.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + user.Username + "','" + user.Email + "','" + string(passwordHash) + "','" + user.Firstname + "','" + user.Lastname + "'," + user.Age + ",'" + user.Gender + "')")
+			
+			// Handles errors inserting data
 			if err1 != nil {
 				log.Fatal(err1)
 			}
@@ -153,57 +162,68 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err1)
 
 			fmt.Println("SUCCESS: User successfully registered into users table.")
-			w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 		} else {
 			fmt.Println("ERROR: Username or email already exists.")
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest) // Checked in authentication.js, alerts user
 		}
 	}
 }
 
+// Handles the login of existing users - validates the data and checks if it exists in the 'users' table in database
 func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	// Decodes session and login data into variables
 	var sess UserSession
-
-	// Create user type of LoginData struct
 	var user LoginData
 	json.NewDecoder(r.Body).Decode(&user)
 	w.Header().Set("Content-type", "application/text")
 
-	// Only true if email/username and password match is found in the database
+	// Only set to true if the email/username IS found in the database
 	emailPassCombinationValid := false
 	userPassCombinationValid := false
 
-	// Check if user entered an email or username
+	// Checks if user entered an email or username
 	enteredEmail := strings.Contains(user.Username, "@")
 
+	/* ---------------------------------------------------------------- */
+	/*               CHECKING EMAIL/USER PASS COMBINATIONS              */
+	/* ---------------------------------------------------------------- */
+
+	/* --- Queries through each table, checks if data exists --- */
+
+	// EMAIL CHECK
 	if enteredEmail {
-		// Check if email and password exist in users table on the same row
+		// Checks if email/pass combination exists in database
 		var passwordHash string
 		row := data.DB.QueryRow("SELECT password FROM users WHERE email = ?", user.Username)
 		err := row.Scan(&passwordHash)
 		if err != nil {
 			fmt.Println("Error with password hash:", err)
 		}
+		// If the password hash matches the password entered, the email/pass combination is valid
 		err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(user.Password))
 		if err == nil {
 			emailPassCombinationValid = true
 		}
 	} else {
-		// Check if username and password exist in users table on the same row
+		// Checks if username/pass combination exists in database
 		var passwordHash string
 		row := data.DB.QueryRow("SELECT password FROM users WHERE username = ?", user.Username)
 		err := row.Scan(&passwordHash)
 		if err != nil {
 			fmt.Println("Error with password hash:", err)
 		}
+		// If the password hash matches the password entered, the user/pass combination is valid
 		err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(user.Password))
 		if err == nil {
 			userPassCombinationValid = true
 		}
 	}
 	var usID int = 5
+
+	// If either combination is valid, we can successfully log the user in
 	if emailPassCombinationValid || userPassCombinationValid {
-		fmt.Println("User logged in successfully.")
+		fmt.Println("SUCCESS: User logged in.")
 
 		row := data.DB.QueryRow("SELECT userID FROM users WHERE username = ?;", user.Username)
 		err := row.Scan(&usID)
@@ -212,35 +232,35 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println("usID:", usID)
 		fmt.Println("user.Username:", user.Username)
+
+		// Creates a new session for the user
 		sess.username = user.Username
 		sess.userID = usID
 		sess.max_age = 18000
 		sess.session = uuid.NewV4().String()
 
-		// Finally, we set the client cookie for "session_token" as the session token we just generated
-		// we also set an expiry time of 120 minutes
+		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
 			Name:   "session_token",
 			Value:  sess.session,
 			MaxAge: 900,
 		})
-		// insert into session
+
+		// Insert data into session variable
 		data.InsertSession(sess)
 
+		// Send user information back to client using JSON format
 		userInfo := data.GetUserProfile(user.Username)
-		
-		fmt.Println(userInfo)
-		// send response to js
+		// fmt.Println(userInfo)
 		js, err := json.Marshal(userInfo)
 		if err != nil {
 			log.Fatal(err)
 		}
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 		w.Write([]byte(js))
-		// set web soc
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println("Error: Email or password is incorrect.")
+		fmt.Println("Error: Email or password is incorrect.") // Checked in authentication.js, alerts user
 	}
 }
 

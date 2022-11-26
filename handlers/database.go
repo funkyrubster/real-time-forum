@@ -13,16 +13,18 @@ type Forum struct {
 	*sql.DB
 }
 
-// --------------- GET USER PROFILE -------------//
-
+// Pulls specific user's data and posts data from database and returns it as a User struct
 func (data *Forum) GetUserProfile(username string) UserProfile {
-
+	// Used to store the user's profile information
 	user := UserProfile{}
 
+	// Get a specific user's information from the 'users' table
 	rows, err := data.DB.Query(`SELECT * FROM users where username= ?`, username)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Used to store the user's data so we can add it to struct later on
 	var userID int
 	var firstname string
 	var lastname string
@@ -32,12 +34,14 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	var age int
 	var gender string
 
+	// Scans through each column in the 'users' row and stores the data in the variables above
 	for rows.Next() {
 		err := rows.Scan(&userID, &nickname, &email, &password, &firstname, &lastname, &age, &gender)
 		if err != nil {
 			log.Fatal(err)
 		}
 
+		// This contains the specific user's data as well as all of their posts
 		user = UserProfile{
 			User: User{
 				Username:  nickname,
@@ -51,21 +55,21 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	return user
 }
 
-//----------------------- CREATE POST-------------------------//
-
+// Handles creation of new posts
 func (data *Forum) CreatePost(post Post) {
 	stmt, err := data.DB.Prepare("INSERT INTO posts (username, content, hashtag, creationDate) VALUES (?, ?, ?, ?);")
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	// Uses data from post variable to insert into posts table
 	_, err = stmt.Exec(post.Username, post.Content, post.Hashtag, post.CreatedAt)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-//----------------------- GET HASHTAGS-------------------------//
-
+// TODO: Needs to be fixed to return all hashtags and their counts
 func (data *Forum) GetHashtags(hashtag Hashtag) []Hashtag {
 	var hashtags []Hashtag // slice of Post 
 
@@ -87,51 +91,42 @@ func (data *Forum) GetHashtags(hashtag Hashtag) []Hashtag {
 	return hashtags
 }
 
-// ------------------- GET POSTS -------------------//
-
+// Pulls all posts from specific user and returns it as a slice of Post structs
 func (data *Forum) GetPosts(username string) []Post {
-
-	var posts []Post // slice of Post 
-
-
+	// Used to store all of the posts
+	var posts []Post
+	// Used to store invidiual post data
+	var post Post
 
 	rows, err := data.DB.Query(`SELECT * FROM posts WHERE username =?`, username)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// Scans through every row where the username matches the username passed in
 	for rows.Next() {
-	  var post Post  // just a struct 
+	    // Populates post var with data from each post found in table
 		err := rows.Scan(&post.PostID, &post.Username, &post.Content, &post.Hashtag, &post.CreatedAt)
 		if err != nil {
 			log.Fatal(err)
 		}
-		// post = Post{
-		// 	// CreatedAt: post.CreatedAt,
-		// 	// Comments: //get commnets func,
-		// }
+		// Adds each post found from specific user to posts slice
 		posts = append(posts, post)
 	}
-
 	return posts
-	
-
 }
 
-// ------------------CREATE SESSION	----------------------//
-
-// InsertSession ...
+// Inserts session into sessions table
 func (data *Forum) InsertSession(sess UserSession) {
 	stmnt, err := data.DB.Prepare("INSERT INTO sessions (cookieValue, userID, username) VALUES (?, ?, ?)")
 	if err != nil {
-		fmt.Println("AddSession error inserting into DB: ", err)
+		fmt.Println("Error inserting session into table:", err)
 	}
 	defer stmnt.Close()
 	stmnt.Exec(sess.session, sess.userID, sess.username)
 }
 
-// -------------- DELETE SESSION------------------	//
-
+// TODO: Clarification
 // User's cookie expires when browser is closed, delete the cookie from the database.
 func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
 	cookie := &http.Cookie{
@@ -151,26 +146,30 @@ func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
 	return nil
 }
 
-// -------------- GET SESSION ----------------//
-
+// Checks all sessions from sessions table and returns latest session
 func (data *Forum) GetSession() []UserSession {
-
+	// Used to store session data
 	session := []UserSession{}
 
+	// Checks all sessions from sessions table
 	rows, err := data.DB.Query(`SELECT * FROM sessions`)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// Used to store individual session data
 	var userID int
 	var cookieValue string
 	var userName string
 
+	// For each session found, populate the variable above
 	for rows.Next() {
 		err := rows.Scan(&userID, &cookieValue, &userName)
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		// Overwrites every session, leaving only data for the latest session
 		session = append(session, UserSession{
 			userID:   userID,
 			session:  cookieValue,
@@ -180,8 +179,7 @@ func (data *Forum) GetSession() []UserSession {
 	return session
 }
 
-// ---------------- CREATE TABLES ----------------//
-
+// Used when starting server - Ensures all tables are created to avoid errors
 func CheckTablesExist(db *sql.DB, table string) {
 	_, table_check := db.Query("select * from " + table + ";")
 	if table_check != nil {
@@ -264,7 +262,7 @@ func CheckTablesExist(db *sql.DB, table string) {
 				log.Fatal(err)
 			}
 
-			// create a slice of string
+			// Used to store hashtag names
 			hashtagSlice := make([]string, 6)
 			hashtagSlice[0] = "#Tech"
 			hashtagSlice[1] = "#Food"
@@ -300,10 +298,8 @@ func CheckTablesExist(db *sql.DB, table string) {
 	}
 }
 
-//--------------- CONNECT WITH MAIN.GO----------------//
-
+// Check all required tables exist in database, and create them if they don't
 func Connect(db *sql.DB) *Forum {
-	// Check all required tables exist in database, and create them if they don't
 	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions"} {
 		CheckTablesExist(db, table)
 	}
