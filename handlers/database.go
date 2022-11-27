@@ -55,6 +55,30 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	return user
 }
 
+func (data *Forum) getLatestPosts() []Post {
+	// Used to store all of the posts
+	var posts []Post
+	// Used to store invidiual post data
+	var post Post
+
+	rows, err := data.DB.Query(`SELECT * FROM posts`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Scans through every post
+	for rows.Next() {
+	    // Populates post var with data from each post found in table
+		err := rows.Scan(&post.PostID, &post.Username, &post.Content, &post.Hashtag, &post.CreatedAt)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// Adds each post found from specific user to posts slice
+		posts = append(posts, post)
+	}
+	return posts
+}
+
 // Handles creation of new posts
 func (data *Forum) CreatePost(post Post) {
 	stmt, err := data.DB.Prepare("INSERT INTO posts (username, content, hashtag, creationDate) VALUES (?, ?, ?, ?);")

@@ -493,7 +493,7 @@ select:hover {
   font-size: 13px;
   line-height: 18px;
   letter-spacing: -0.05em;
-
+  text-align: initial;
   color: #76889d;
 }
 
