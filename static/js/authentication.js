@@ -352,11 +352,11 @@ function displayPosts(posts) {
 
 function updateHashtagTable() {
   // Get the value of the hashtag with the class of selected
-  let hashtag = document.querySelector(".category.selected").innerHTML;
+  let hashtag_value = document.querySelector(".category.selected").innerHTML;
 
-  let post = {
-    Name: hashtag,
-    Count: 5
+  let hashtag = {
+    Name: hashtag_value,
+    Count: "1"
   };
 
   let options = {
@@ -364,7 +364,7 @@ function updateHashtagTable() {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(post)
+    body: JSON.stringify(hashtag)
   };
 
   let fetchRes = fetch("http://localhost:8080/updateHashtag", options);

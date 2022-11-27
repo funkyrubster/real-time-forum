@@ -97,14 +97,17 @@ func (data *Forum) UpdateHashtag(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("ok"))
 
 	// Convert data into variables for easier use
+	hashID := hashtag.ID
 	hashName := hashtag.Name
 	hashCount := hashtag.Count
 
-	fmt.Println("hashName: ", hashName)
-	fmt.Println("hashtagCount: ", hashCount)
+	fmt.Println("hashID:", hashID)
+	fmt.Println("hashName:", hashName)
+	fmt.Println("hashtagCount:", hashCount)
 
 	// Updates hashtag count in the 'hashtags' table of the database
 	data.UpdateHashtagCount(Hashtag{
+		ID: 	hashID,
 		Name:   hashName,
 		Count:  hashCount,
 	})
