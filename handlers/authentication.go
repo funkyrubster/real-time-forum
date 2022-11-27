@@ -85,35 +85,22 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("sendLatestPosts() sent to JS")
 }
 
-func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) Hashtag {
-	// Used to store the user's profile information
-	hashtags := Hashtag{}
+func (data *Forum) SendLatestHashtags(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("sendLatestHashtags() called")
 
-	rows, err := data.DB.Query(`SELECT * FROM hashtags`)
+	// Send user information back to client using JSON format
+	hashtags := data.getLatestHashtags()
+
+	// fmt.Println(userInfo)
+	js, err := json.Marshal(hashtags)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Used to store hashtag data so we can add it to struct later on
-	var hashtagID int
-	var hashtagName string
-	var hashtagCount int
+	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
 
-	// Scans through each column in the 'users' row and stores the data in the variables above
-	for rows.Next() {
-		err := rows.Scan(&hashtagID, &hashtagName, &hashtagCount)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// This contains the specific user's data as well as all of their posts
-		hashtags = Hashtag{
-			hashtagID:    hashtagID,
-			hashtagName:  hashtagName,
-			hashtagCount: hashtagCount,
-		}
-	}
-	return hashtags
+	fmt.Println("sendLatestHashtags() sent to JS")
 }
 
 // Handles the registration of new users - validates the data and adds it to the 'users' table in database

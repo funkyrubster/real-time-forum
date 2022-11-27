@@ -79,6 +79,31 @@ func (data *Forum) getLatestPosts() []Post {
 	return posts
 }
 
+func (data *Forum) getLatestHashtags() []Hashtag {
+	// Used to store all of the hashtags
+	var hashtags []Hashtag
+	// Used to store invidiual post data
+	var hashtag Hashtag
+
+	rows, err := data.DB.Query(`SELECT * FROM hashtags`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Scans through every hashtag
+	for rows.Next() {
+	    // Populates hashtag var with data from each hashtag found in table
+		err := rows.Scan(&hashtag.hashtagID, &hashtag.hashtagName, &hashtag.hashtagCount)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// Adds each post found from specific user to hashtags slice
+		hashtags = append(hashtags, hashtag)
+	}
+	fmt.Println(hashtags)
+	return hashtags
+}
+
 // Handles creation of new posts
 func (data *Forum) CreatePost(post Post) {
 	stmt, err := data.DB.Prepare("INSERT INTO posts (username, content, hashtag, creationDate) VALUES (?, ?, ?, ?);")
@@ -313,13 +338,14 @@ func CheckTablesExist(db *sql.DB, table string) {
 			}
 
 			// Used to store hashtag names
-			hashtagSlice := make([]string, 6)
-			hashtagSlice[0] = "#Tech"
-			hashtagSlice[1] = "#Food"
-			hashtagSlice[2] = "#Art"
-			hashtagSlice[3] = "#Sports"
-			hashtagSlice[4] = "#Fitness"
-			hashtagSlice[5] = "#Misc"
+			hashtagSlice := make([]string, 7)
+			hashtagSlice[0] = "Tech"
+			hashtagSlice[1] = "Food"
+			hashtagSlice[2] = "Art"
+			hashtagSlice[3] = "Sports"
+			hashtagSlice[4] = "Fitness"
+			hashtagSlice[5] = "Travel"
+			hashtagSlice[6] = "Misc"
 
 			// insert all hashtags into hashtags table
 			for _, hashtag := range hashtagSlice {

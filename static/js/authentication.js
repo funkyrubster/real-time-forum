@@ -184,11 +184,20 @@ loginData.addEventListener("submit", function () {
       updateUserDetails(data);
       // Pulls latest posts from database and displays them
       refreshPosts();
+      // Pulls hashtag stats from database and displays them
+      refreshHashtags();
     })
     .catch(function (err) {
       console.log(err);
     });
 });
+
+// Concatenates the user's details within the HTML after login
+function updateUserDetails(data) {
+  document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
+  document.querySelector("p.username").innerHTML = `@` + data.User.username;
+  document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
+}
 
 function refreshPosts() {
   fetch("/getPosts", {
@@ -201,6 +210,7 @@ function refreshPosts() {
     .then((response) => {
       response.text().then(function (data) {
         let posts = JSON.parse(data);
+        console.log("posts:", posts);
         // 'posts' contains all latest posts from database, in JSON format
         displayPosts(posts);
       });
@@ -210,11 +220,25 @@ function refreshPosts() {
     });
 }
 
-// Concatenates the user's details within the HTML after login
-function updateUserDetails(data) {
-  document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
-  document.querySelector("p.username").innerHTML = `@` + data.User.username;
-  document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
+function refreshHashtags() {
+  fetch("/getHashtags", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "POST"
+  })
+    .then((response) => {
+      response.text().then(function (data) {
+        let hashtags = JSON.parse(data);
+        console.log("Hashtags data:", hashtags);
+        // 'hashtags' contains all latest hashtags & counts from database, in JSON format
+        displayTrendingHashtags(hashtags);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 // Listen for clicks on categories buttons and adds 'selected' class
@@ -322,6 +346,31 @@ function displayPosts(posts) {
         </div>
       </div>
     </div>
+    `;
+  }
+}
+
+// Displays all posts on the feed
+function displayTrendingHashtags(hashtags) {
+  trendingWrap = document.querySelector(".trending");
+
+  // Clear all hashtags printed
+  trendingWrap.innerHTML = "";
+
+  // Loop through all hashtags and print them, concatenating each hashtag data
+  for (let i = hashtags.length - 1; i >= 0; i--) {
+    trendingWrap.innerHTML +=
+      `
+      <div class="hashtag">
+        <p id="name">` +
+      hashtags[i].name +
+      `</p>
+        <div class="circle">
+          <p id="count">` +
+      hashtags[i].count +
+      `</p>
+        </div>
+      </div>
     `;
   }
 }
