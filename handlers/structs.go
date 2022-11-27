@@ -30,6 +30,10 @@ type UserProfile struct {
 	Hashtags	 []Hashtag
 }
 
+type Hashtags struct {
+	Hashtags	 []Hashtag
+}
+
 type Post struct {
 	PostID    int
 	Username  string `json:"username"`
@@ -39,9 +43,9 @@ type Post struct {
 }
 
 type Hashtag struct {
-	hashtagID int
-	hashtagName string
-	hashtagCount int
+	ID    int
+	Name  string `json:"name"`
+	Count   string `json:"count"`
 }
 
 type LoginData struct {

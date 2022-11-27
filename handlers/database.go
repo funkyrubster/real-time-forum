@@ -80,7 +80,7 @@ func (data *Forum) getLatestPosts() []Post {
 }
 
 func (data *Forum) getLatestHashtags() []Hashtag {
-	// Used to store all of the hashtags
+	// Used to store all of the posts
 	var hashtags []Hashtag
 	// Used to store invidiual post data
 	var hashtag Hashtag
@@ -90,17 +90,16 @@ func (data *Forum) getLatestHashtags() []Hashtag {
 		log.Fatal(err)
 	}
 
-	// Scans through every hashtag
+	// Scans through every post
 	for rows.Next() {
-	    // Populates hashtag var with data from each hashtag found in table
-		err := rows.Scan(&hashtag.hashtagID, &hashtag.hashtagName, &hashtag.hashtagCount)
+	    // Populates post var with data from each post found in table
+		err := rows.Scan(&hashtag.ID, &hashtag.Name, &hashtag.Count)
 		if err != nil {
 			log.Fatal(err)
 		}
-		// Adds each post found from specific user to hashtags slice
+		// Adds each post found from specific user to posts slice
 		hashtags = append(hashtags, hashtag)
 	}
-	fmt.Println(hashtags)
 	return hashtags
 }
 
@@ -166,30 +165,30 @@ func (data *Forum) GetPosts(username string) []Post {
 }
 
 // Pulls all hashtags and their counts, returns it as a slice of Hashtag structs
-func (data *Forum) GetHashtagData() []Hashtag {
-	// Used to store all of the hashtags
-	var hashtags []Hashtag
-	// Used to store invidiual hashtag data
-	var hashtag Hashtag
+// func (data *Forum) GetHashtagData() []Hashtag {
+// 	// Used to store all of the hashtags
+// 	var hashtags []Hashtag
+// 	// Used to store invidiual hashtag data
+// 	var hashtag Hashtag
 
-	rows, err := data.DB.Query(`SELECT * FROM hashtags`)
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	rows, err := data.DB.Query(`SELECT * FROM hashtags`)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	// Scans through each hashtag
-	for rows.Next() {
-	    // Populates hashtag var with data from each hashtag found in table
-		err := rows.Scan(&hashtag.hashtagID, &hashtag.hashtagName, &hashtag.hashtagCount)
-		if err != nil {
-			log.Fatal(err)
-		}
-		// Adds each hashtag found from specific user to hashtags slice
-		hashtags = append(hashtags, hashtag)
-	}
-	fmt.Println("Hashtags just pulled from DB:\n", hashtags)
-	return hashtags
-}
+// 	// Scans through each hashtag
+// 	for rows.Next() {
+// 	    // Populates hashtag var with data from each hashtag found in table
+// 		err := rows.Scan(&hashtag.hashtagID, &hashtag.hashtagName, &hashtag.hashtagCount)
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
+// 		// Adds each hashtag found from specific user to hashtags slice
+// 		hashtags = append(hashtags, hashtag)
+// 	}
+// 	fmt.Println("Hashtags just pulled from DB:\n", hashtags)
+// 	return hashtags
+// }
 
 // Inserts session into sessions table
 func (data *Forum) InsertSession(sess UserSession) {
