@@ -119,23 +119,35 @@ func (data *Forum) CreatePost(post Post) {
 
 // Updates hashtag value
 func (data *Forum) UpdateHashtagCount(hashtag Hashtag) {
+	// GET COUNT FOR DESIRED HASHTAG
+	var hashtagCount int
+
+	var hashtagName string
+	var hashtagID int
+
+	rows, err := data.DB.Query(`SELECT * FROM hashtags WHERE hashtagName =?`, hashtag.Name)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&hashtagID, &hashtagName, &hashtagCount)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// NOW WE HAVE CURRENT COUNT FOR DESIRED HASHTAG, WE CAN ADD 1 TO IT
+	hashtagCount++
+
 	stmt, err := data.DB.Prepare("UPDATE hashtags SET hashtagCount = ? WHERE hashtagName = ?;")
 	if err != nil {
 		log.Fatal(err)
 	}
-	stmt.Exec(99, "#Tech")
-	fmt.Println("Hashtag count updated for", hashtag.Name)
+	stmt.Exec(hashtagCount, hashtag.Name)
 	
-	// stmt, err := data.DB.Prepare("UPDATE hashtags SET hashtagCount = ? WHERE hashtagName = ?; VALUES (?, ?);")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	
-	// // Uses data from post variable to insert into posts table
-	// _, err = stmt.Exec("UPDATE hashtags SET hashtagName = ? WHERE hashtagCount = ?", hashtag.Count, hashtag.Name)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	fmt.Println("Hashtag count updated to", hashtagCount, "from", hashtag.Count, "for", hashtag.Name)
+
 }
 
 // Pulls all posts from specific user and returns it as a slice of Post structs
