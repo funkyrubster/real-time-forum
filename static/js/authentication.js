@@ -180,7 +180,9 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
+      // Fills the user's profile with their details
       updateUserDetails(data);
+      // Pulls latest posts from database and displays them
       refreshPosts();
     })
     .catch(function (err) {
@@ -199,7 +201,7 @@ function refreshPosts() {
     .then((response) => {
       response.text().then(function (data) {
         let posts = JSON.parse(data);
-        console.log(posts);
+        // 'posts' contains all latest posts from database, in JSON format
         displayPosts(posts);
       });
     })
@@ -260,7 +262,6 @@ const createPost = function getInputValue() {
 // Displays all posts on the feed
 function displayPosts(posts) {
   postsWrap = document.querySelector(".posts-wrap");
-  console.log(posts[0].username);
 
   // Clear all posts printed
   postsWrap.innerHTML = "";
