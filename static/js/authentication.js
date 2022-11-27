@@ -231,7 +231,6 @@ function refreshHashtags() {
     .then((response) => {
       response.text().then(function (data) {
         let hashtags = JSON.parse(data);
-        console.log("Hashtags data:", hashtags);
         // 'hashtags' contains all latest hashtags & counts from database, in JSON format
         displayTrendingHashtags(hashtags);
       });
@@ -276,6 +275,7 @@ const createPost = function getInputValue() {
     if (response.status == "200") {
       notyf.success("Your post was created successfully.");
       refreshPosts();
+      updateHashtagTable();
     } else {
       notyf.error("Your post failed to send.");
     }
@@ -350,27 +350,72 @@ function displayPosts(posts) {
   }
 }
 
+function updateHashtagTable() {
+  // Get the value of the hashtag with the class of selected
+  let hashtag = document.querySelector(".category.selected").innerHTML;
+
+  let post = {
+    Name: hashtag,
+    Count: 5
+  };
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(post)
+  };
+
+  let fetchRes = fetch("http://localhost:8080/updateHashtag", options);
+  fetchRes.then((response) => {
+    if (response.status == "200") {
+      notyf.success("Succesfully updated hashtag table.");
+      refreshHashtags();
+    } else {
+      notyf.error("Failed to update hashtag table.");
+    }
+    return response.text();
+  });
+}
+
 // Displays all posts on the feed
 function displayTrendingHashtags(hashtags) {
+  console.log(hashtags);
   trendingWrap = document.querySelector(".trending");
 
-  // Clear all hashtags printed
-  trendingWrap.innerHTML = "";
+  // We need to check if there are any hashtag stats to print, otherwise leave at default order
 
-  // Loop through all hashtags and print them, concatenating each hashtag data
-  for (let i = hashtags.length - 1; i >= 0; i--) {
-    trendingWrap.innerHTML +=
-      `
-      <div class="hashtag">
-        <p id="name">` +
-      hashtags[i].name +
-      `</p>
-        <div class="circle">
-          <p id="count">` +
-      hashtags[i].count +
-      `</p>
+  // Assume all hashtags have 0 count
+  let allZero = true;
+
+  // Check if all hashtag counts are 0 aka no posts have been made
+  for (let i = 0; i <= hashtags.length - 1; i++) {
+    if (hashtags[i].count != 0) {
+      allZero = false;
+    }
+  }
+
+  // If any hashtag count is > 0, rearrange trending div as we know there are posts
+  if (!allZero) {
+    // Clear existing hashtags div contents
+    trendingWrap.innerHTML = "";
+
+    // Loop through all hashtags and print them, concatenating each hashtag data
+    for (let i = 0; i <= hashtags.length - 1; i++) {
+      trendingWrap.innerHTML +=
+        `
+        <div class="hashtag">
+          <p id="name">` +
+        hashtags[i].name +
+        `</p>
+          <div class="circle">
+            <p id="count">` +
+        hashtags[i].count +
+        `</p>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    }
   }
 }

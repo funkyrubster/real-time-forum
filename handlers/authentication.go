@@ -85,6 +85,32 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("sendLatestPosts() sent to JS")
 }
 
+// Updates hashtag count for specific hashtag when called
+func (data *Forum) UpdateHashtag(w http.ResponseWriter, r *http.Request) {
+	// Decodes posts data into post variable
+	var hashtag Hashtag
+
+	// Decode the JSON data from the request body into the post variable
+	json.NewDecoder(r.Body).Decode(&hashtag)
+
+	// w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
+
+	// Convert data into variables for easier use
+	hashName := hashtag.Name
+	hashCount := hashtag.Count
+
+	fmt.Println("hashName: ", hashName)
+	fmt.Println("hashtagCount: ", hashCount)
+
+	// Updates hashtag count in the 'hashtags' table of the database
+	data.UpdateHashtagCount(Hashtag{
+		Name:   hashName,
+		Count:  hashCount,
+	})
+	
+}
+
 func (data *Forum) SendLatestHashtags(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("SendLatestHashtags() called")
 
