@@ -69,6 +69,22 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	
 }
 
+func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("sendLatestPosts() called")
+
+	// Send user information back to client using JSON format
+	posts := data.getLatestPosts()
+	// fmt.Println(userInfo)
+	js, err := json.Marshal(posts)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
+
+	fmt.Println("sendLatestPosts() sent to JS")
+}
+
 func (data *Forum) Hashtag(w http.ResponseWriter, r *http.Request) Hashtag {
 	// Used to store the user's profile information
 	hashtags := Hashtag{}
