@@ -86,21 +86,19 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (data *Forum) SendLatestHashtags(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("sendLatestHashtags() called")
+	fmt.Println("SendLatestHashtags() called")
 
 	// Send user information back to client using JSON format
 	hashtags := data.getLatestHashtags()
-
 	// fmt.Println(userInfo)
 	js, err := json.Marshal(hashtags)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
 
-	fmt.Println("sendLatestHashtags() sent to JS")
+	fmt.Println("SendLatestHashtags() sent to JS")
 }
 
 // Handles the registration of new users - validates the data and adds it to the 'users' table in database
