@@ -401,6 +401,9 @@ function displayTrendingHashtags(hashtags) {
     // Clear existing hashtags div contents
     trendingWrap.innerHTML = "";
 
+    // Sort hashtags by count
+    hashtags.sort((a, b) => (a.count < b.count ? 1 : -1));
+
     // Loop through all hashtags and print them, concatenating each hashtag data
     for (let i = 0; i <= hashtags.length - 1; i++) {
       trendingWrap.innerHTML +=
