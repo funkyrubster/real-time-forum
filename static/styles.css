@@ -380,7 +380,7 @@ select:hover {
   margin: auto;
   width: 100vw;
   /* max-width: 1440px; */
-  height: 76px;
+  height: 67px;
   left: 0px;
   top: 0px;
 
@@ -408,6 +408,16 @@ select:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.nav .profile-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav .profile-image img {
+  width: 40px;
 }
 
 /* MAIN */
@@ -502,7 +512,7 @@ select:hover {
   width: 210px;
   height: 272px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   flex-direction: column;
 
@@ -519,6 +529,7 @@ select:hover {
   gap: 0.6rem;
   padding: 0.85rem;
   cursor: pointer;
+  width: 100%;
 }
 
 .nav-item:nth-last-child(1) {
