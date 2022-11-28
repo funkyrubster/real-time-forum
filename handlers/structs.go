@@ -2,6 +2,10 @@ package handlers
 
 import "time"
 
+/* ---------------------------------------------------------------- */
+/*             USED FOR CREATING VARIABLES TO STORE DATA            */
+/* ---------------------------------------------------------------- */
+
 type RegisterData struct {
 	Firstname string `json:"firstName"`
 	Lastname  string `json:"lastName"`
@@ -23,15 +27,25 @@ type User struct {
 type UserProfile struct {
 	User         User
 	CreatedPosts []Post
+	Hashtags	 []Hashtag
+}
+
+type Hashtags struct {
+	Hashtags	 []Hashtag
 }
 
 type Post struct {
 	PostID    int
-	UserID    int
 	Username  string `json:"username"`
 	Content   string `json:"postBody"`
+	Hashtag  string
 	CreatedAt time.Time
-	Comments []Comment
+}
+
+type Hashtag struct {
+	ID    int
+	Name  string `json:"name"`
+	Count   string `json:"count"`
 }
 
 type LoginData struct {
@@ -54,3 +68,4 @@ type Comment struct {
 	Content   string
 	CreatedAt string
 }
+

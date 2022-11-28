@@ -28,7 +28,15 @@ func main() {
 	http.HandleFunc("/login", data.LoginHandler)
 	http.HandleFunc("/register", data.RegistrationHandler)
 	http.HandleFunc("/post", data.Post)
-	http.HandleFunc("/ws", data.WsEndpoint)
+	http.HandleFunc("/getPosts", data.SendLatestPosts)
+	http.HandleFunc("/getHashtags", data.SendLatestHashtags)
+	http.HandleFunc("/updateHashtag", data.UpdateHashtag)
+	// http.HandleFunc("/hashtag", data.hashtag)
+	hub := handlers.NewHub(data)
+	go hub.Run()
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		data.ServeWs(hub, w, r)
+	})
 
 	fmt.Println("Server started at http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
