@@ -1,10 +1,24 @@
 package handlers
 
 import (
+	"bytes"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
+)
+
+const (
+	writeWait = 10 * time.Second // Time allowed to write a message to the peer.
+	pongWait = 60 * time.Second // Time allowed to read the next pong message from the peer.
+	pingPeriod = (pongWait * 9) / 10 // Send pings to peer with this period. Must be less than pongWait.
+	maxMessageSize = 512 // Maximum message size allowed from peer.
+)
+
+var (
+	newline = []byte{'\n'}
+	space   = []byte{' '}
 )
 
 var upgrader = websocket.Upgrader{
@@ -12,30 +26,144 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func reader(conn *websocket.Conn) {
-	for {
-		messageType, p, err := conn.ReadMessage()
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		log.Println(string(p))
+// Client is a middleman between the websocket connection and the hub
+type Client struct {
+	Hub *Hub 
+	Conn *websocket.Conn // The websocket connection
+	Send chan []byte // Buffered channel of outbound messages
+	UserId string // The user id of the client
+}
 
-		if err := conn.WriteMessage(messageType, p); err != nil {
-			log.Println(err)
-			return
+/* -------- ReadPump is ran in a per-connection goroutine. -------- */
+/* --- The application ensures that there is at most one reader --- */
+/* -- on a connection by executing all reads from this goroutine -- */
+
+// Pumps messages from the websocket connection to the hub
+func (c *Client) ReadPump() {
+	defer func() {
+		c.Hub.Unregister <- c
+		c.Conn.Close()
+	}()
+	c.Conn.SetReadLimit(maxMessageSize)
+	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+	c.Conn.SetPongHandler(func(string) error { c.Conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	for {
+		_, message, err := c.Conn.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("error: %v", err)
+			}
+			break
+		}
+		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		c.Hub.Broadcast <- message
+	}
+}
+
+
+/* -------- WritePump is called for each connection. It is -------- */
+/* --------- ensured that there is at most one writer to a -------- */
+/* ---- connection by executing all writes from this goroutine ---- */
+
+// Pumps messages from the hub to the websocket connection
+func (c *Client) WritePump() {
+	ticker := time.NewTicker(pingPeriod)
+	defer func() {
+		ticker.Stop()
+		c.Conn.Close()
+	}()
+	for {
+		select {
+		case message, ok := <-c.Send:
+			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if !ok {
+				// The hub closed the channel
+				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+				return
+			}
+
+			w, err := c.Conn.NextWriter(websocket.TextMessage)
+			if err != nil {
+				return
+			}
+			w.Write(message)
+
+			// Add queued chat messages to the current websocket message
+			n := len(c.Send)
+			for i := 0; i < n; i++ {
+				w.Write(newline)
+				w.Write(<-c.Send)
+			}
+
+			if err := w.Close(); err != nil {
+				return
+			}
+		case <-ticker.C:
+			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
 		}
 	}
 }
 
-func (data *Forum) WsEndpoint(w http.ResponseWriter, r *http.Request) {
-	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
-
-	ws, err := upgrader.Upgrade(w, r, nil)
+// Handles websocket requests from the peer
+func (data *Forum) ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
+		return
 	}
+	// TODO: userID need to be replace by the userId of the current user from the cookie
+	client := &Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256), UserId: "userId"}
+	// fmt.Println("ServeWs", client.UserId, client.Conn)
+	client.Hub.Register <- client
 
-	log.Println("Client successfully connected.")
-	reader(ws)
+	// Allow collection of memory referenced by the caller by doing all work in new goroutines
+	go client.WritePump()
+	go client.ReadPump()
+}
+
+// Hub maintains the set of active clients and broadcasts messages to the clients
+type Hub struct {
+	Clients map[string]*Client // Registered clients
+	Broadcast chan []byte // Inbound messages from the clients
+	Register chan *Client // Register requests from the clients
+	Unregister chan *Client // Unregister requests from clients
+	Database *Forum
+}
+
+func NewHub(db *Forum) *Hub {
+	return &Hub{
+		Broadcast:  make(chan []byte),
+		Register:   make(chan *Client),
+		Unregister: make(chan *Client),
+		Clients:    make(map[string]*Client),
+		Database:   db,
+	}
+}
+
+func (h *Hub) Run() {
+	for {
+		select {
+		case client := <-h.Register:
+			h.Clients[client.UserId] = client
+			// fmt.Println("Current user:", h.Clients[client.UserId])
+		case client := <-h.Unregister:
+			if _, ok := h.Clients[client.UserId]; ok {
+				delete(h.Clients, client.UserId)
+				close(client.Send)
+			}
+		case message := <-h.Broadcast:
+			for _, client := range h.Clients {
+				
+				select {
+				case client.Send <- message:
+				default:
+					close(client.Send)
+					delete(h.Clients, client.UserId)
+				}
+			}
+		}
+	}
 }
