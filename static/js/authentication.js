@@ -294,7 +294,9 @@ function displayPosts(posts) {
   for (let i = posts.length - 1; i >= 0; i--) {
     postsWrap.innerHTML +=
       `
-    <div class="post">
+    <div class="post" id="` +
+      posts[i].PostID +
+      `">
       <div class="header">
         <div class="author-category-wrap">
           <img src="../static/img/profile.png" width="40px" />
