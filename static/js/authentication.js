@@ -326,21 +326,11 @@ function displayPosts(posts) {
         <!-- Comment, Like, Dislike -->
         <div class="actions">
           <img src="../static/img/comments-icon.svg" />
-          <img src="../static/img/like-icon.svg" />
-          <img src="../static/img/dislike-icon.svg" />
         </div>
         <!-- Comment, Like & Dislike Statistics -->
         <div class="stats">
           <div class="stat-wrapper">
             <img src="../static/img/post/comments-icon.svg" width="17px" />
-            <p>0</p>
-          </div>
-          <div class="stat-wrapper">
-            <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" />
-            <p>0</p>
-          </div>
-          <div class="stat-wrapper">
-            <img src="../static/img/post/dislikes-icon.svg" width="17px" />
             <p>0</p>
           </div>
         </div>
