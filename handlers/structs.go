@@ -64,8 +64,8 @@ type UserSession struct {
 type Comment struct {
 	CommentID int
 	PostID    int
-	UserId    string
-	Content   string
-	CreatedAt string
+	Username  string `json:"username"`
+	Content   string `json:"commentBody"`
+	CreatedAt time.Time
 }
 

@@ -27,6 +27,39 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Handles receiving the comment data and adding it to the 'comments' table in the database
+func (data *Forum) Comment(w http.ResponseWriter, r *http.Request ){
+
+var comment Comment
+
+// Decode the JSON data from the request body into the comment variable
+json.NewDecoder(r.Body).Decode(&comment)
+
+
+	// Checks session from 'sessions' table and selects the latest one
+	sess := data.GetSession()
+	currentSession := sess[len(sess)-1]
+
+
+	// Fetches username from current session
+	user := currentSession.username
+
+
+	// type postSessionStruct struct {
+	// 	Post    []Post
+	// 	Session UserSession
+	// }
+  
+	comment.Username = user 
+
+// w.WriteHeader(http.StatusOK)
+w.Write([]byte("ok"))
+
+fmt.Println(user)
+
+
+}
+
 // Handles receiving the post data and adding it to the 'posts' table in the database
 func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// Decodes posts data into post variable
@@ -257,6 +290,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// If either combination is valid, we can successfully log the user in
 	if emailPassCombinationValid || userPassCombinationValid {
 		fmt.Println("SUCCESS: User logged in.")
+
 
 		row := data.DB.QueryRow("SELECT userID FROM users WHERE username = ?;", user.Username)
 		err := row.Scan(&usID)
