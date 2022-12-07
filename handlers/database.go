@@ -284,14 +284,12 @@ func CheckTablesExist(db *sql.DB, table string) {
 		if table == "comments" {
 			fmt.Println("Creating comments table...")
 			comments_table := `CREATE TABLE IF NOT EXISTS comments (
-					"commentID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+					"commentID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					"postID" INTEGER NOT NULL,
-					"authorID" INTEGER NOT NULL,
-					"author" TEXT NOT NULL,
-					"text" TEXT NOT NULL, 
+					"username" TEXT REFERENCES sesssion(userID),
+					"content" TEXT NOT NULL, 
 					"creationDate" TIMESTAMP,
-					FOREIGN KEY(postID)REFERENCES posts(postID),
-					FOREIGN KEY(authorID)REFERENCES users(userID)
+					FOREIGN KEY(postID)REFERENCES posts(postID)
 					);`
 
 			comments, errCommments := db.Prepare(comments_table)
