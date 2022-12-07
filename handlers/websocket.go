@@ -2,18 +2,20 @@ package handlers
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
 )
 
 const (
-	writeWait = 10 * time.Second // Time allowed to write a message to the peer.
-	pongWait = 60 * time.Second // Time allowed to read the next pong message from the peer.
-	pingPeriod = (pongWait * 9) / 10 // Send pings to peer with this period. Must be less than pongWait.
-	maxMessageSize = 512 // Maximum message size allowed from peer.
+	writeWait      = 10 * time.Second    // Time allowed to write a message to the peer.
+	pongWait       = 60 * time.Second    // Time allowed to read the next pong message from the peer.
+	pingPeriod     = (pongWait * 9) / 10 // Send pings to peer with this period. Must be less than pongWait.
+	maxMessageSize = 512                 // Maximum message size allowed from peer.
 )
 
 var (
@@ -28,10 +30,10 @@ var upgrader = websocket.Upgrader{
 
 // Client is a middleman between the websocket connection and the hub
 type Client struct {
-	Hub *Hub 
-	Conn *websocket.Conn // The websocket connection
-	Send chan []byte // Buffered channel of outbound messages
-	UserId string // The user id of the client
+	Hub    *Hub
+	Conn   *websocket.Conn // The websocket connection
+	Send   chan []byte     // Buffered channel of outbound messages
+	UserId string          // The user id of the client
 }
 
 /* -------- ReadPump is ran in a per-connection goroutine. -------- */
@@ -55,11 +57,11 @@ func (c *Client) ReadPump() {
 			}
 			break
 		}
+		//fmt.Println(string(message))
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		c.Hub.Broadcast <- message
 	}
 }
-
 
 /* -------- WritePump is called for each connection. It is -------- */
 /* --------- ensured that there is at most one writer to a -------- */
@@ -115,7 +117,14 @@ func (data *Forum) ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// TODO: userID need to be replace by the userId of the current user from the cookie
-	client := &Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256), UserId: "userId"}
+	cookie, err := r.Cookie("session_token")
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	fmt.Println("cookie", strings.Split(cookie.String(), "&")[1])
+	client := &Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256), UserId: strings.Split(cookie.String(), "&")[1]}
 	// fmt.Println("ServeWs", client.UserId, client.Conn)
 	client.Hub.Register <- client
 
@@ -126,11 +135,11 @@ func (data *Forum) ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 // Hub maintains the set of active clients and broadcasts messages to the clients
 type Hub struct {
-	Clients map[string]*Client // Registered clients
-	Broadcast chan []byte // Inbound messages from the clients
-	Register chan *Client // Register requests from the clients
-	Unregister chan *Client // Unregister requests from clients
-	Database *Forum
+	Clients    map[string]*Client // Registered clients
+	Broadcast  chan []byte        // Inbound messages from the clients
+	Register   chan *Client       // Register requests from the clients
+	Unregister chan *Client       // Unregister requests from clients
+	Database   *Forum
 }
 
 func NewHub(db *Forum) *Hub {
@@ -148,7 +157,6 @@ func (h *Hub) Run() {
 		select {
 		case client := <-h.Register:
 			h.Clients[client.UserId] = client
-			// fmt.Println("Current user:", h.Clients[client.UserId])
 		case client := <-h.Unregister:
 			if _, ok := h.Clients[client.UserId]; ok {
 				delete(h.Clients, client.UserId)
@@ -156,7 +164,8 @@ func (h *Hub) Run() {
 			}
 		case message := <-h.Broadcast:
 			for _, client := range h.Clients {
-				
+				fmt.Println(client.UserId)
+				fmt.Println(string(message))
 				select {
 				case client.Send <- message:
 				default:
@@ -165,5 +174,15 @@ func (h *Hub) Run() {
 				}
 			}
 		}
+	}
+}
+func (h *Hub) LogConns() {
+	for {
+		fmt.Println(len(h.Clients), "clients connected")
+		for userId := range h.Clients {
+			fmt.Printf("client %v have %v connections\n", userId, len(h.Clients))
+		}
+		fmt.Println()
+		time.Sleep(1 * time.Second)
 	}
 }
