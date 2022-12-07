@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -46,7 +47,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// Checks session from 'sessions' table and selects the latest one
 	sess := data.GetSession()
 	currentSession := sess[len(sess)-1]
-	
+
 	// Fetches username from current session
 	user := currentSession.username
 
@@ -63,10 +64,10 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	data.CreatePost(Post{
 		Username:  user,
 		Content:   content,
-		Hashtag:  hashtag,
+		Hashtag:   hashtag,
 		CreatedAt: time,
 	})
-	
+
 }
 
 func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
@@ -107,11 +108,11 @@ func (data *Forum) UpdateHashtag(w http.ResponseWriter, r *http.Request) {
 
 	// Updates hashtag count in the 'hashtags' table of the database
 	data.UpdateHashtagCount(Hashtag{
-		ID: 	hashID,
-		Name:   hashName,
-		Count:  hashCount,
+		ID:    hashID,
+		Name:  hashName,
+		Count: hashCount,
 	})
-	
+
 }
 
 func (data *Forum) SendLatestHashtags(w http.ResponseWriter, r *http.Request) {
@@ -155,7 +156,6 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		/*       CHECKING IF EMAIL/USERNAME ALREADY EXISTS IN DATABASE      */
 		/* ---------------------------------------------------------------- */
 
-
 		/* --- Queries through each table, checks if data already exists -- */
 
 		// EMAIL CHECK
@@ -186,7 +186,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 			// Inserts registration data into the 'users' table of the database
 			query, err1 := data.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + user.Username + "','" + user.Email + "','" + string(passwordHash) + "','" + user.Firstname + "','" + user.Lastname + "'," + user.Age + ",'" + user.Gender + "')")
-			
+
 			// Handles errors inserting data
 			if err1 != nil {
 				log.Fatal(err1)
@@ -275,7 +275,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
 			Name:   "session_token",
-			Value:  sess.session,
+			Value:  sess.session + "&" + strconv.Itoa(sess.userID),
 			MaxAge: 900,
 		})
 
