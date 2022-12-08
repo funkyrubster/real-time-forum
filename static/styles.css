@@ -886,6 +886,23 @@ select:hover {
   color: #9aa7b6;
 }
 
+
+.post .submitCom{
+  width: 108px;
+  /* height: 20px; */
+  cursor: pointer;
+  background: #1677f2;
+  box-shadow: 0px 0px 10px 5px rgb(0 0 0 / 1%);
+  border-radius: 8px;
+  border: none;
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  color: #ffffff;
+}
+
 /* --------------------------- TRENDING HASHTAGS --------------------------- */
 
 /* --------------------------- CHAT --------------------------- */
