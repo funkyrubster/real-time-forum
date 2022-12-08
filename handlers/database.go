@@ -68,7 +68,7 @@ func (data *Forum) getLatestPosts() []Post {
 
 	// Scans through every post
 	for rows.Next() {
-	    // Populates post var with data from each post found in table
+		// Populates post var with data from each post found in table
 		err := rows.Scan(&post.PostID, &post.Username, &post.Content, &post.Hashtag, &post.CreatedAt)
 		if err != nil {
 			log.Fatal(err)
@@ -92,7 +92,7 @@ func (data *Forum) getLatestHashtags() []Hashtag {
 
 	// Scans through every post
 	for rows.Next() {
-	    // Populates post var with data from each post found in table
+		// Populates post var with data from each post found in table
 		err := rows.Scan(&hashtag.ID, &hashtag.Name, &hashtag.Count)
 		if err != nil {
 			log.Fatal(err)
@@ -109,7 +109,7 @@ func (data *Forum) CreatePost(post Post) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// Uses data from post variable to insert into posts table
 	_, err = stmt.Exec(post.Username, post.Content, post.Hashtag, post.CreatedAt)
 	if err != nil {
@@ -158,7 +158,7 @@ func (data *Forum) UpdateHashtagCount(hashtag Hashtag) {
 		log.Fatal(err)
 	}
 	stmt.Exec(hashtagCount, hashtag.Name)
-	
+
 	fmt.Println("Hashtag count updated to", hashtagCount, "from", hashtag.Count, "for", hashtag.Name)
 
 }
@@ -177,7 +177,7 @@ func (data *Forum) GetPosts(username string) []Post {
 
 	// Scans through every row where the username matches the username passed in
 	for rows.Next() {
-	    // Populates post var with data from each post found in table
+		// Populates post var with data from each post found in table
 		err := rows.Scan(&post.PostID, &post.Username, &post.Content, &post.Hashtag, &post.CreatedAt)
 		if err != nil {
 			log.Fatal(err)
@@ -297,14 +297,12 @@ func CheckTablesExist(db *sql.DB, table string) {
 		if table == "comments" {
 			fmt.Println("Creating comments table...")
 			comments_table := `CREATE TABLE IF NOT EXISTS comments (
-					"commentID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+					"commentID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					"postID" INTEGER NOT NULL,
-					"authorID" INTEGER NOT NULL,
-					"author" TEXT NOT NULL,
-					"text" TEXT NOT NULL, 
+					"username" TEXT REFERENCES sesssion(userID),
+					"content" TEXT NOT NULL, 
 					"creationDate" TIMESTAMP,
-					FOREIGN KEY(postID)REFERENCES posts(postID),
-					FOREIGN KEY(authorID)REFERENCES users(userID)
+					FOREIGN KEY(postID)REFERENCES posts(postID)
 					);`
 
 			comments, errCommments := db.Prepare(comments_table)
