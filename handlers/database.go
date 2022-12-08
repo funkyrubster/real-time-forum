@@ -206,12 +206,12 @@ func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
 }
 
 // Checks all sessions from sessions table and returns latest session
-func (data *Forum) GetSession() []UserSession {
+func (data *Forum) GetSession(cookie string) UserSession {
 	// Used to store session data
-	session := []UserSession{}
+	session := UserSession{}
 
 	// Checks all sessions from sessions table
-	rows, err := data.DB.Query(`SELECT * FROM sessions`)
+	rows, err := data.DB.Query(`SELECT * FROM sessions WHERE cookieValue=?;`, cookie)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -223,18 +223,18 @@ func (data *Forum) GetSession() []UserSession {
 
 	// For each session found, populate the variable above
 	for rows.Next() {
-		err := rows.Scan(&userID, &cookieValue, &userName)
-		if err != nil {
-			log.Fatal(err)
+		err2 := rows.Scan(&userID, &cookieValue, &userName)
+		if err2 != nil {
+			log.Fatal(err2)
 		}
-
 		// Overwrites every session, leaving only data for the latest session
-		session = append(session, UserSession{
+		session = UserSession{
 			userID:   userID,
 			session:  cookieValue,
 			username: userName,
-		})
+		}
 	}
+
 	return session
 }
 
