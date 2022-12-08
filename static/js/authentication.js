@@ -276,7 +276,7 @@ const createPost = function getInputValue() {
   let fetchRes = fetch("http://localhost:8080/post", options);
   fetchRes.then((response) => {
     if (response.status == "200") {
-      postBody.value = '';
+      postBody.value = "";
       notyf.success("Your post was created successfully.");
       refreshPosts();
       updateHashtagTable();
@@ -329,8 +329,15 @@ function displayPosts(posts) {
       <div class="footer">
         <!-- Comment -->
         <div class="actions">
-          <textarea class="comBody" id="commentBody${i}" name="commentBody" style="width:100%" rows="2" cols="70" placeholder="create comment"></textarea>
-          <input type="submit" id="submitCom${i}" class="submitCom" value="Submit", onclick="createCom(${i})";>
+        
+          <textarea class="comBody" id="commentBody${
+            posts.length - i
+          }" name="commentBody" style="width:100%" rows="2" cols="70" placeholder="create comment"></textarea>
+          <input type="submit" id="submitCom${
+            posts.length - i
+          }" class="submitCom" value="Submit", onclick="createCom(${
+        posts.length - i
+      })";>
         </div>
         <!-- Comment -->
         <div class="stats">
@@ -350,6 +357,7 @@ function createCom(i) {
   // let submitCom = document.querySelector(idSubmit);
   let comBody = document.querySelector(idCommentBody);
   let commentObj = {
+    postid: i,
     commentBody: comBody.value,
   };
   console.log(commentObj);
