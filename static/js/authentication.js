@@ -341,10 +341,6 @@ function displayPosts(posts) {
         </div>
         <!-- Comment -->
         <div class="stats">
-          <div class="stat-wrapper">
-            <img src="../static/img/post/comments-icon.svg" width="17px" />
-            <p>0</p>
-          </div>
         </div>
       </div>
     </div>
