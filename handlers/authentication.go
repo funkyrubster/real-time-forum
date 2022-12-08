@@ -85,14 +85,6 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 
 	sess := data.GetSession(sessionvalue)
 
-	type postSessionStruct struct {
-		Post    []Post
-		Session UserSession
-	}
-	// Creates postAndSession variable and assigns the post and session to it
-	var postAndSession postSessionStruct
-	postAndSession.Session.session = sessionvalue
-
 	// Inserts post into the 'posts' table of the database
 	data.CreatePost(Post{
 		//username from current session
