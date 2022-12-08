@@ -34,27 +34,27 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 
 	// Decode the JSON data from the request body into the comment variable
 	json.NewDecoder(r.Body).Decode(&comment)
+
+	// w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
+
+	// feches current session value 
 	x, err := r.Cookie("session_token")
 	if err != nil {
 		log.Fatal(err)
 	}
 	sessionvalue := x.Value
+
 	sess := data.GetSession(sessionvalue)
-	// Checks session from 'sessions' table and selects the latest one
-	// sess := data.GetSession()
-	// currentSession := sess[len(sess)-1]
+	time := time.Now()
 
-	// Fetches username from current session
-	// user := currentSession.username
-
-	// type postSessionStruct struct {
-	// 	Post    []Post
-	// 	Session UserSession
-	// }
-
-	comment.Username = sess.username
-	// w.WriteHeader(http.StatusOK)
-	w.Write([]byte("ok"))
+	data.CreateComment(Comment{
+		PostID: comment.PostID,
+		Username: sess.username,
+		Content: comment.Content,
+		CreatedAt: time,
+	})
+	
 
 	fmt.Println(comment)
 
@@ -65,39 +65,29 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// Decodes posts data into post variable
 	var post Post
 
-	x, err := r.Cookie("session_token")
-	if err != nil {
-		log.Fatal()
-	}
-	sessionvalue := x.Value
 	// Decode the JSON data from the request body into the post variable
 	json.NewDecoder(r.Body).Decode(&post)
 
 	// w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 
+	// feches current session value 
+	x, err := r.Cookie("session_token")
+	if err != nil {
+		log.Fatal()
+	}
+	sessionvalue := x.Value
+
 	// Convert data into variables for easier use
 	hashtag := post.Hashtag
 	time := time.Now()
 	content := post.Content
 
-	// Checks session from 'sessions' table and selects the latest one
 	sess := data.GetSession(sessionvalue)
-	// currentSession := sess[len(sess)-1]
-
-	// Fetches username from current session
-
-	type postSessionStruct struct {
-		Post    []Post
-		Session UserSession
-	}
-
-	// Creates postAndSession variable and assigns the post and session to it
-	var postAndSession postSessionStruct
-	postAndSession.Session.session = sessionvalue
-
+	
 	// Inserts post into the 'posts' table of the database
 	data.CreatePost(Post{
+		//username from current session
 		Username:  sess.username,
 		Content:   content,
 		Hashtag:   hashtag,
