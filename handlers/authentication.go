@@ -28,35 +28,35 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 // Handles receiving the comment data and adding it to the 'comments' table in the database
-func (data *Forum) Comment(w http.ResponseWriter, r *http.Request ){
+func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 
-var comment Comment
+	var comment Comment
 
-// Decode the JSON data from the request body into the comment variable
-json.NewDecoder(r.Body).Decode(&comment)
-
-
+	// Decode the JSON data from the request body into the comment variable
+	json.NewDecoder(r.Body).Decode(&comment)
+	x, err := r.Cookie("session_token")
+	if err != nil {
+		log.Fatal(err)
+	}
+	sessionvalue := x.Value
+	sess := data.GetSession(sessionvalue)
 	// Checks session from 'sessions' table and selects the latest one
-	sess := data.GetSession()
-	currentSession := sess[len(sess)-1]
-
+	// sess := data.GetSession()
+	// currentSession := sess[len(sess)-1]
 
 	// Fetches username from current session
-	user := currentSession.username
-
+	// user := currentSession.username
 
 	// type postSessionStruct struct {
 	// 	Post    []Post
 	// 	Session UserSession
 	// }
-  
-	comment.Username = user 
 
-// w.WriteHeader(http.StatusOK)
-w.Write([]byte("ok"))
+	comment.Username = sess.username
+	// w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
 
-fmt.Println(user)
-
+	fmt.Println(comment)
 
 }
 
@@ -65,6 +65,11 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// Decodes posts data into post variable
 	var post Post
 
+	x, err := r.Cookie("session_token")
+	if err != nil {
+		log.Fatal()
+	}
+	sessionvalue := x.Value
 	// Decode the JSON data from the request body into the post variable
 	json.NewDecoder(r.Body).Decode(&post)
 
@@ -77,11 +82,10 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	content := post.Content
 
 	// Checks session from 'sessions' table and selects the latest one
-	sess := data.GetSession()
-	currentSession := sess[len(sess)-1]
-	
+	sess := data.GetSession(sessionvalue)
+	// currentSession := sess[len(sess)-1]
+
 	// Fetches username from current session
-	user := currentSession.username
 
 	type postSessionStruct struct {
 		Post    []Post
@@ -90,16 +94,16 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 
 	// Creates postAndSession variable and assigns the post and session to it
 	var postAndSession postSessionStruct
-	postAndSession.Session = currentSession
+	postAndSession.Session.session = sessionvalue
 
 	// Inserts post into the 'posts' table of the database
 	data.CreatePost(Post{
-		Username:  user,
+		Username:  sess.username,
 		Content:   content,
-		Hashtag:  hashtag,
+		Hashtag:   hashtag,
 		CreatedAt: time,
 	})
-	
+
 }
 
 func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
@@ -140,11 +144,11 @@ func (data *Forum) UpdateHashtag(w http.ResponseWriter, r *http.Request) {
 
 	// Updates hashtag count in the 'hashtags' table of the database
 	data.UpdateHashtagCount(Hashtag{
-		ID: 	hashID,
-		Name:   hashName,
-		Count:  hashCount,
+		ID:    hashID,
+		Name:  hashName,
+		Count: hashCount,
 	})
-	
+
 }
 
 func (data *Forum) SendLatestHashtags(w http.ResponseWriter, r *http.Request) {
@@ -188,7 +192,6 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		/*       CHECKING IF EMAIL/USERNAME ALREADY EXISTS IN DATABASE      */
 		/* ---------------------------------------------------------------- */
 
-
 		/* --- Queries through each table, checks if data already exists -- */
 
 		// EMAIL CHECK
@@ -219,7 +222,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 
 			// Inserts registration data into the 'users' table of the database
 			query, err1 := data.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + user.Username + "','" + user.Email + "','" + string(passwordHash) + "','" + user.Firstname + "','" + user.Lastname + "'," + user.Age + ",'" + user.Gender + "')")
-			
+
 			// Handles errors inserting data
 			if err1 != nil {
 				log.Fatal(err1)
@@ -290,7 +293,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// If either combination is valid, we can successfully log the user in
 	if emailPassCombinationValid || userPassCombinationValid {
 		fmt.Println("SUCCESS: User logged in.")
-
 
 		row := data.DB.QueryRow("SELECT userID FROM users WHERE username = ?;", user.Username)
 		err := row.Scan(&usID)

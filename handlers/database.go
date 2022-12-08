@@ -68,7 +68,7 @@ func (data *Forum) getLatestPosts() []Post {
 
 	// Scans through every post
 	for rows.Next() {
-	    // Populates post var with data from each post found in table
+		// Populates post var with data from each post found in table
 		err := rows.Scan(&post.PostID, &post.Username, &post.Content, &post.Hashtag, &post.CreatedAt)
 		if err != nil {
 			log.Fatal(err)
@@ -92,7 +92,7 @@ func (data *Forum) getLatestHashtags() []Hashtag {
 
 	// Scans through every post
 	for rows.Next() {
-	    // Populates post var with data from each post found in table
+		// Populates post var with data from each post found in table
 		err := rows.Scan(&hashtag.ID, &hashtag.Name, &hashtag.Count)
 		if err != nil {
 			log.Fatal(err)
@@ -109,7 +109,7 @@ func (data *Forum) CreatePost(post Post) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// Uses data from post variable to insert into posts table
 	_, err = stmt.Exec(post.Username, post.Content, post.Hashtag, post.CreatedAt)
 	if err != nil {
@@ -145,7 +145,7 @@ func (data *Forum) UpdateHashtagCount(hashtag Hashtag) {
 		log.Fatal(err)
 	}
 	stmt.Exec(hashtagCount, hashtag.Name)
-	
+
 	fmt.Println("Hashtag count updated to", hashtagCount, "from", hashtag.Count, "for", hashtag.Name)
 
 }
@@ -164,7 +164,7 @@ func (data *Forum) GetPosts(username string) []Post {
 
 	// Scans through every row where the username matches the username passed in
 	for rows.Next() {
-	    // Populates post var with data from each post found in table
+		// Populates post var with data from each post found in table
 		err := rows.Scan(&post.PostID, &post.Username, &post.Content, &post.Hashtag, &post.CreatedAt)
 		if err != nil {
 			log.Fatal(err)
@@ -206,12 +206,12 @@ func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
 }
 
 // Checks all sessions from sessions table and returns latest session
-func (data *Forum) GetSession() []UserSession {
+func (data *Forum) GetSession(cookie string) UserSession {
 	// Used to store session data
-	session := []UserSession{}
+	session := UserSession{}
 
 	// Checks all sessions from sessions table
-	rows, err := data.DB.Query(`SELECT * FROM sessions`)
+	rows, err := data.DB.Query(`SELECT * FROM sessions WHERE cookieValue=?;`, cookie)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -223,18 +223,18 @@ func (data *Forum) GetSession() []UserSession {
 
 	// For each session found, populate the variable above
 	for rows.Next() {
-		err := rows.Scan(&userID, &cookieValue, &userName)
-		if err != nil {
-			log.Fatal(err)
+		err2 := rows.Scan(&userID, &cookieValue, &userName)
+		if err2 != nil {
+			log.Fatal(err2)
 		}
-
 		// Overwrites every session, leaving only data for the latest session
-		session = append(session, UserSession{
+		session = UserSession{
 			userID:   userID,
 			session:  cookieValue,
 			username: userName,
-		})
+		}
 	}
+
 	return session
 }
 
