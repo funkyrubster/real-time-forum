@@ -117,6 +117,19 @@ func (data *Forum) CreatePost(post Post) {
 	}
 }
 
+func (data *Forum) CreateComment(comment Comment) {
+stmt, err := data.DB.Prepare("INSERT INTO comments(postID, username, content, creationDate) VALUES(?, ?, ?, ?);")
+if err != nil {
+	log.Fatal(err)
+}
+
+_, err = stmt.Exec(comment.PostID, comment.Username, comment.Content, comment.CreatedAt)
+if err != nil {
+	log.Fatal(err)
+}
+}
+
+
 // Updates hashtag value
 func (data *Forum) UpdateHashtagCount(hashtag Hashtag) {
 	// GET COUNT FOR DESIRED HASHTAG
