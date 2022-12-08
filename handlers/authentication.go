@@ -28,6 +28,39 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Handles receiving the comment data and adding it to the 'comments' table in the database
+func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
+
+	var comment Comment
+
+	// Decode the JSON data from the request body into the comment variable
+	json.NewDecoder(r.Body).Decode(&comment)
+
+	// w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
+
+	// feches current session value 
+	x, err := r.Cookie("session_token")
+	if err != nil {
+		log.Fatal(err)
+	}
+	sessionvalue := x.Value
+
+	sess := data.GetSession(sessionvalue)
+	time := time.Now()
+
+	data.CreateComment(Comment{
+		PostID: comment.PostID,
+		Username: sess.username,
+		Content: comment.Content,
+		CreatedAt: time,
+	})
+	
+
+	fmt.Println(comment)
+
+}
+
 // Handles receiving the post data and adding it to the 'posts' table in the database
 func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// Decodes posts data into post variable
@@ -39,30 +72,24 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 
+	// feches current session value 
+	x, err := r.Cookie("session_token")
+	if err != nil {
+		log.Fatal()
+	}
+	sessionvalue := x.Value
+
 	// Convert data into variables for easier use
 	hashtag := post.Hashtag
 	time := time.Now()
 	content := post.Content
 
-	// Checks session from 'sessions' table and selects the latest one
-	sess := data.GetSession()
-	currentSession := sess[len(sess)-1]
-
-	// Fetches username from current session
-	user := currentSession.username
-
-	type postSessionStruct struct {
-		Post    []Post
-		Session UserSession
-	}
-
-	// Creates postAndSession variable and assigns the post and session to it
-	var postAndSession postSessionStruct
-	postAndSession.Session = currentSession
+	sess := data.GetSession(sessionvalue)
 
 	// Inserts post into the 'posts' table of the database
 	data.CreatePost(Post{
-		Username:  user,
+		//username from current session
+		Username:  sess.username,
 		Content:   content,
 		Hashtag:   hashtag,
 		CreatedAt: time,
