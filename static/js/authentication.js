@@ -325,31 +325,53 @@ function displayPosts(posts) {
       </div>
       <!-- Footer -->
       <div class="footer">
-        <!-- Comment, Like, Dislike -->
+        <!-- Comment -->
         <div class="actions">
-          <img src="../static/img/comments-icon.svg" />
-          <img src="../static/img/like-icon.svg" />
-          <img src="../static/img/dislike-icon.svg" />
+        
+          <textarea class="comBody" id="commentBody${
+            posts.length - i
+          }" name="commentBody" style="width:100%" rows="2" cols="70" placeholder="create comment"></textarea>
+          <input type="submit" id="submitCom${
+            posts.length - i
+          }" class="submitCom" value="Submit", onclick="createCom(${
+        posts.length - i
+      })";>
         </div>
-        <!-- Comment, Like & Dislike Statistics -->
+        <!-- Comment -->
         <div class="stats">
-          <div class="stat-wrapper">
-            <img src="../static/img/post/comments-icon.svg" width="17px" />
-            <p>0</p>
-          </div>
-          <div class="stat-wrapper">
-            <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" />
-            <p>0</p>
-          </div>
-          <div class="stat-wrapper">
-            <img src="../static/img/post/dislikes-icon.svg" width="17px" />
-            <p>0</p>
-          </div>
         </div>
       </div>
     </div>
     `;
   }
+}
+function createCom(i) {
+  let idCommentBody = "#commentBody" + i;
+  // let idSubmit = "#submitCom" + i;
+  // let submitCom = document.querySelector(idSubmit);
+  let comBody = document.querySelector(idCommentBody);
+  let commentObj = {
+    postid: i,
+    commentBody: comBody.value,
+  };
+  console.log(commentObj);
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(commentObj),
+  };
+  let fetchRes = fetch("http://localhost:8080/comment", options);
+  fetchRes.then((response) => {
+    if (response.status == "200") {
+      notyf.success("Your comment was created successfully.");
+      comBody.value = " ";
+    } else {
+      notyf.error("Your comment failed to send.");
+    }
+    return response.text();
+  });
 }
 
 function updateHashtagTable() {
