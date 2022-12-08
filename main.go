@@ -35,6 +35,7 @@ func main() {
 	// http.HandleFunc("/hashtag", data.hashtag)
 	hub := handlers.NewHub(data)
 	go hub.Run()
+	go hub.LogConns()
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		data.ServeWs(hub, w, r)
 	})
