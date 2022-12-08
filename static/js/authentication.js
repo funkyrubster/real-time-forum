@@ -78,7 +78,8 @@ function convertDate(date) {
       month = "December";
       break;
   }
-  fullDate = day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
+  fullDate =
+    day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
   return fullDate;
 }
 
@@ -94,15 +95,15 @@ signUpData.addEventListener("submit", function () {
     newusername: document.getElementById("newusername").value,
     age: document.getElementById("age").value,
     gender: document.getElementById("gender").value,
-    newpassword: document.getElementById("newpassword").value
+    newpassword: document.getElementById("newpassword").value,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(user)
+    body: JSON.stringify(user),
   };
 
   let fetchRes = fetch("http://localhost:8080/register", options);
@@ -154,15 +155,15 @@ const loginData = document.getElementById("login-form");
 loginData.addEventListener("submit", function () {
   let user = {
     username: document.getElementById("username").value,
-    password: document.getElementById("password").value
+    password: document.getElementById("password").value,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(user)
+    body: JSON.stringify(user),
   };
 
   let fetchRes = fetch("http://localhost:8080/login", options);
@@ -194,18 +195,20 @@ loginData.addEventListener("submit", function () {
 
 // Concatenates the user's details within the HTML after login
 function updateUserDetails(data) {
-  document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
+  document.querySelector("p.name").innerHTML =
+    data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
-  document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
+  document.querySelector("#postBody").placeholder =
+    `What's on your mind, ` + data.User.firstName + `?`;
 }
 
 function refreshPosts() {
   fetch("/getPosts", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    method: "POST"
+    method: "POST",
   })
     .then((response) => {
       response.text().then(function (data) {
@@ -224,9 +227,9 @@ function refreshHashtags() {
   fetch("/getHashtags", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    method: "POST"
+    method: "POST",
   })
     .then((response) => {
       response.text().then(function (data) {
@@ -259,20 +262,21 @@ const createPost = function getInputValue() {
 
   let post = {
     postBody: document.getElementById("postBody").value,
-    Hashtag: hashtag
+    Hashtag: hashtag,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(post)
+    body: JSON.stringify(post),
   };
 
   let fetchRes = fetch("http://localhost:8080/post", options);
   fetchRes.then((response) => {
     if (response.status == "200") {
+      postBody.value = "";
       notyf.success("Your post was created successfully.");
       refreshPosts();
       updateHashtagTable();
@@ -380,15 +384,15 @@ function updateHashtagTable() {
 
   let hashtag = {
     Name: hashtag_value,
-    Count: "1"
+    Count: "1",
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(hashtag)
+    body: JSON.stringify(hashtag),
   };
 
   let fetchRes = fetch("http://localhost:8080/updateHashtag", options);
