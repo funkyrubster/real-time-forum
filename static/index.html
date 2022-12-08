@@ -197,7 +197,7 @@
           <!-- Create A Post -->
           <div class="create-post">
             <img src="../static/img/profile.png" width="50px" alt="" />
-            <textarea id="postBody" name="postBody" rows="4" cols="50" placeholder="What’s new, Loretta?"></textarea>
+            <textarea id="postBody" name="postBody" rows="4" cols="50" placeholder="What’s new, Loretta?" autofocus></textarea>
             <div class="category-post-wrap">
               <!-- radio button options -->
               <div class="categories">
@@ -217,21 +217,81 @@
           <!-- Posts -->
           <div class="posts-wrap"></div>
         </div>
+
+        <!-- Left-section -->
+        <div class="left">
+          <!-- Mini profile -->
+          <div class="mini-profile">
+            <img src="../static/img/profile.png" width="40px" alt="" />
+            <div class="name-username-wrap">
+              <p class="name"></p>
+              <p class="username"></p>
+            </div>
+          </div>
+
+          <div class="title-bg">
+            <p>ACTIONS</p>
+          </div>
+
+          <!-- Navigation menu -->
+          <div class="nav-menu">
+            <!-- Feed -->
+            <div class="nav-item" id="feed">
+              <img src="../static/img/nav-menu/home-icon.svg" alt="" />
+              <p>Feed</p>
+            </div>
+            <!-- My profile -->
+            <div class="nav-item" id="my-profile">
+              <img src="../static/img/nav-menu/profile-icon.svg" alt="" />
+              <p>My Profile</p>
+            </div>
+            <!-- My posts -->
+            <div class="nav-item" id="my-posts">
+              <img src="../static/img/nav-menu/posts-icon.svg" alt="" />
+              <p>My Posts</p>
+            </div>
+            <!-- My likes -->
+            <div class="nav-item" id="my-likes">
+              <img src="../static/img/nav-menu/likes-icon.svg" alt="" />
+              <p>My Likes</p>
+            </div>
+            <!-- Settings -->
+            <div class="nav-item" id="settings">
+              <img src="../static/img/nav-menu/settings-icon.svg" alt="" />
+              <p>Settings</p>
+            </div>
+          </div>
+
+          <div class="title-bg">
+            <p>CHAT</p>
+          </div>
+          <!-- Trending Topics -->
+          <div id="chat">
+            <div class="profile-header">
+              <div class="img-name-wrap">
+                <img src="../static/img/chat/profile_pic.svg" width="37.5px" />
+                <div class="status-wrap">
+                  <div class="online-status"></div>
+                </div>
+                <p class="name">Adam Torff</p>
+              </div>
+              <img src="../static/img/chat/cross.svg" width="15px" />
+            </div>
+            <div id="log"></div>
+            <form id="form">
+              <input type="text" id="msg" placeholder="Start typing..." size="64" />
+              <input type="submit" value="Send" />
+            </form>
+          </div>
+        </div>
       </div>
       </div>
     </main>
 
     <!--------------------------- PRIVATE MESSAGING --------------------------->
-    <div id="chat">
-      <div id="log"></div>
-      <form id="form">
-        <input type="submit" value="Send" />
-        <input type="text" id="msg" size="64" autofocus />
-      </form>
-    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script src="../static/js/app.js"></script>
-    <script src="../static/js/websocket.js"></script>
     <script src="https://cdn.lordicon.com/pzdvqjsp.js"></script>
     <script src="../static/js/authentication.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
