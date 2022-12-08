@@ -59,8 +59,8 @@ function showFeed() {
   };
 }
 
-let messengerButton = document.getElementById("messenger");
-messengerButton.addEventListener("click", () => {
-  document.getElementById("log").style.display = "block";
-  document.getElementById("form").style.display = "block";
-});
+// let messengerButton = document.getElementById("messenger");
+// messengerButton.addEventListener("click", () => {
+//   document.getElementById("log").style.display = "block";
+//   document.getElementById("form").style.display = "block";
+// });

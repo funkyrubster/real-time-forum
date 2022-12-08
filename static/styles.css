@@ -210,7 +210,7 @@ select {
 
 /* Hides dropdown icon */
 select {
-  -webkit-appearance: none; 
+  -webkit-appearance: none;
   -moz-appearance: none;
   text-indent: 1px;
   text-overflow: "";
@@ -894,32 +894,133 @@ select:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100px;
-  width: 100%;
+  height: 100%;
+  width: 265px;
+  box-shadow: 0px 0px 10px 5px rgb(0 0 0 / 1%);
+  border-radius: 10px;
 }
 
 #log {
-  display: none;
+  display: block;
   background: white;
-  margin: 0;
-  padding: 0.5em 0.5em 0.5em 0.5em;
-  position: absolute;
-  top: 0.5em;
-  left: 0.5em;
-  right: 0.5em;
-  bottom: 3em;
+  width: 100%;
+  height: 100%;
   overflow: auto;
+  padding: 0 1rem;
 }
 
 #form {
-  display: none;
-  padding: 0 0.5em 0 0.5em;
-  margin: 0;
-  position: absolute;
-  bottom: 1em;
-  left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: 1rem;
   width: 100%;
-  overflow: hidden;
+  background: white;
+
+  border-radius: 10px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+/* Profile Header */
+#chat .profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  width: 100%;
+  padding: 0.75rem 1rem;
+
+  border-bottom: 0.3px solid #1e3a5f1c;
+  border-radius: 10px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+  position: relative;
+}
+
+#chat .profile-header .status-wrap {
+  width: 15px;
+  height: 15px;
+  background: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.01);
+  border-radius: 100px;
+
+  position: absolute;
+  left: 38px;
+  top: 34px;
+}
+
+#chat .profile-header .online-status {
+  width: 9.5px;
+  height: 9.5px;
+  background: #59d73b;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.01);
+  border-radius: 100px;
+
+  position: absolute;
+  left: 3px;
+  top: 3px;
+}
+
+#chat .profile-header .img-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+#chat .profile-header p.name {
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  letter-spacing: -0.02em;
+  color: #1e3a5f;
+}
+
+#form input#msg::placeholder {
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  color: #9aa7b6;
+}
+
+#form input#msg {
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+
+  background: linear-gradient(90deg, #f5f5f5 0%, #f1f1f1 98.19%);
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 8px;
+  border: none;
+
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  color: #4c5b6e;
+}
+
+#form input[type="submit"] {
+  background: #1677f2;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 8px;
+  border: none;
+  padding: 0.5rem;
+
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  color: #ffffff;
 }
 
 /* --------------------------- ANIMATIONS --------------------------- */
