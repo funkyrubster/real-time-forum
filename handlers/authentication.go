@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -302,7 +301,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
 			Name:   "session_token",
-			Value:  sess.session + "&" + strconv.Itoa(sess.userID),
+			Value:  sess.session,
 			MaxAge: 900,
 		})
 
