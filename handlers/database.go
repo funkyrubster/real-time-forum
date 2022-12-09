@@ -208,7 +208,7 @@ func (data *Forum) DeleteSession(w http.ResponseWriter, userID int) error {
 	}
 	http.SetCookie(w, cookie)
 
-	stmt, err := data.DB.Prepare("DELETE FROM session WHERE userID=?;")
+	stmt, err := data.DB.Prepare("DELETE FROM sessions WHERE userID=?;")
 	// defer stmt.Close()
 	stmt.Exec(userID)
 	if err != nil {
