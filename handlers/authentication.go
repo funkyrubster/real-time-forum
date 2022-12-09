@@ -332,36 +332,36 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // // logout handle
-// func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("LogOut Handler Here ********* ")
-// 	c, err := r.Cookie("session_token")
-// 	var logoutUser int
+func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("LogOut Handler Here ********* ")
+	c, err := r.Cookie("session_token")
+	var logoutUser int
 
-// 	if err == nil {
+	if err == nil {
 
-// 		rows, err := data.DB.Query("SELECT userID FROM sessions WHERE sessionID=?", c.Value)
-// 		if err != nil {
-// 			log.Fatal(err)
+		rows, err := data.DB.Query("SELECT userID FROM sessions WHERE sessionID=?", c.Value)
+		if err != nil {
+			log.Fatal(err)
 
-// 			// fmt.Println("Logout error: ", err)
-// 		}
-// 		defer rows.Close()
-// 		for rows.Next() {
-// 			rows.Scan(&logoutUser)
-// 		}
-// 		fmt.Printf("User %d wants to logout\n", logoutUser)
-// 	}
-// 	data.DeleteSession(w, logoutUser) // ?
-// 	// fmt.Println("User logged out")
-// 	// http.Redirect(w, r, "/", http.StatusFound)
+			// fmt.Println("Logout error: ", err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			rows.Scan(&logoutUser)
+		}
+		fmt.Printf("User %d wants to logout\n", logoutUser)
+	}
+	data.DeleteSession(w, logoutUser) // ?
+	// fmt.Println("User logged out")
+	// http.Redirect(w, r, "/", http.StatusFound)
 
-// 	stmt, errUpdate := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE userID = ?;")
-// 	if errUpdate != nil {
-// 		log.Fatal("Updating Table: ", errUpdate)
-// 	}
-// 	defer stmt.Close()
-// 	stmt.Exec(false, logoutUser)
-// }
+	// stmt, errUpdate := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE userID = ?;")
+	// if errUpdate != nil {
+	// 	log.Fatal("Updating Table: ", errUpdate)
+	// }
+	// defer stmt.Close()
+	// stmt.Exec(false, logoutUser)
+}
 
 // TODO
 // once login check session table for creating user list (get data for user table)
