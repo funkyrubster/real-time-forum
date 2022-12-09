@@ -334,12 +334,13 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 // // logout handle
 func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LogOut Handler Here ********* ")
+	
 	c, err := r.Cookie("session_token")
 	var logoutUser int
 
 	if err == nil {
 
-		rows, err := data.DB.Query("SELECT userID FROM sessions WHERE sessionID=?", c.Value)
+		rows, err := data.DB.Query("SELECT userID FROM sessions WHERE cookieValue=?", c.Value)
 		if err != nil {
 			log.Fatal(err)
 
@@ -351,7 +352,9 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Printf("User %d wants to logout\n", logoutUser)
 	}
-	data.DeleteSession(w, logoutUser) // ?
+	data.DeleteSession(w, logoutUser)
+	w.WriteHeader(http.StatusOK) 
+	w.Write([]byte("ok"))
 	// fmt.Println("User logged out")
 	// http.Redirect(w, r, "/", http.StatusFound)
 
