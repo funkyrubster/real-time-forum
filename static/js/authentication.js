@@ -450,3 +450,38 @@ function displayTrendingHashtags(hashtags) {
     }
   }
 }
+
+
+const logout = function logoutUser(){
+  let cookie = document.cookie
+  let username = (cookie.split("="))[0]
+  
+  console.log(username);
+  
+  let logoutData = {
+    ok: ""
+  }
+  
+  logoutData.ok = username
+  
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(loginData),
+  };
+  
+  
+  let fetchRes = fetch("http://localhost:8080/logout", options);
+  fetchRes
+  .then((response) => {
+    if (response.status == "200" )
+    notyf.success("Succesfully loggedOut.");
+    showLoginUI()
+    return response.text();
+  }).catch(function(err){
+    console.log(err);
+  })
+  
+  };
