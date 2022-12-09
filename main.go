@@ -29,6 +29,7 @@ func main() {
 	http.HandleFunc("/register", data.RegistrationHandler)
 	http.HandleFunc("/post", data.Post)
 	http.HandleFunc("/comment", data.Comment )
+	http.HandleFunc("/logout", data.LogoutUser)
 	http.HandleFunc("/getPosts", data.SendLatestPosts)
 	http.HandleFunc("/getHashtags", data.SendLatestHashtags)
 	http.HandleFunc("/updateHashtag", data.UpdateHashtag)
