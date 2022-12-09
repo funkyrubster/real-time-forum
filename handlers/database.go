@@ -13,6 +13,7 @@ type Forum struct {
 	*sql.DB
 }
 
+
 // Pulls specific user's data and posts data from database and returns it as a User struct
 func (data *Forum) GetUserProfile(username string) UserProfile {
 	// Used to store the user's profile information
@@ -33,10 +34,11 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	var password string
 	var age int
 	var gender string
+	var loggedin string
 
 	// Scans through each column in the 'users' row and stores the data in the variables above
 	for rows.Next() {
-		err := rows.Scan(&userID, &nickname, &email, &password, &firstname, &lastname, &age, &gender)
+		err := rows.Scan(&userID, &nickname, &email, &password, &firstname, &lastname, &age, &gender, &loggedin)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -103,6 +105,7 @@ func (data *Forum) getLatestHashtags() []Hashtag {
 	return hashtags
 }
 
+
 // Handles creation of new posts
 func (data *Forum) CreatePost(post Post) {
 	stmt, err := data.DB.Prepare("INSERT INTO posts (username, content, hashtag, creationDate) VALUES (?, ?, ?, ?);")
@@ -128,6 +131,17 @@ if err != nil {
 	log.Fatal(err)
 }
 }
+
+
+func (data *Forum) UpdateStatus(loggedin string, username string){
+		stmt, err := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE username = ?;")
+		if err != nil {
+			log.Fatal(err)
+		}
+		stmt.Exec(loggedin, username)
+
+}
+
 
 
 // Updates hashtag value
@@ -267,7 +281,8 @@ func CheckTablesExist(db *sql.DB, table string) {
 					"firstname" TEXT,
 					"lastname" TEXT,
 					"age" INTEGER NOT NULL, 
-					"gender" TEXT NOT NULL
+					"gender" TEXT NOT NULL,
+					"loggedin" TEXT
 					);`
 
 			users, errUser := db.Prepare(users_table)
