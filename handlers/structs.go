@@ -14,6 +14,7 @@ type RegisterData struct {
 	Age       string `json:"age"`
 	Gender    string `json:"gender"`
 	Password  string `json:"newpassword"`
+	LoggedIn  string 
 }
 
 type User struct {
@@ -51,7 +52,7 @@ type Hashtag struct {
 type LoginData struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	LoggedIn bool 
+	LoggedIn  string 
 }
 
 type UserSession struct {
