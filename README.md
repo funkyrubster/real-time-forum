@@ -73,4 +73,4 @@ You can then register and login to the forum, and start using the various featur
 
 ## Conclusion
 
-Overall, we found this project to be a challenging but rewarding experience. Working with Go and websockets required us to learn and apply various new concepts
+Overall, we found this project to be a challenging but rewarding experience. Working with Go and websockets required us to learn and apply various new concepts.
