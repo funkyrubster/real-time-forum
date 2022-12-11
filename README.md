@@ -1,6 +1,6 @@
 # Real-Time-Forum
 
-This project is a forum website created using Go and websockets. The forum allows users to register, login, create posts, comment on posts, and send private messages to each other. The forum uses SQLite to store data, and uses the Gorilla websocket package to handle websocket connections.
+This project is a forum website created using HTML, CSS, Javascript and Go. The forum allows users to register, login, create posts, comment on posts, and send private messages to each other. We also used technologies such as SQLite to store data and the Gorilla websocket package to handle websocket connections and client-server communication.
 
 ## How we did it
 
