@@ -22,6 +22,7 @@ type User struct {
 	Lastname  string `json:"lastName"`
 	Email     string `json:"email"`
 	Username  string `json:"username"`
+	LoggedIn string
 }
 
 
@@ -29,6 +30,7 @@ type UserProfile struct {
 	User         User
 	CreatedPosts []Post
 	Hashtags	 []Hashtag
+	
 }
 
 type Hashtags struct {

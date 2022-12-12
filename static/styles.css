@@ -721,6 +721,25 @@ select:hover {
   color: #ffffff;
 }
 
+#logout-btn {
+  width: 108px;
+  height: 36px;
+
+  cursor: pointer;
+  background: #1677f2;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 8px;
+  border: none;
+
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  color: #ffffff;
+}
+
+
 /* Posts */
 .posts-wrap {
   display: flex;
@@ -888,8 +907,8 @@ select:hover {
 
 
 .post .submitCom{
-    width: 108px;
-    /* height: 20px; */
+  width: 106px;
+  height: 36px;
     cursor: pointer;
     background: #1677f2;
     box-shadow: 0px 0px 10px 5px rgb(0 0 0 / 1%);
@@ -897,7 +916,7 @@ select:hover {
     border: none;
     font-family: "Bambino New";
     font-style: normal;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 14px;
     line-height: 19px;
     color: #ffffff;
