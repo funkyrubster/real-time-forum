@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -38,7 +39,7 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 	// w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 
-	// feches current session value 
+	// feches current session value
 	x, err := r.Cookie("session_token")
 	if err != nil {
 		log.Fatal(err)
@@ -49,12 +50,11 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 	time := time.Now()
 
 	data.CreateComment(Comment{
-		PostID: comment.PostID,
-		Username: sess.username,
-		Content: comment.Content,
+		PostID:    comment.PostID,
+		Username:  sess.username,
+		Content:   comment.Content,
 		CreatedAt: time,
 	})
-	
 
 	fmt.Println(comment)
 
@@ -71,7 +71,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 
-	// feches current session value 
+	// feches current session value
 	x, err := r.Cookie("session_token")
 	if err != nil {
 		log.Fatal()
@@ -177,6 +177,7 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		// These are initially false, and are only set to true if the email/username is not found in the database (registration is available and will not overwrite existing data)
 		emailValid := false
 		usernameValid := false
+		user.LoggedIn = "false"
 
 		/* ---------------------------------------------------------------- */
 		/*       CHECKING IF EMAIL/USERNAME ALREADY EXISTS IN DATABASE      */
@@ -211,14 +212,15 @@ func (data *Forum) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// Inserts registration data into the 'users' table of the database
-			query, err1 := data.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender) values('" + user.Username + "','" + user.Email + "','" + string(passwordHash) + "','" + user.Firstname + "','" + user.Lastname + "'," + user.Age + ",'" + user.Gender + "')")
-
-			// Handles errors inserting data
-			if err1 != nil {
-				log.Fatal(err1)
+			query, err := data.DB.Prepare("INSERT INTO users(username, email, password, firstname, lastname, age, gender,loggedin) VALUES(?, ?, ?, ?, ?, ?, ?, ?);")
+			if err != nil {
+				log.Fatal(err)
 			}
-			_, err1 = query.Exec()
-			fmt.Println(err1)
+
+			_, err = query.Exec(user.Username, user.Email, string(passwordHash), user.Firstname, user.Lastname, user.Age, user.Gender, user.LoggedIn)
+			if err != nil {
+				log.Fatal(err)
+			}
 
 			fmt.Println("SUCCESS: User successfully registered into users table.")
 			w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
@@ -234,6 +236,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// Decodes session and login data into variables
 	var sess UserSession
 	var user LoginData
+
 	json.NewDecoder(r.Body).Decode(&user)
 	w.Header().Set("Content-type", "application/text")
 
@@ -296,17 +299,25 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		sess.username = user.Username
 		sess.userID = usID
 		sess.max_age = 18000
-		sess.session = uuid.NewV4().String()
+		sess.session = (uuid.NewV4().String() + "&" + strconv.Itoa(sess.userID))
+		user.LoggedIn = "true"
 
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
-			Name:   "session_token",
-			Value:  sess.session,
+			Name:  "session_token",
+			Value: sess.session,
 			MaxAge: 900,
 		})
 
+		// x := sess.session + "&" + strconv.Itoa(sess.userID)
+		// fmt.Println(reflect.TypeOf(x))
+
 		// Insert data into session variable
 		data.InsertSession(sess)
+
+		fmt.Println(sess)
+
+		data.UpdateStatus(user.LoggedIn, user.Username)
 
 		// Send user information back to client using JSON format
 		userInfo := data.GetUserProfile(user.Username)
@@ -317,14 +328,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 		w.Write([]byte(js))
-
-		// GET HASHTAG DATA FROM DATABASE AND SEND TO CLIENT
-		// var hashtagData []HashtagData
-		// hashtagData = data.GetHashtagData()
-		// js, err = json.Marshal(hashtagData)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println("Error: Email or password is incorrect.") // Checked in authentication.js, alerts user
@@ -334,36 +337,23 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 // // logout handle
 func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LogOut Handler Here ********* ")
-	
+
 	c, err := r.Cookie("session_token")
-	var logoutUser int
-
-	if err == nil {
-
-		rows, err := data.DB.Query("SELECT userID FROM sessions WHERE cookieValue=?", c.Value)
-		if err != nil {
-			log.Fatal(err)
-
-			// fmt.Println("Logout error: ", err)
-		}
-		defer rows.Close()
-		for rows.Next() {
-			rows.Scan(&logoutUser)
-		}
-		fmt.Printf("User %d wants to logout\n", logoutUser)
+	if err != nil {
+		log.Fatal(err)
 	}
-	data.DeleteSession(w, logoutUser)
-	w.WriteHeader(http.StatusOK) 
-	w.Write([]byte("ok"))
-	// fmt.Println("User logged out")
-	// http.Redirect(w, r, "/", http.StatusFound)
 
-	// stmt, errUpdate := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE userID = ?;")
-	// if errUpdate != nil {
-	// 	log.Fatal("Updating Table: ", errUpdate)
-	// }
-	// defer stmt.Close()
-	// stmt.Exec(false, logoutUser)
+	sess := data.GetSession(c.Value)
+
+
+	fmt.Printf("User %d wants to logout\n", sess.userID)
+	loggedin := "false"
+
+	data.DeleteSession(w, sess.userID)
+	data.UpdateStatus(loggedin, sess.username)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
 }
 
 // TODO
