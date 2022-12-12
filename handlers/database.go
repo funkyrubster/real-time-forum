@@ -17,7 +17,6 @@ type Forum struct {
 
 // --------------------------- USER ------------------------//
 
-
 // Pulls specific user's data and posts data from database and returns it as a User struct
 func (data *Forum) GetUserProfile(username string) UserProfile {
 	// Used to store the user's profile information
@@ -54,6 +53,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 				Firstname: firstname,
 				Lastname:  lastname,
 				Email:     email,
+				LoggedIn: loggedin,
 			},
 			CreatedPosts: data.GetPosts(username),
 		}
