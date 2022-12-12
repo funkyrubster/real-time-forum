@@ -299,18 +299,23 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		sess.username = user.Username
 		sess.userID = usID
 		sess.max_age = 18000
-		sess.session = uuid.NewV4().String()
+		sess.session = (uuid.NewV4().String() + "&" + strconv.Itoa(sess.userID))
 		user.LoggedIn = "true"
 
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
-			Name:   "session_token",
-			Value:  sess.session + "&" + strconv.Itoa(sess.userID),
+			Name:  "session_token",
+			Value: sess.session,
 			MaxAge: 900,
 		})
 
+		// x := sess.session + "&" + strconv.Itoa(sess.userID)
+		// fmt.Println(reflect.TypeOf(x))
+
 		// Insert data into session variable
 		data.InsertSession(sess)
+
+		fmt.Println(sess)
 
 		data.UpdateStatus(user.LoggedIn, user.Username)
 
@@ -323,14 +328,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 		w.Write([]byte(js))
-
-		// GET HASHTAG DATA FROM DATABASE AND SEND TO CLIENT
-		// var hashtagData []HashtagData
-		// hashtagData = data.GetHashtagData()
-		// js, err = json.Marshal(hashtagData)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println("Error: Email or password is incorrect.") // Checked in authentication.js, alerts user
@@ -342,37 +339,24 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("LogOut Handler Here ********* ")
 
 	c, err := r.Cookie("session_token")
-	var logoutUser int
-
-	if err == nil {
-
-		rows, err := data.DB.Query("SELECT userID FROM sessions WHERE cookieValue=?", c.Value)
-		if err != nil {
-			log.Fatal(err)
-
-			// fmt.Println("Logout error: ", err)
-		}
-		defer rows.Close()
-		for rows.Next() {
-			rows.Scan(&logoutUser)
-		}
-		fmt.Printf("User %d wants to logout\n", logoutUser)
+	if err != nil {
+		log.Fatal(err)
 	}
-	data.DeleteSession(w, logoutUser)
+
+	fmt.Println(c.Value)
+
+	sess := data.GetSession(c.Value)
+	fmt.Println("userID", sess.userID)
+	fmt.Println("username", sess.username)
+
+	fmt.Printf("User %d wants to logout\n", sess.userID)
+	loggedin := "false"
+
+	data.DeleteSession(w, sess.userID)
+	data.UpdateStatus(loggedin, sess.username)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
-
-	// ?
-	// fmt.Println("User logged out")
-	// http.Redirect(w, r, "/", http.StatusFound)
-
-	// stmt, errUpdate := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE userID = ?;")
-	// if errUpdate != nil {
-	// 	log.Fatal("Updating Table: ", errUpdate)
-	// }
-	// defer stmt.Close()
-	// stmt.Exec(false, logoutUser)
 }
 
 // TODO
