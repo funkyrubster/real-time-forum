@@ -54,6 +54,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 				Firstname: firstname,
 				Lastname:  lastname,
 				Email:     email,
+				LoggedIn: loggedin,
 			},
 			CreatedPosts: data.GetPosts(username),
 		}

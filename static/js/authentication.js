@@ -170,6 +170,7 @@ loginData.addEventListener("submit", function () {
   let fetchRes = fetch("http://localhost:8080/login", options);
   fetchRes
     .then((response) => {
+      console.log();
       if (response.status == "200") {
         // add alert login ok
         notyf.success("You have logged in successfully.");
@@ -469,18 +470,29 @@ let options = {
   headers: {
     "Content-Type": "application/json",
   },
-  body: JSON.stringify(loginData),
+  body: JSON.stringify(logoutData),
 };
 
 
 let fetchRes = fetch("http://localhost:8080/logout", options);
 fetchRes
 .then((response) => {
-  if (response.status == "200" )
-  notyf.success("Succesfully loggedOut.");
-  showLoginUI()
-  return response.text();
-}).catch(function(err){
+  if (response.status === 200){
+    console.log("ok");
+  }
+  return response.json();
+})
+.then(function (data) {
+  if(data.User.LoggedIn === "false"){
+    document.querySelector("main").style.display = "none";
+    document.querySelector(".auth-container").style.display = "flex";
+
+    // showRegistrationUI()
+    notyf.success("Succesfully logged out.");
+
+  }
+})
+.catch(function(err){
   console.log(err);
 })
 
