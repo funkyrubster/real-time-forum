@@ -343,11 +343,8 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	fmt.Println(c.Value)
-
 	sess := data.GetSession(c.Value)
-	fmt.Println("userID", sess.userID)
-	fmt.Println("username", sess.username)
+
 
 	fmt.Printf("User %d wants to logout\n", sess.userID)
 	loggedin := "false"
