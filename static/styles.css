@@ -436,33 +436,36 @@ select:hover {
   gap: 1rem;
 }
 
-.left .title-bg p {
+.main .right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.right .title-bg p {
   margin: 0;
 }
 
-.left .title-bg {
-  padding: 0.35rem 1.25rem;
+.right .title-bg {
+  width: 100%;
+  padding: 0.35rem;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 
-  background: #f1f1f1;
-  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
-  border-radius: 8px;
-  margin-bottom: -18px;
+  margin-bottom: -12px;
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
-.left p {
-  text-align: center;
-  margin-left: 0.3rem;
+.title-bg p {
   font-family: "Bambino New";
   font-style: normal;
   font-weight: 700;
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 13px;
+  line-height: 18px;
   color: #a6b3c1;
 }
 
@@ -525,7 +528,7 @@ select:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 0.1px solid #1e3a5f42;
+  border-bottom: 0.1px solid #1e3a5f1c;
   gap: 0.4rem;
   padding: 0.7rem;
   cursor: pointer;
@@ -551,6 +554,24 @@ select:hover {
 }
 
 /* Trending topics */
+
+.left .title-bg p {
+  margin: 0;
+}
+
+.left .title-bg {
+  padding: 0.35rem 1.25rem;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  background: #f1f1f1;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 8px;
+  margin-bottom: -18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .trending {
   width: 190px;
   height: 344px;
@@ -585,7 +606,7 @@ select:hover {
   color: #4b607c;
 }
 
-.trending .hashtag .circle {
+.circle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -594,9 +615,14 @@ select:hover {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.01);
   border-radius: 100px;
   padding: 0.1rem 0.4rem;
+  width: 18px;
 }
 
-.trending .hashtag .circle p {
+.circle.blue {
+  background: #1677f2;
+}
+
+.circle p {
   margin: 0rem;
   font-family: "Bambino New";
   font-style: normal;
@@ -886,8 +912,7 @@ select:hover {
   color: #9aa7b6;
 }
 
-
-.post .submitCom{
+.post .submitCom {
   width: 108px;
   /* height: 20px; */
   cursor: pointer;
@@ -902,7 +927,6 @@ select:hover {
   line-height: 19px;
   color: #ffffff;
 }
-
 
 #logout-btn {
   width: 108px;
@@ -922,9 +946,107 @@ select:hover {
   color: #ffffff;
 }
 
+/* RECENTLY JOINED */
 
+#recently-joined {
+  width: 265px;
+  height: 425px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 10px;
+  gap: 0.75rem;
+  overflow: auto;
+}
 
-/* --------------------------- TRENDING HASHTAGS --------------------------- */
+#recently-joined .user-prompt {
+  background: #ffffff;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 10px;
+  margin-right: 7.5px;
+}
+
+#recently-joined .user-prompt .info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+#recently-joined .user-prompt span#fullname {
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  letter-spacing: -0.02em;
+  color: #1e3a5f;
+}
+
+#recently-joined .user-prompt p {
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+  letter-spacing: -0.02em;
+  color: #1e3a5f;
+
+  text-align: left;
+}
+
+#recently-joined .actions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#recently-joined .say-hi,
+.dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#recently-joined .say-hi {
+  padding: 0.4rem 0.75rem;
+  background: #1677f2;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 8px;
+
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 17px;
+  color: #ffffff;
+}
+
+#recently-joined .dismiss {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #e4e4ed;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
+  border-radius: 8px;
+
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 17px;
+  color: #4a607e;
+}
 
 /* --------------------------- CHAT --------------------------- */
 #chat {
