@@ -504,7 +504,7 @@ const postsWrapper = document.querySelector(".posts-wrap");
 postsWrapper.addEventListener("click", (event) => {
   console.log(event.target);
   // Check if the clicked element is a post, header, body, or footer
-  if (event.target.matches("img, .name, .timestamp, .category-option-wrap, .post, p, .header, .body, .footer")) {
+  if (event.target.matches("img, .name, .timestamp, .category-option-wrap, .post, .body, .author, p, .create-comment-wrap, .header, .footer")) {
     // Save the ID of the clicked post to a variable
     const clickedPostId = event.target.id;
 
