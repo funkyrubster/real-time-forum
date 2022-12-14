@@ -36,7 +36,6 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 	// Decode the JSON data from the request body into the comment variable
 	json.NewDecoder(r.Body).Decode(&comment)
 
-	// w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 
 	// feches current session value
@@ -55,8 +54,21 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 		Content:   comment.Content,
 		CreatedAt: time,
 	})
+}
 
-	fmt.Println(comment)
+func (data *Forum) SendComments(w http.ResponseWriter, r *http.Request) {
+
+	var comment Comment
+
+	json.NewDecoder(r.Body).Decode(&comment)
+
+	comments := data.GetComments(comment.PostID)
+	js, err := json.Marshal(comments)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(js))
 
 }
 
@@ -101,6 +113,7 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 
 	// Send user information back to client using JSON format
 	posts := data.getLatestPosts()
+	// fmt.Println(posts)
 	// fmt.Println(userInfo)
 	js, err := json.Marshal(posts)
 	if err != nil {
@@ -304,8 +317,8 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
-			Name:  "session_token",
-			Value: sess.session,
+			Name:   "session_token",
+			Value:  sess.session,
 			MaxAge: 900,
 		})
 
@@ -351,15 +364,15 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	data.DeleteSession(w, sess.userID)
 	data.UpdateStatus(loggedin, sess.username)
 
-// Send user information back to client using JSON format
-userInfo := data.GetUserProfile(sess.username)
-// fmt.Println(userInfo)
-js, err := json.Marshal(userInfo)
-if err != nil {
-	log.Fatal(err)
-}
-w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
-w.Write([]byte(js))
+	// Send user information back to client using JSON format
+	userInfo := data.GetUserProfile(sess.username)
+	// fmt.Println(userInfo)
+	js, err := json.Marshal(userInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
 }
 
 // TODO
