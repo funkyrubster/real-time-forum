@@ -329,7 +329,8 @@ function displayPosts(posts) {
       <div class="footer">
         <!-- Comment, Like, Dislike -->
         <div class="actions">
-          <img src="../static/img/comments-icon.svg" />
+          <img src="../static/img/comments-icon.svg" onclick="getComments(this)" id="${
+            posts[i].PostID}"/>
           <img src="../static/img/like-icon.svg" />
           <img src="../static/img/dislike-icon.svg" />
         </div>
