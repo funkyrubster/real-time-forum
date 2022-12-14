@@ -349,6 +349,40 @@ function displayPosts(posts) {
           </div>
         </div>
       </div>
+
+      <div class="comments">
+                <!-- Create A Comment -->
+                <div class="separator"></div>
+                <div class="create-comment-wrap">
+                  <img src="../static/img/post/comments/chat-bubbles.svg" id="bubbles">
+                  <div class="comment-field-wrap">
+                    <img src="../static/img/profile.png" width="50px" id="composeCommentAuthor">
+                    <div class="comment-field-submit-wrap">
+                      <input type="text" id="commentBody" placeholder="Start typing...">
+                      <div class="comment-btn">Comment</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="separator"></div>
+
+                <!-- Comments -->
+                <p class="title">Comments</p>
+                <div class="comments-wrap">
+                  <div class="comment">
+                    <div class="author">Loretta Turner</div>
+                    <img src="../static/img/profile.png" id="profile-picture" width="35px">
+                    <div class="timestamp">5:29am</div>
+                    <div class="body">This is a comment. I love writing comments. Hello hello hello hello hello hello hello.</div>
+                  </div>
+                  <div class="comment">
+                    <div class="author">Loretta Turner</div>
+                    <img src="../static/img/profile.png" id="profile-picture" width="35px">
+                    <div class="timestamp">5:29am</div>
+                    <div class="body">This is a comment. I love writing comments. Hello hello hello hello hello hello hello.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
     </div>
     `;
   }
