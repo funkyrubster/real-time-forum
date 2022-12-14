@@ -29,7 +29,7 @@ html {
 }
 
 main {
-  display: none;
+  display: block;
 }
 
 a {
@@ -40,7 +40,7 @@ a {
 .auth-container .left,
 .auth-container .right,
 .auth-container form {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
 }
@@ -731,8 +731,7 @@ select:hover {
 }
 
 .create-post #submit {
-  width: 108px;
-  height: 36px;
+  padding: 0.5rem 0.85rem;
 
   cursor: pointer;
   background: #1677f2;
@@ -947,14 +946,15 @@ img#bubbles {
 
 .create-comment-wrap {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  margin: 1rem 0;
 }
 
 .comment-field-wrap {
   width: fit-content;
   position: relative;
+  width: 100%;
 }
 
 img#composeCommentAuthor {
@@ -966,7 +966,7 @@ img#composeCommentAuthor {
 }
 
 input#commentBody {
-  width: 425px;
+  width: 100%;
   height: 40px;
 
   background: linear-gradient(90deg, #f5f5f5 0%, #f1f1f1 98.19%);
@@ -981,6 +981,7 @@ input#commentBody {
   opacity: 1; /* Firefox */
 
   color: #4c5b6e;
+  border-radius: 20px;
 }
 
 .comment-field-submit-wrap {
@@ -994,7 +995,7 @@ input#commentBody {
   height: 40px;
   padding: 0 0.75rem;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
-  border-radius: 8px;
+  border-radius: 20px;
 
   font-family: "Bambino New";
   font-style: normal;
@@ -1029,17 +1030,20 @@ input#commentBody {
 .comments-wrap {
   display: flex;
   overflow: auto;
+  flex-direction: column;
+}
+
+.comments-wrap:last-child {
+  margin-bottom: -0.5rem;
 }
 
 .comment {
   position: relative;
-  width: 275px;
-  height: 82px;
   background: #76889d91;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 0px 8px 8px 0px;
   margin: 0 0.75rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.25rem;
   margin-top: 1.5rem;
 }
 
@@ -1063,13 +1067,13 @@ input#commentBody {
 .comment img#profile-picture {
   border-radius: 20px;
   position: absolute;
-  top: 52.5px;
+  bottom: -10px;
   right: -7.5px;
 }
 
 .comment .timestamp {
   position: absolute;
-  top: 82px;
+  bottom: -22px;
 
   padding: 0.1rem 0.75rem;
   background: linear-gradient(90deg, #f5f5f5 0%, #f1f1f1 98.19%);
@@ -1093,15 +1097,13 @@ input#commentBody {
   line-height: 19px;
   color: #ffffff;
   padding: 0.75rem;
-  width: 275px;
 }
 
 #logout-btn {
-  width: 108px;
-  height: 36px;
+  padding: 0.6rem 1rem;
 
   cursor: pointer;
-  background: #1677f2;
+  background: #ff4242;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 8px;
   border: none;
