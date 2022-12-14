@@ -1045,6 +1045,8 @@ input#commentBody {
   margin: 0 0.75rem;
   margin-bottom: 2.25rem;
   margin-top: 1.5rem;
+  width: fit-content;
+  max-width: 650px;
 }
 
 .comment .author {
