@@ -320,12 +320,12 @@ function displayPosts(posts) {
           <div class="category">` +
       posts[i].Hashtag +
       `</div>
-          <img src="../static/img/post-options.svg" onclick="getComments(this)" id="${
-          posts[i].PostID}"/>
+          <img src="../static/img/post-options.svg"/>
         </div>
       </div>
       <!-- Post Body -->
-      <div class="body" >
+      <div class="body" onclick="getComments(this)" id="${
+        posts[i].PostID}" >
         <p>` +
       posts[i].postBody +
       `</p>
@@ -335,8 +335,7 @@ function displayPosts(posts) {
         <!-- Comment -->
         <div class="actions"> 
           <textarea class="comBody" id="commentBody${
-            posts.length - i
-          }" name="commentBody" style="width:100%" rows="2" cols="70" placeholder="create comment"></textarea>
+            posts.length - i}" name="commentBody" style="width:100%" rows="2" cols="70" placeholder="create comment"></textarea>
           <input type="submit" id="submitCom${
             posts.length - i
           }" class="submitCom" value="Submit", onclick="createCom(${
@@ -381,16 +380,13 @@ function createCom(i) {
 }
 
 function getComments(e){
-  console.log("hello", e.id);
+  //console.log("hello", e.id);
 
-  let PostID = e.id
-  console.log(PostID);
+  let postid = parseInt(e.id)
 
   let commentData = {
-    PostID: PostID
+    postId: postid
   }
-
-  console.log(commentData);
 
   let options = {
     method: "POST",
@@ -401,13 +397,16 @@ function getComments(e){
   };
   let fetchRes = fetch("http://localhost:8080/sendComments", options);
   fetchRes.then((response) => {
-    console.log("ok");
-    if (response.status == "200") {
-
-    } 
-    return response.text();
-  });
-}
+       return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+      }
+    )
+    .catch(function(err){
+      console.log(err);
+    })
+    };
 
 
 

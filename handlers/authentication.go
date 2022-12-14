@@ -56,19 +56,21 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (data *Forum) SendComments(w http.ResponseWriter, r *http.Request){
+func (data *Forum) SendComments(w http.ResponseWriter, r *http.Request) {
 
-var comment Comment
+	var comment Comment
 
-json.NewDecoder(r.Body).Decode(&comment.PostID)
+	json.NewDecoder(r.Body).Decode(&comment)
 
-
-fmt.Println(comment.PostID)
+	comments := data.GetComments(comment.PostID)
+	js, err := json.Marshal(comments)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(js))
 
 }
-
-
-
 
 // Handles receiving the post data and adding it to the 'posts' table in the database
 func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +107,6 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	})
 
 }
-
 
 func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("sendLatestPosts() called")
@@ -316,8 +317,8 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
-			Name:  "session_token",
-			Value: sess.session,
+			Name:   "session_token",
+			Value:  sess.session,
 			MaxAge: 900,
 		})
 
@@ -363,15 +364,15 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	data.DeleteSession(w, sess.userID)
 	data.UpdateStatus(loggedin, sess.username)
 
-// Send user information back to client using JSON format
-userInfo := data.GetUserProfile(sess.username)
-// fmt.Println(userInfo)
-js, err := json.Marshal(userInfo)
-if err != nil {
-	log.Fatal(err)
-}
-w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
-w.Write([]byte(js))
+	// Send user information back to client using JSON format
+	userInfo := data.GetUserProfile(sess.username)
+	// fmt.Println(userInfo)
+	js, err := json.Marshal(userInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
 }
 
 // TODO
