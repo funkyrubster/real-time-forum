@@ -333,8 +333,7 @@ function displayPosts(posts) {
       <!-- Footer -->
       <div class="footer">
         <!-- Comment -->
-        <div class="actions">
-        
+        <div class="actions"> 
           <textarea class="comBody" id="commentBody${
             posts.length - i
           }" name="commentBody" style="width:100%" rows="2" cols="70" placeholder="create comment"></textarea>
