@@ -161,7 +161,7 @@ if err != nil {
 
 func (data *Forum) GetComments(postID int)[]Comment{
 
-		// Used to store all of the comments
+  // Used to store all of the comments
 	var comments []Comment
 
 	// Used to store individual comment data 
@@ -183,8 +183,6 @@ func (data *Forum) GetComments(postID int)[]Comment{
 		comments = append(comments, comment)
 	}
 	return comments
-
-
 
 }
 
