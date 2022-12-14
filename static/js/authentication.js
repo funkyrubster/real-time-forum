@@ -358,8 +358,8 @@ function displayPosts(posts) {
                   <div class="comment-field-wrap">
                     <img src="../static/img/profile.png" width="50px" id="composeCommentAuthor">
                     <div class="comment-field-submit-wrap">
-                      <input type="text" id="commentBody" placeholder="Start typing...">
-                      <div class="comment-btn">Comment</div>
+                      <input type="text" id="commentBody${posts.length - i}" placeholder="Start typing...">
+                      <div class="comment-btn" onclick="createCom(${posts.length - i})">Comment</div>
                     </div>
                   </div>
                 </div>
