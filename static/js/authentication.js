@@ -562,3 +562,17 @@ postsWrapper.addEventListener("click", (event) => {
     }
   }
 });
+
+function checkCookies(){
+  let cookie = document.cookie
+    if (cookie != ""){
+      showFeed();
+      refreshPosts()
+      refreshHashtags()
+    }
+    else{
+      showLoginUI()
+    }
+    
+    // for extra security can be checked with backend and session in database 
+  } 

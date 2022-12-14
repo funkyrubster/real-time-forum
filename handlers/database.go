@@ -13,8 +13,6 @@ type Forum struct {
 	*sql.DB
 }
 
-
-
 // --------------------------- USER ------------------------//
 
 // Pulls specific user's data and posts data from database and returns it as a User struct
@@ -53,7 +51,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 				Firstname: firstname,
 				Lastname:  lastname,
 				Email:     email,
-				LoggedIn: loggedin,
+				LoggedIn:  loggedin,
 			},
 			CreatedPosts: data.GetPosts(username),
 		}
@@ -61,20 +59,16 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	return user
 }
 
-
-// Updates user status after loginOut 
-func (data *Forum) UpdateStatus(loggedin string, username string){
+// Updates user status after loginOut
+func (data *Forum) UpdateStatus(loggedin string, username string) {
 	stmt, err := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE username = ?;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	stmt.Exec(loggedin, username)
-
 }
 
-
 // --------------------------- POSTS ------------------------//
-
 
 // Handles creation of new posts
 func (data *Forum) CreatePost(post Post) {
@@ -115,7 +109,6 @@ func (data *Forum) GetPosts(username string) []Post {
 	return posts
 }
 
-
 func (data *Forum) getLatestPosts() []Post {
 	// Used to store all of the posts
 	var posts []Post
@@ -140,26 +133,21 @@ func (data *Forum) getLatestPosts() []Post {
 	return posts
 }
 
-
 // ----------------------- COMMENTS -------------------------//
 
-
 func (data *Forum) CreateComment(comment Comment) {
-stmt, err := data.DB.Prepare("INSERT INTO comments(postID, username, content, creationDate) VALUES(?, ?, ?, ?);")
-if err != nil {
-	log.Fatal(err)
-}
+	stmt, err := data.DB.Prepare("INSERT INTO comments(postID, username, content, creationDate) VALUES(?, ?, ?, ?);")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-_, err = stmt.Exec(comment.PostID, comment.Username, comment.Content, comment.CreatedAt)
-if err != nil {
-	log.Fatal(err)
+	_, err = stmt.Exec(comment.PostID, comment.Username, comment.Content, comment.CreatedAt)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
-}
-
-
 
 // --------------------------- HASHTAG ------------------------//
-
 
 func (data *Forum) getLatestHashtags() []Hashtag {
 	// Used to store all of the posts
@@ -184,7 +172,6 @@ func (data *Forum) getLatestHashtags() []Hashtag {
 	}
 	return hashtags
 }
-
 
 // Updates hashtag value
 func (data *Forum) UpdateHashtagCount(hashtag Hashtag) {
@@ -216,12 +203,9 @@ func (data *Forum) UpdateHashtagCount(hashtag Hashtag) {
 	stmt.Exec(hashtagCount, hashtag.Name)
 
 	fmt.Println("Hashtag count updated to", hashtagCount, "from", hashtag.Count, "for", hashtag.Name)
-
 }
 
-
 // --------------------------- SESSION ------------------------//
-
 
 // Inserts session into sessions table
 func (data *Forum) InsertSession(sess UserSession) {
@@ -287,11 +271,7 @@ func (data *Forum) GetSession(cookie string) UserSession {
 	return session
 }
 
-
-
-
 //-------------------------  TABLES -------------------------//
-
 
 // Used when starting server - Ensures all tables are created to avoid errors
 func CheckTablesExist(db *sql.DB, table string) {
@@ -421,3 +401,27 @@ func Connect(db *sql.DB) *Forum {
 		DB: db,
 	}
 }
+
+func (data *Forum) OnlineUsers() []User {
+	var onlineuser User
+	var onlineusers []User
+
+	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'true';`)
+	if err1 != nil {
+		fmt.Println("Error with OnlineUsers func")
+		return nil
+	}
+
+	// Scans through each column in the 'users' row and stores the data in the variables above
+	for row.Next() {
+		err := row.Scan(&onlineuser.Firstname, &onlineuser.Lastname, &onlineuser.LoggedIn)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		onlineusers = append(onlineusers, onlineuser)
+
+	}
+	return onlineusers
+}
+
