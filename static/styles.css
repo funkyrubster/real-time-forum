@@ -1039,7 +1039,7 @@ input#commentBody {
 
 .comment {
   position: relative;
-  background: #76889d91;
+  background: #f1f0f0;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 0px 8px 8px 0px;
   margin: 0 0.75rem;
@@ -1049,7 +1049,7 @@ input#commentBody {
 
 .comment .author {
   position: absolute;
-  top: -20px;
+  top: -19px;
   padding: 0 0.5rem;
   background: linear-gradient(90deg, #f5f5f5 0%, #f1f1f1 98.19%);
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
@@ -1057,11 +1057,11 @@ input#commentBody {
 
   font-family: "Bambino New";
   font-style: normal;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
   line-height: 19px;
   text-align: center;
-  color: #8a96a3;
+  color: #4c93e0;
 }
 
 .comment img#profile-picture {
@@ -1092,10 +1092,10 @@ input#commentBody {
 .comment .body {
   font-family: "Bambino New";
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
   line-height: 19px;
-  color: #ffffff;
+  color: #1e3a5f;
   padding: 0.75rem;
 }
 
