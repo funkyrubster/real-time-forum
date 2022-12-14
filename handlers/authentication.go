@@ -60,6 +60,23 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (data *Forum) SendComments(w http.ResponseWriter, r *http.Request) {
+
+	var comment Comment
+
+	json.NewDecoder(r.Body).Decode(&comment)
+
+	comments := data.GetComments(comment.PostID)
+	js, err := json.Marshal(comments)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(js))
+
+}
+
+
 // Handles receiving the post data and adding it to the 'posts' table in the database
 func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// Decodes posts data into post variable
