@@ -319,8 +319,7 @@ function displayPosts(posts) {
         </div>
       </div>
       <!-- Post Body -->
-      <div class="body" onclick="getComments(this)" id="${
-        posts[i].PostID}">
+      <div class="body" onclick="getComments(this)" id="${posts[i].PostID}">
         <p>` +
       posts[i].postBody +
       `</p>
@@ -358,8 +357,8 @@ function displayPosts(posts) {
                   <div class="comment-field-wrap">
                     <!-- <img src="../static/img/profile.png" width="50px" id="composeCommentAuthor"> -->
                     <div class="comment-field-submit-wrap">
-                      <input type="text" id="commentBody" placeholder="Write a comment...">
-                      <div class="comment-btn">Comment</div>
+                      <input type="text" id="commentBody${posts.length - i}" placeholder="Write a comment...">
+                      <div class="comment-btn" onclick="createCom(${posts.length - i})">Comment</div>
                     </div>
                   </div>
                 </div>
@@ -421,35 +420,34 @@ function createCom(i) {
   });
 }
 
-function getComments(e){
+function getComments(e) {
   //console.log("hello", e.id);
 
-  let postid = parseInt(e.id)
+  let postid = parseInt(e.id);
 
   let commentData = {
     postId: postid
-  }
+  };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(commentData),
+    body: JSON.stringify(commentData)
   };
   let fetchRes = fetch("http://localhost:8080/sendComments", options);
-  fetchRes.then((response) => {
-       return response.json();
+  fetchRes
+    .then((response) => {
+      return response.json();
     })
     .then(function (data) {
       console.log(data);
-      }
-    )
-    .catch(function(err){
-      console.log(err);
     })
-    };
-
+    .catch(function (err) {
+      console.log(err);
+    });
+}
 
 function updateHashtagTable() {
   // Get the value of the hashtag with the class of selected
