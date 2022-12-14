@@ -30,8 +30,11 @@ type UserProfile struct {
 	User         User
 	CreatedPosts []Post
 	Hashtags	 []Hashtag
+	CreatedComments []Comment
 	
 }
+
+
 
 type Hashtags struct {
 	Hashtags	 []Hashtag

@@ -320,11 +320,12 @@ function displayPosts(posts) {
           <div class="category">` +
       posts[i].Hashtag +
       `</div>
-          <img src="../static/img/post-options.svg" />
+          <img src="../static/img/post-options.svg" onclick="getComments(this)" id="${
+          posts[i].PostID}"/>
         </div>
       </div>
       <!-- Post Body -->
-      <div class="body">
+      <div class="body" >
         <p>` +
       posts[i].postBody +
       `</p>
@@ -379,6 +380,38 @@ function createCom(i) {
     return response.text();
   });
 }
+
+function getComments(e){
+  console.log("hello", e.id);
+
+  let PostID = e.id
+  console.log(PostID);
+
+  let commentData = {
+    PostID: PostID
+  }
+
+  console.log(commentData);
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(commentData),
+  };
+  let fetchRes = fetch("http://localhost:8080/sendComments", options);
+  fetchRes.then((response) => {
+    console.log("ok");
+    if (response.status == "200") {
+
+    } 
+    return response.text();
+  });
+}
+
+
+
 
 function updateHashtagTable() {
   // Get the value of the hashtag with the class of selected
@@ -495,5 +528,19 @@ fetchRes
 .catch(function(err){
   console.log(err);
 })
-
 };
+
+ 
+function checkCookies(){
+let cookie = document.cookie
+  if (cookie != ""){
+    showFeed();
+    refreshPosts()
+    refreshHashtags()
+  }
+  else{
+    showLoginUI()
+  }
+  
+  // for extra security can be checked with backend and session in database 
+} 

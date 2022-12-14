@@ -36,7 +36,6 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 	// Decode the JSON data from the request body into the comment variable
 	json.NewDecoder(r.Body).Decode(&comment)
 
-	// w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 
 	// feches current session value
@@ -55,10 +54,21 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 		Content:   comment.Content,
 		CreatedAt: time,
 	})
+}
 
-	fmt.Println(comment)
+func (data *Forum) SendComments(w http.ResponseWriter, r *http.Request){
+
+var comment Comment
+
+json.NewDecoder(r.Body).Decode(&comment.PostID)
+
+
+fmt.Println(comment.PostID)
 
 }
+
+
+
 
 // Handles receiving the post data and adding it to the 'posts' table in the database
 func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
@@ -96,11 +106,13 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 
 }
 
+
 func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("sendLatestPosts() called")
 
 	// Send user information back to client using JSON format
 	posts := data.getLatestPosts()
+	// fmt.Println(posts)
 	// fmt.Println(userInfo)
 	js, err := json.Marshal(posts)
 	if err != nil {

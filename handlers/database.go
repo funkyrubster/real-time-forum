@@ -135,6 +135,7 @@ func (data *Forum) getLatestPosts() []Post {
 		if err != nil {
 			log.Fatal(err)
 		}
+		
 		// Adds each post found from specific user to posts slice
 		posts = append(posts, post)
 	}
@@ -155,6 +156,36 @@ _, err = stmt.Exec(comment.PostID, comment.Username, comment.Content, comment.Cr
 if err != nil {
 	log.Fatal(err)
 }
+}
+
+
+func (data *Forum) GetComments(postID int)[]Comment{
+
+		// Used to store all of the comments
+	var comments []Comment
+
+	// Used to store individual comment data 
+	var comment Comment
+
+	rows, err := data.DB.Query(`SELECT * FROM comments WHERE postID =?`, postID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Scans through every row where the postID matches the postID passed in
+	for rows.Next() {
+		// Populates post var with data from each post found in table
+		err := rows.Scan(&comment.CommentID,&comment.PostID,&comment.Username, &comment.Content, &comment.CreatedAt)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// Adds each comment found from specific post to posts slice
+		comments = append(comments, comment)
+	}
+	return comments
+
+
+
 }
 
 
