@@ -420,6 +420,36 @@ function createCom(i) {
   });
 }
 
+function getComments(e){
+  //console.log("hello", e.id);
+
+  let postid = parseInt(e.id)
+
+  let commentData = {
+    postId: postid
+  }
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(commentData),
+  };
+  let fetchRes = fetch("http://localhost:8080/sendComments", options);
+  fetchRes.then((response) => {
+       return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+      }
+    )
+    .catch(function(err){
+      console.log(err);
+    })
+    };
+
+
 function updateHashtagTable() {
   // Get the value of the hashtag with the class of selected
   let hashtag_value = document.querySelector(".category.selected").innerHTML;
