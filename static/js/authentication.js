@@ -78,8 +78,7 @@ function convertDate(date) {
       month = "December";
       break;
   }
-  fullDate =
-    day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
+  fullDate = day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
   return fullDate;
 }
 
@@ -95,15 +94,15 @@ signUpData.addEventListener("submit", function () {
     newusername: document.getElementById("newusername").value,
     age: document.getElementById("age").value,
     gender: document.getElementById("gender").value,
-    newpassword: document.getElementById("newpassword").value,
+    newpassword: document.getElementById("newpassword").value
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(user),
+    body: JSON.stringify(user)
   };
 
   let fetchRes = fetch("http://localhost:8080/register", options);
@@ -155,15 +154,15 @@ const loginData = document.getElementById("login-form");
 loginData.addEventListener("submit", function () {
   let user = {
     username: document.getElementById("username").value,
-    password: document.getElementById("password").value,
+    password: document.getElementById("password").value
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(user),
+    body: JSON.stringify(user)
   };
 
   let fetchRes = fetch("http://localhost:8080/login", options);
@@ -195,20 +194,18 @@ loginData.addEventListener("submit", function () {
 
 // Concatenates the user's details within the HTML after login
 function updateUserDetails(data) {
-  document.querySelector("p.name").innerHTML =
-    data.User.firstName + ` ` + data.User.lastName;
+  document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
-  document.querySelector("#postBody").placeholder =
-    `What's on your mind, ` + data.User.firstName + `?`;
+  document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
 }
 
 function refreshPosts() {
   fetch("/getPosts", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    method: "POST",
+    method: "POST"
   })
     .then((response) => {
       response.text().then(function (data) {
@@ -227,9 +224,9 @@ function refreshHashtags() {
   fetch("/getHashtags", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    method: "POST",
+    method: "POST"
   })
     .then((response) => {
       response.text().then(function (data) {
@@ -262,15 +259,15 @@ const createPost = function getInputValue() {
 
   let post = {
     postBody: document.getElementById("postBody").value,
-    Hashtag: hashtag,
+    Hashtag: hashtag
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(post),
+    body: JSON.stringify(post)
   };
 
   let fetchRes = fetch("http://localhost:8080/post", options);
@@ -328,21 +325,28 @@ function displayPosts(posts) {
       `</p>
       </div>
       <!-- Footer -->
+      <!-- Footer -->
       <div class="footer">
-        <!-- Comment -->
+        <!-- Comment, Like, Dislike -->
         <div class="actions">
-        
-          <textarea class="comBody" id="commentBody${
-            posts.length - i
-          }" name="commentBody" style="width:100%" rows="2" cols="70" placeholder="create comment"></textarea>
-          <input type="submit" id="submitCom${
-            posts.length - i
-          }" class="submitCom" value="Submit", onclick="createCom(${
-        posts.length - i
-      })";>
+          <img src="../static/img/comments-icon.svg" />
+          <img src="../static/img/like-icon.svg" />
+          <img src="../static/img/dislike-icon.svg" />
         </div>
-        <!-- Comment -->
+        <!-- Comment, Like & Dislike Statistics -->
         <div class="stats">
+          <div class="stat-wrapper">
+            <img src="../static/img/post/comments-icon.svg" width="17px" />
+            <p>0</p>
+          </div>
+          <div class="stat-wrapper">
+            <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" />
+            <p>0</p>
+          </div>
+          <div class="stat-wrapper">
+            <img src="../static/img/post/dislikes-icon.svg" width="17px" />
+            <p>0</p>
+          </div>
         </div>
       </div>
     </div>
@@ -356,15 +360,15 @@ function createCom(i) {
   let comBody = document.querySelector(idCommentBody);
   let commentObj = {
     postid: i,
-    commentBody: comBody.value,
+    commentBody: comBody.value
   };
   console.log(commentObj);
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(commentObj),
+    body: JSON.stringify(commentObj)
   };
   let fetchRes = fetch("http://localhost:8080/comment", options);
   fetchRes.then((response) => {
@@ -384,15 +388,15 @@ function updateHashtagTable() {
 
   let hashtag = {
     Name: hashtag_value,
-    Count: "1",
+    Count: "1"
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(hashtag),
+    body: JSON.stringify(hashtag)
   };
 
   let fetchRes = fetch("http://localhost:8080/updateHashtag", options);
@@ -451,47 +455,72 @@ function displayTrendingHashtags(hashtags) {
   }
 }
 
-const logout = function logoutUser(){
-  let cookie = document.cookie
-  let username = (cookie.split("="))[0]
-  
+const logout = function logoutUser() {
+  let cookie = document.cookie;
+  let username = cookie.split("=")[0];
+
   console.log(username);
-  
+
   let logoutData = {
     ok: ""
-  }
-  
-  logoutData.ok = username
-  
+  };
+
+  logoutData.ok = username;
+
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(logoutData),
+    body: JSON.stringify(logoutData)
   };
-  
-  
+
   let fetchRes = fetch("http://localhost:8080/logout", options);
   fetchRes
-  .then((response) => {
-    if (response.status === 200){
-      console.log("ok");
+    .then((response) => {
+      if (response.status === 200) {
+        console.log("ok");
+      }
+      return response.json();
+    })
+    .then(function (data) {
+      if (data.User.LoggedIn === "false") {
+        document.querySelector("main").style.display = "none";
+        document.querySelector(".auth-container").style.display = "flex";
+
+        // showRegistrationUI()
+        notyf.success("Succesfully logged out.");
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+};
+
+// Get a reference to the posts wrapper div
+const postsWrapper = document.querySelector(".posts-wrap");
+
+// Listen for clicks on the posts wrapper div
+postsWrapper.addEventListener("click", (event) => {
+  console.log(event.target);
+  // Check if the clicked element is a post, header, body, or footer
+  if (event.target.matches("img, .name, .timestamp, .category-option-wrap, .post, p, .header, .body, .footer")) {
+    // Save the ID of the clicked post to a variable
+    const clickedPostId = event.target.id;
+
+    // Get a reference to the .comments child inside of the clicked post
+    const comments = event.target.closest(".post").querySelector(".comments");
+
+    // Check if the comments element exists
+    if (comments) {
+      // Check if the comments element is already visible
+      if (comments.style.display === "block") {
+        // If the comments element is already visible, set its display property to 'none'
+        comments.style.display = "none";
+      } else {
+        // If the comments element is not visible, set its display property to 'block'
+        comments.style.display = "block";
+      }
     }
-    return response.json();
-  })
-  .then(function (data) {
-    if(data.User.LoggedIn === "false"){
-      document.querySelector("main").style.display = "none";
-      document.querySelector(".auth-container").style.display = "flex";
-  
-      // showRegistrationUI()
-      notyf.success("Succesfully logged out.");
-  
-    }
-  })
-  .catch(function(err){
-    console.log(err);
-  })
-  
-  };
+  }
+});
