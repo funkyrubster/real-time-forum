@@ -542,3 +542,4 @@ let cookie = document.cookie
   
   // for extra security can be checked with backend and session in database 
 } 
+
