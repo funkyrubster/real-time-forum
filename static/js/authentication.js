@@ -319,7 +319,7 @@ function displayPosts(posts) {
         </div>
       </div>
       <!-- Post Body -->
-      <div class="body" onclick="getComments(this)" id="${posts[i].PostID}">
+      <div class="body">
         <p>` +
       posts[i].postBody +
       `</p>
