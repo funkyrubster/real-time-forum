@@ -1048,6 +1048,15 @@ input#commentBody {
   max-width: 650px;
 }
 
+.no-comments p {
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  color: #4c5b6e;
+}
+
 .comment .author {
   position: absolute;
   top: -19px;

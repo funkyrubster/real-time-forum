@@ -220,6 +220,33 @@ function refreshPosts() {
     });
 }
 
+// function refreshAllComments() {
+//   let commentData = {
+//     postId: postID
+//     // TODO: get rid of post ID and just get all comments
+//   };
+
+//   let options = {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify(commentData)
+//   };
+//   let fetchRes = fetch("http://localhost:8080/sendComments", options);
+//   fetchRes
+//     .then((response) => {
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       // TODO: get posts.length and comments.length and update counters
+
+//       // populate comments counter
+//       let commentsCounter = document.querySelector("#\\3" + postID + "  > div.footer > div.stats > div:nth-child(1) > p");
+//       commentsCounter.innerHTML = comments.length;
+//     });
+// }
+
 function refreshComments(postID) {
   let commentData = {
     postId: postID
@@ -390,7 +417,7 @@ function displayPosts(posts) {
                 <!-- Comments -->
                 <p class="title">Comments</p>
                 <div class="comments-wrap">
-                
+                  <img src="../static/img/post/comments/no-comments.svg" width="600px" />
                 </div>
               </div>
     </div>
@@ -429,7 +456,9 @@ function createCom(postID) {
 }
 
 function getComments(comments, postID) {
-  // convert date
+  // update comments counter
+  let commentsCounter = document.querySelector("#\\3" + postID + "  > div.footer > div.stats > div:nth-child(1) > p");
+  commentsCounter.innerHTML = comments.length;
 
   console.log(comments);
   console.log("first com", comments[1]);
@@ -581,7 +610,7 @@ const postsWrapper = document.querySelector(".posts-wrap");
 postsWrapper.addEventListener("click", (event) => {
   console.log(event.target);
   // Check if the clicked element is a post, header, body, or footer
-  if (event.target.matches("img, .name, .timestamp, .category-option-wrap, .post, .body, .author, p, .create-comment-wrap, .header, .footer")) {
+  if (event.target.matches("img, .name, .timestamp, .category-option-wrap, .post, .body, .stat-wrapper, .stats, .author, p, .create-comment-wrap, .header, .footer")) {
     // Save the ID of the clicked post to a variable
     const clickedPostId = event.target.id;
 
