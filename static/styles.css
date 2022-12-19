@@ -1098,6 +1098,7 @@ input#commentBody {
   line-height: 19px;
   color: #1e3a5f;
   padding: 0.75rem;
+  min-width: 330px;
 }
 
 #logout-btn {

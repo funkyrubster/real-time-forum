@@ -220,6 +220,29 @@ function refreshPosts() {
     });
 }
 
+function refreshComments(postID) {
+  let commentData = {
+    postId: postID
+  };
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(commentData)
+  };
+  let fetchRes = fetch("http://localhost:8080/sendComments", options);
+  fetchRes
+    .then((response) => {
+      return response.json();
+    })
+    .then(function (data) {
+      // sends latest comment data to getComments function
+      getComments(data, postID);
+    });
+}
+
 function refreshHashtags() {
   fetch("/getHashtags", {
     headers: {
@@ -329,7 +352,7 @@ function displayPosts(posts) {
       <div class="footer">
         <!-- Comment, Like, Dislike -->
         <div class="actions">
-          <img src="../static/img/comments-icon.svg" onclick="getComments(${posts[i].PostID})" id="${posts[i].PostID}"/>
+          <img src="../static/img/comments-icon.svg" onclick="refreshComments(${posts[i].PostID})" id="${posts[i].PostID}"/>
           <img src="../static/img/like-icon.svg" />
           <img src="../static/img/dislike-icon.svg" />
         </div>
@@ -367,38 +390,18 @@ function displayPosts(posts) {
                 <!-- Comments -->
                 <p class="title">Comments</p>
                 <div class="comments-wrap">
-                  <div class="comment">
-                    <div class="author">Klaudia B</div>
-                    <img src="../static/img/profile.png" id="profile-picture" width="35px">
-                    <div class="timestamp">5:29am</div>
-                    <div class="body">This is a comment. I love writing comments. Hello hello hello hello hello hello hello.</div>
-                  </div>
-                  <div class="comment">
-                    <div class="author">Connor H</div>
-                    <img src="../static/img/profile.png" id="profile-picture" width="35px">
-                    <div class="timestamp">5:29am</div>
-                    <div class="body">Blah blah blah Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consequatur harum quas beatae error ut aut inventore ipsa dolores fugiat, unde eaque quasi nulla culpa esse et quae magnam atque incidunt.</div>
-                  </div>
-                  <div class="comment">
-                    <div class="author">Mo Rubie</div>
-                    <img src="../static/img/profile.png" id="profile-picture" width="35px">
-                    <div class="timestamp">5:29am</div>
-                    <div class="body">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sapiente mollitia eum repudiandae aut. Quam nihil accusamus laboriosam veniam.</div>
-                  </div>
+                
                 </div>
               </div>
     </div>
     `;
   }
 }
+
 function createCom(postID) {
   console.log("postID: " + postID);
   let idCommentBody = "#commentBody" + postID;
-  console.log("idCommentBody: " + idCommentBody);
-  // let idSubmit = "#submitCom" + i;
-  // let submitCom = document.querySelector(idSubmit);
   let comBody = document.querySelector(idCommentBody);
-  console.log("comBody: " + comBody);
 
   let commentObj = {
     postid: postID,
@@ -416,6 +419,7 @@ function createCom(postID) {
   fetchRes.then((response) => {
     if (response.status == "200") {
       notyf.success("Your comment was created successfully.");
+      refreshComments(postID);
       comBody.value = " ";
     } else {
       notyf.error("Your comment failed to send.");
@@ -424,30 +428,35 @@ function createCom(postID) {
   });
 }
 
-function getComments(postID) {
-  console.log("Displaying all comments for postID: " + postID + " ...");
-  let commentData = {
-    postId: postID
-  };
+function getComments(comments, postID) {
+  // convert date
 
-  let options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(commentData)
-  };
-  let fetchRes = fetch("http://localhost:8080/sendComments", options);
-  fetchRes
-    .then((response) => {
-      return response.json();
-    })
-    .then(function (data) {
-      console.log(data);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
+  console.log(comments);
+  console.log("first com", comments[1]);
+
+  commentsWrap = document.querySelector("#\\3" + postID + "  > div.comments > div.comments-wrap");
+
+  // Clear all posts printed
+  commentsWrap.innerHTML = "";
+
+  // Loop through all comments and print them
+  for (let i = comments.length - 1; i >= 0; i--) {
+    commentsWrap.innerHTML +=
+      `
+        <div class="comment">
+        <div class="author">` +
+      comments[i].username +
+      `</div>
+        <img src="../static/img/profile.png" id="profile-picture" width="35px">
+        <div class="timestamp">` +
+      convertDate(comments[i].CreatedAt) +
+      `</div>
+        <div class="body">` +
+      comments[i].commentBody +
+      `</div>
+      </div>
+          `;
+  }
 }
 
 function updateHashtagTable() {
