@@ -329,8 +329,7 @@ function displayPosts(posts) {
       <div class="footer">
         <!-- Comment, Like, Dislike -->
         <div class="actions">
-          <img src="../static/img/comments-icon.svg" onclick="getComments(this)" id="${
-            posts[i].PostID}"/>
+          <img src="../static/img/comments-icon.svg" onclick="getComments(${posts[i].PostID})" id="${posts[i].PostID}"/>
           <img src="../static/img/like-icon.svg" />
           <img src="../static/img/dislike-icon.svg" />
         </div>
@@ -358,8 +357,8 @@ function displayPosts(posts) {
                   <div class="comment-field-wrap">
                     <!-- <img src="../static/img/profile.png" width="50px" id="composeCommentAuthor"> -->
                     <div class="comment-field-submit-wrap">
-                      <input type="text" id="commentBody${posts.length - i}" placeholder="Write a comment...">
-                      <div class="comment-btn" onclick="createCom(${posts.length - i})">Comment</div>
+                      <input type="text" id="commentBody${posts[i].PostID}" placeholder="Write a comment...">
+                      <div class="comment-btn" onclick="createCom(${posts[i].PostID})">Comment</div>
                     </div>
                   </div>
                 </div>
@@ -392,13 +391,17 @@ function displayPosts(posts) {
     `;
   }
 }
-function createCom(i) {
-  let idCommentBody = "#commentBody" + i;
+function createCom(postID) {
+  console.log("postID: " + postID);
+  let idCommentBody = "#commentBody" + postID;
+  console.log("idCommentBody: " + idCommentBody);
   // let idSubmit = "#submitCom" + i;
   // let submitCom = document.querySelector(idSubmit);
   let comBody = document.querySelector(idCommentBody);
+  console.log("comBody: " + comBody);
+
   let commentObj = {
-    postid: i,
+    postid: postID,
     commentBody: comBody.value
   };
   console.log(commentObj);
@@ -421,13 +424,10 @@ function createCom(i) {
   });
 }
 
-function getComments(e) {
-  //console.log("hello", e.id);
-
-  let postid = parseInt(e.id);
-
+function getComments(postID) {
+  console.log("Displaying all comments for postID: " + postID + " ...");
   let commentData = {
-    postId: postid
+    postId: postID
   };
 
   let options = {
