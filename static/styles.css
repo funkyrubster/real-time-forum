@@ -770,7 +770,7 @@ select:hover {
 
   width: 100%;
   height: fit-content;
-
+  cursor: pointer;
   background: #ffffff;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 10px;
@@ -791,7 +791,7 @@ select:hover {
   line-height: 19px;
   letter-spacing: -0.02em;
 
-  color: #1e3a5f;
+  color: #4b607c;
 }
 
 .post .name-timestamp-wrap p.timestamp {
@@ -1170,7 +1170,7 @@ input#commentBody {
   font-size: 13.5px;
   line-height: 19px;
   letter-spacing: -0.02em;
-  color: #1e3a5f;
+  color: #4b607c;
 }
 
 #recently-joined .user-prompt p {
@@ -1319,7 +1319,7 @@ input#commentBody {
   font-size: 14px;
   line-height: 19px;
   letter-spacing: -0.02em;
-  color: #1e3a5f;
+  color: #4b607c;
   margin-left: 5px;
 }
 

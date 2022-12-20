@@ -194,9 +194,10 @@ loginData.addEventListener("submit", function () {
 
 // Concatenates the user's details within the HTML after login
 function updateUserDetails(data) {
+  console.log("updated User Details", data.User.firstName, data.User.lastName, data.User.username);
   document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
-  document.querySelector("#postBody").placeholder = `What's on your mind, ` + data.User.firstName + `?`;
+  document.querySelector("#postBody").placeholder = `What's new, ` + data.User.firstName + `?`;
 }
 
 function refreshPosts() {
@@ -360,13 +361,10 @@ function displayPosts(posts) {
       `</p>
           </div>
         </div>
-        <!-- Category & Option Button -->
-        <div class="category-option-wrap">
-          <div class="category">` +
+        <!-- Category Button -->
+        <div class="category">` +
       posts[i].Hashtag +
       `</div>
-          <img src="../static/img/post-options.svg" />
-        </div>
       </div>
       <!-- Post Body -->
       <div class="body">
@@ -508,10 +506,9 @@ function updateHashtagTable() {
   let fetchRes = fetch("http://localhost:8080/updateHashtag", options);
   fetchRes.then((response) => {
     if (response.status == "200") {
-      notyf.success("Succesfully updated hashtag table.");
       refreshHashtags();
     } else {
-      notyf.error("Failed to update hashtag table.");
+      notyf.error("Failed to update trending hashtags.");
     }
     return response.text();
   });
