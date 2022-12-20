@@ -180,6 +180,7 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
+      onlineActivity()
       // Fills the user's profile with their details
       updateUserDetails(data);
       // Pulls latest posts from database and displays them
@@ -199,6 +200,27 @@ function updateUserDetails(data) {
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
   document.querySelector("#postBody").placeholder = `What's new, ` + data.User.firstName + `?`;
 }
+
+
+function onlineActivity(){
+  fetch("/usersStatus", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method:"POST"
+  })
+  .then((response) =>{
+    response.text().then(function(data){
+      let status = JSON.parse(data)
+      console.log("STATUS:",status);
+    })
+  })
+  .catch((error)=>{
+    console.log(error);
+  })
+}
+
 
 function refreshPosts() {
   fetch("/getPosts", {
@@ -221,32 +243,6 @@ function refreshPosts() {
     });
 }
 
-// function refreshAllComments() {
-//   let commentData = {
-//     postId: postID
-//     // TODO: get rid of post ID and just get all comments
-//   };
-
-//   let options = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify(commentData)
-//   };
-//   let fetchRes = fetch("http://localhost:8080/sendComments", options);
-//   fetchRes
-//     .then((response) => {
-//       return response.json();
-//     })
-//     .then(function (data) {
-//       // TODO: get posts.length and comments.length and update counters
-
-//       // populate comments counter
-//       let commentsCounter = document.querySelector("#\\3" + postID + "  > div.footer > div.stats > div:nth-child(1) > p");
-//       commentsCounter.innerHTML = comments.length;
-//     });
-// }
 
 function refreshComments(postID) {
   let commentData = {

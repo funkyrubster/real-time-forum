@@ -28,6 +28,21 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
+	// Send user information back to client using JSON format
+	onlineactivity := OnlineActivity{
+		Online:  data.OnlineUsers(),
+		Offline: data.OfflineUser(),
+	}
+
+	js, err := json.Marshal(onlineactivity)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
+}
+
 // Handles receiving the comment data and adding it to the 'comments' table in the database
 func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 
@@ -76,7 +91,6 @@ func (data *Forum) SendComments(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
 // Handles receiving the post data and adding it to the 'posts' table in the database
 func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	// Decodes posts data into post variable
@@ -114,8 +128,6 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 }
 
 func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("sendLatestPosts() called")
-
 	// Send user information back to client using JSON format
 	posts := data.getLatestPosts()
 	// fmt.Println(userInfo)
@@ -125,8 +137,6 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
-
-	fmt.Println("sendLatestPosts() sent to JS")
 }
 
 // Updates hashtag count for specific hashtag when called
@@ -159,19 +169,16 @@ func (data *Forum) UpdateHashtag(w http.ResponseWriter, r *http.Request) {
 }
 
 func (data *Forum) SendLatestHashtags(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("SendLatestHashtags() called")
 
 	// Send user information back to client using JSON format
 	hashtags := data.getLatestHashtags()
-	// fmt.Println(userInfo)
+
 	js, err := json.Marshal(hashtags)
 	if err != nil {
 		log.Fatal(err)
 	}
 	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
-
-	fmt.Println("SendLatestHashtags() sent to JS")
 }
 
 // Handles the registration of new users - validates the data and adds it to the 'users' table in database
@@ -321,20 +328,22 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
-			Name:  "session_token",
-			Value: sess.session,
+			Name:   "session_token",
+			Value:  sess.session,
 			MaxAge: 900,
 		})
-
-		// x := sess.session + "&" + strconv.Itoa(sess.userID)
-		// fmt.Println(reflect.TypeOf(x))
 
 		// Insert data into session variable
 		data.InsertSession(sess)
 
-		fmt.Println(sess)
-
 		data.UpdateStatus(user.LoggedIn, user.Username)
+
+		// JUST FOR TESTING
+		x := data.OfflineUser()
+		fmt.Println("offline:", x)
+		
+		y := data.OnlineUsers()
+		fmt.Println("online:", y)
 
 		// Send user information back to client using JSON format
 		userInfo := data.GetUserProfile(user.Username)
@@ -353,7 +362,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // // logout handle
 func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("LogOut Handler Here ********* ")
 
 	c, err := r.Cookie("session_token")
 	if err != nil {
@@ -368,17 +376,21 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	data.DeleteSession(w, sess.userID)
 	data.UpdateStatus(loggedin, sess.username)
 
-// Send user information back to client using JSON format
-userInfo := data.GetUserProfile(sess.username)
-// fmt.Println(userInfo)
-js, err := json.Marshal(userInfo)
-if err != nil {
-	log.Fatal(err)
-}
-w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
-w.Write([]byte(js))
+	// JUST FOR TESTING
+	x := data.OfflineUser()
+  fmt.Println("offline:", x)
+	
+	y := data.OnlineUsers()
+	fmt.Println("online:",y)
+
+	// Send user information back to client using JSON format
+	userInfo := data.GetUserProfile(sess.username)
+	// fmt.Println(userInfo)
+	js, err := json.Marshal(userInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
 }
 
-// TODO
-// once login check session table for creating user list (get data for user table)
-// when logged in try to avoid loggin in another browser

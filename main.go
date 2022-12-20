@@ -35,6 +35,7 @@ func main() {
 	http.HandleFunc("/getHashtags", data.SendLatestHashtags)
 	http.HandleFunc("/updateHashtag", data.UpdateHashtag)
 	http.HandleFunc("/sendComments", data.SendComments)
+	http.HandleFunc("/usersStatus", data.SendLatestActivity)
 
 
 	// Create the hub that will manage the connections and communication with clients

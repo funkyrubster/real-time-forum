@@ -25,9 +25,10 @@ type User struct {
 	LoggedIn  string
 }
 
+
 type OnlineActivity struct {
-	Onlinestatus  string `json:"onlineuser"`
-	OfflineStatus string `json:"offlineuser"`
+	Online       []User
+	Offline      []User
 }
 
 type UserProfile struct {

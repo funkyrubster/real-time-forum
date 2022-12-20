@@ -59,6 +59,10 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	return user
 }
 
+
+//-------------------------- ACTIVITY STATUS ------------------//
+
+
 // Updates user status after loginOut
 func (data *Forum) UpdateStatus(loggedin string, username string) {
 	stmt, err := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE username = ?;")
@@ -67,6 +71,52 @@ func (data *Forum) UpdateStatus(loggedin string, username string) {
 	}
 	stmt.Exec(loggedin, username)
 }
+
+func (data *Forum) OnlineUsers()[]User {
+	var onlineuser User
+	var onlineusers []User
+
+	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'true';`)
+	if err1 != nil {
+		fmt.Println("Error with OnlineUsers func")
+		return nil
+	}
+
+	// Scans through each column in the 'users' row and stores the data in the variables above
+	for row.Next() {
+		err := row.Scan(&onlineuser.Firstname, &onlineuser.Lastname, &onlineuser.LoggedIn)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		onlineusers = append(onlineusers, onlineuser)
+
+	}
+	return onlineusers
+}
+
+// Offline status function, just setting loggedin to false
+func (data *Forum) OfflineUser() []User {
+	var offlineuser User
+	var offlineusers []User
+
+	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'false';`)
+	if err1 != nil {
+		fmt.Println("Error with OfflineUsers func")
+		return nil
+	}
+	// Scans through each column in the 'users' row and stores the data in the variables above
+	for row.Next() {
+		err := row.Scan(&offlineuser.Firstname, &offlineuser.Lastname, &offlineuser.LoggedIn)
+		if err != nil {
+			log.Fatal(err)
+		}
+		offlineusers = append(offlineusers, offlineuser)
+
+	}
+	return offlineusers
+}
+
 
 // --------------------------- POSTS ------------------------//
 
@@ -427,106 +477,4 @@ func Connect(db *sql.DB) *Forum {
 	}
 }
 
-func (data *Forum) OnlineUsers() []User {
-	var onlineuser User
-	var onlineusers []User
 
-	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'true';`)
-	if err1 != nil {
-		fmt.Println("Error with OnlineUsers func")
-		return nil
-	}
-
-	// Scans through each column in the 'users' row and stores the data in the variables above
-	for row.Next() {
-		err := row.Scan(&onlineuser.Firstname, &onlineuser.Lastname, &onlineuser.LoggedIn)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		onlineusers = append(onlineusers, onlineuser)
-
-	}
-	return onlineusers
-}
-
-// Offline status function, just setting loggedin to false
-func (data *Forum) OfflineUser() []User {
-	var offlineuser User
-	var offlineusers []User
-
-	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'false';`)
-	if err1 != nil {
-		fmt.Println("Error with OfflineUsers func")
-		return nil
-	}
-	// Scans through each column in the 'users' row and stores the data in the variables above
-	for row.Next() {
-		err := row.Scan(&offlineuser.Firstname, &offlineuser.Lastname, &offlineuser.LoggedIn)
-		if err != nil {
-			log.Fatal(err)
-		}
-		offlineusers = append(offlineusers, offlineuser)
-
-	}
-	return offlineusers
-}
-
-// func (data Forum) SendUserActivityList(onoff string) OnlineActivity {
-// 	// Used to store the user's profile information
-// 	onlineactivity := OnlineActivity{}
-
-// 	// Get a specific user's information from the 'users' table
-// 	rows, err := data.DB.Query(`SELECT FROM users where loggedin= ?`, onoff)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	// Used to store the user's data so we can add it to struct later on
-// 	var userID int
-// 	var firstname string
-// 	var lastname string
-// 	var email string
-// 	var nickname string
-// 	var password string
-// 	var age int
-// 	var gender string
-// 	var loggedin string
-
-// 	// Scans through each column in the 'users' row and stores the data in the variables above
-// 	for rows.Next() {
-// 		err := rows.Scan(&userID, &nickname, &email, &password, &firstname, &lastname, &age, &gender, &loggedin)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-
-// 		// This contains the specific user's data as well as all of their posts
-// 		onlineactivity = OnlineActivity{
-// 			User: User{
-// 				Username:  nickname,
-// 				Firstname: firstname,
-// 				Lastname:  lastname,
-// 				Email:     email,
-// 				LoggedIn:  loggedin,
-// 			},
-// 			// CreatedPosts: data.GetPosts(username),
-// 		}
-// 	}
-// 	return onlineactivity
-// }
-
-// func (data Forum) SendLatestActivity(w http.ResponseWriter, r http.Request) {
-// 	fmt.Println("sendLatestActivity() called")
-
-// 	// Send user information back to client using JSON format
-// 	onlineactivity := data.SendUserActivityList()
-
-// 	js, err := json.Marshal(onlineactivity)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
-// 	w.Write([]byte(js))
-
-// 	fmt.Println("sendLatestActivity() sent to JS")
-// }
