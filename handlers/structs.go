@@ -25,10 +25,9 @@ type User struct {
 	LoggedIn  string
 }
 
-
 type OnlineActivity struct {
-	Online       []User
-	Offline      []User
+	Online  []User
+	Offline []User
 }
 
 type UserProfile struct {
@@ -74,4 +73,15 @@ type Comment struct {
 	Username  string `json:"username"`
 	Content   string `json:"commentBody"`
 	CreatedAt time.Time
+}
+
+// maybe the fields can be updated?
+type Chat struct {
+	MessageSender    string    `json:"messagesender"`
+	MessageRecipient string    `json:"messagerecipient"`
+	Message          string    `json:"message"`
+	MessageID        int       `json:"messageID"`
+	CreatedAt        time.Time // string `json:"chatDate"`
+	UserWithHistroy  []Chat    `json:"userwithhistory"`
+	User             []User    `json:"users"`
 }
