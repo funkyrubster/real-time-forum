@@ -59,9 +59,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	return user
 }
 
-
 //-------------------------- ACTIVITY STATUS ------------------//
-
 
 // Updates user status after loginOut
 func (data *Forum) UpdateStatus(loggedin string, username string) {
@@ -72,7 +70,7 @@ func (data *Forum) UpdateStatus(loggedin string, username string) {
 	stmt.Exec(loggedin, username)
 }
 
-func (data *Forum) OnlineUsers()[]User {
+func (data *Forum) OnlineUsers() []User {
 	var onlineuser User
 	var onlineusers []User
 
@@ -116,7 +114,6 @@ func (data *Forum) OfflineUser() []User {
 	}
 	return offlineusers
 }
-
 
 // --------------------------- POSTS ------------------------//
 
@@ -346,6 +343,14 @@ func (data *Forum) GetSession(cookie string) UserSession {
 	return session
 }
 
+func (data *Forum) SaveChat(messagesender string, messagerecipient string) {
+	stmnt, err := data.DB.Prepare("INSERT INTO chat (username1, username2, creationDate) VALUES (?, ?, ?)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmnt.Close()
+}
+
 //-------------------------  TABLES -------------------------//
 
 // Used when starting server - Ensures all tables are created to avoid errors
@@ -464,17 +469,49 @@ func CheckTablesExist(db *sql.DB, table string) {
 			}
 			sessions.Exec()
 		}
+		// draft table for message, maybe update fields?
+		if table == "messages" {
+			fmt.Println("Creating messages table...")
+			messages_table := `CREATE TABLE IF NOT EXISTS messages (
+					"messageID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+					"chatID" INTEGER REFERENCES chat(chatID),
+					"sender" TEXT REFERENCES users(username), 
+					"recipient" TEXT REFERENCES users(username),
+					"message" CHAR(200),
+					"creationDate" TIMESTAMP
+					);`
+
+			messages, errTable := db.Prepare(messages_table)
+			if errTable != nil {
+				log.Fatal(errTable)
+			}
+			messages.Exec()
+		}
+		// draft table for message, maybe update fields?
+		if table == "chat" {
+			fmt.Println("Creating chat table...")
+			chat_table := `CREATE TABLE IF NOT EXISTS chat (
+					"chatID" INTEGER PRIMARY KEY AUTOINCREMENT,
+					"username1" TEXT REFERENCES users(username), 
+					"username2" TEXT REFERENCES users(username),
+					"creationDate" TIMESTAMP
+					);`
+
+			chat, errTable := db.Prepare(chat_table)
+			if errTable != nil {
+				log.Fatal(errTable)
+			}
+			chat.Exec()
+		}
 	}
 }
 
 // Check all required tables exist in database, and create them if they don't
 func Connect(db *sql.DB) *Forum {
-	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions"} {
+	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions", "messages", "chat"} {
 		CheckTablesExist(db, table)
 	}
 	return &Forum{
 		DB: db,
 	}
 }
-
-
