@@ -214,12 +214,24 @@ function onlineActivity(){
     response.text().then(function(data){
       let status = JSON.parse(data)
       console.log("STATUS:",status);
+      
+      console.log("online: ");
+      for (let i = 0; i < status.length; i++ ){
+        console.log(status.Online[i].firstName + " " + status.Online[i].lastName);
+      }
+
+      console.log("offline: ");
+      for (let i = 0; i < status.length; i++ ){
+        console.log(status.Offline[i].firstName + " " + status.Offline[i].lastName);
+      }
+      
     })
   })
   .catch((error)=>{
     console.log(error);
   })
 }
+
 
 
 function refreshPosts() {
