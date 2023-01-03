@@ -1365,6 +1365,34 @@ input#commentBody {
   color: #ffffff;
 }
 
+ul li {
+  list-style-type: none;
+  position: relative;
+
+}
+
+#online li:before {
+  content: counter(item, disc) " ";
+  color: rgb(29, 206, 44);
+  top: 12px;
+  left: 5px;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+}
+#offline li:before {
+  content: counter(item, disc) " ";
+  color: rgb(206, 29, 29);
+  top: 12px;
+  left: 5px;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+}
+  
+
+
+
 /* --------------------------- ANIMATIONS --------------------------- */
 .animate {
   animation-duration: 1s;
