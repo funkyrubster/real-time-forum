@@ -13,10 +13,7 @@ type Forum struct {
 	*sql.DB
 }
 
-
-
 // --------------------------- USER ------------------------//
-
 
 // Pulls specific user's data and posts data from database and returns it as a User struct
 func (data *Forum) GetUserProfile(username string) UserProfile {
@@ -54,7 +51,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 				Firstname: firstname,
 				Lastname:  lastname,
 				Email:     email,
-				LoggedIn: loggedin,
+				LoggedIn:  loggedin,
 			},
 			CreatedPosts: data.GetPosts(username),
 		}
@@ -62,20 +59,63 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 	return user
 }
 
+//-------------------------- ACTIVITY STATUS ------------------//
 
-// Updates user status after loginOut 
-func (data *Forum) UpdateStatus(loggedin string, username string){
+// Updates user status after loginOut
+func (data *Forum) UpdateStatus(loggedin string, username string) {
 	stmt, err := data.DB.Prepare("UPDATE users SET loggedin = ? WHERE username = ?;")
 	if err != nil {
 		log.Fatal(err)
 	}
 	stmt.Exec(loggedin, username)
-
 }
 
+func (data *Forum) OnlineUsers() []User {
+	var onlineuser User
+	var onlineusers []User
+
+	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'true';`)
+	if err1 != nil {
+		fmt.Println("Error with OnlineUsers func")
+		return nil
+	}
+
+	// Scans through each column in the 'users' row and stores the data in the variables above
+	for row.Next() {
+		err := row.Scan(&onlineuser.Firstname, &onlineuser.Lastname, &onlineuser.LoggedIn)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		onlineusers = append(onlineusers, onlineuser)
+
+	}
+	return onlineusers
+}
+
+// Offline status function, just setting loggedin to false
+func (data *Forum) OfflineUser() []User {
+	var offlineuser User
+	var offlineusers []User
+
+	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'false';`)
+	if err1 != nil {
+		fmt.Println("Error with OfflineUsers func")
+		return nil
+	}
+	// Scans through each column in the 'users' row and stores the data in the variables above
+	for row.Next() {
+		err := row.Scan(&offlineuser.Firstname, &offlineuser.Lastname, &offlineuser.LoggedIn)
+		if err != nil {
+			log.Fatal(err)
+		}
+		offlineusers = append(offlineusers, offlineuser)
+
+	}
+	return offlineusers
+}
 
 // --------------------------- POSTS ------------------------//
-
 
 // Handles creation of new posts
 func (data *Forum) CreatePost(post Post) {
@@ -116,7 +156,6 @@ func (data *Forum) GetPosts(username string) []Post {
 	return posts
 }
 
-
 func (data *Forum) getLatestPosts() []Post {
 	// Used to store all of the posts
 	var posts []Post
@@ -135,36 +174,31 @@ func (data *Forum) getLatestPosts() []Post {
 		if err != nil {
 			log.Fatal(err)
 		}
-		
 		// Adds each post found from specific user to posts slice
 		posts = append(posts, post)
 	}
 	return posts
 }
 
-
 // ----------------------- COMMENTS -------------------------//
 
-
 func (data *Forum) CreateComment(comment Comment) {
-stmt, err := data.DB.Prepare("INSERT INTO comments(postID, username, content, creationDate) VALUES(?, ?, ?, ?);")
-if err != nil {
-	log.Fatal(err)
+	stmt, err := data.DB.Prepare("INSERT INTO comments(postID, username, content, creationDate) VALUES(?, ?, ?, ?);")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = stmt.Exec(comment.PostID, comment.Username, comment.Content, comment.CreatedAt)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-_, err = stmt.Exec(comment.PostID, comment.Username, comment.Content, comment.CreatedAt)
-if err != nil {
-	log.Fatal(err)
-}
-}
-
-
-func (data *Forum) GetComments(postID int)[]Comment{
-
-  // Used to store all of the comments
+func (data *Forum) GetComments(postID int) []Comment {
+	// Used to store all of the comments
 	var comments []Comment
 
-	// Used to store individual comment data 
+	// Used to store individual comment data
 	var comment Comment
 
 	rows, err := data.DB.Query(`SELECT * FROM comments WHERE postID =?`, postID)
@@ -175,7 +209,7 @@ func (data *Forum) GetComments(postID int)[]Comment{
 	// Scans through every row where the postID matches the postID passed in
 	for rows.Next() {
 		// Populates post var with data from each post found in table
-		err := rows.Scan(&comment.CommentID,&comment.PostID,&comment.Username, &comment.Content, &comment.CreatedAt)
+		err := rows.Scan(&comment.CommentID, &comment.PostID, &comment.Username, &comment.Content, &comment.CreatedAt)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -183,13 +217,9 @@ func (data *Forum) GetComments(postID int)[]Comment{
 		comments = append(comments, comment)
 	}
 	return comments
-
 }
 
-
-
 // --------------------------- HASHTAG ------------------------//
-
 
 func (data *Forum) getLatestHashtags() []Hashtag {
 	// Used to store all of the posts
@@ -214,7 +244,6 @@ func (data *Forum) getLatestHashtags() []Hashtag {
 	}
 	return hashtags
 }
-
 
 // Updates hashtag value
 func (data *Forum) UpdateHashtagCount(hashtag Hashtag) {
@@ -246,12 +275,9 @@ func (data *Forum) UpdateHashtagCount(hashtag Hashtag) {
 	stmt.Exec(hashtagCount, hashtag.Name)
 
 	fmt.Println("Hashtag count updated to", hashtagCount, "from", hashtag.Count, "for", hashtag.Name)
-
 }
 
-
 // --------------------------- SESSION ------------------------//
-
 
 // Inserts session into sessions table
 func (data *Forum) InsertSession(sess UserSession) {
@@ -317,11 +343,15 @@ func (data *Forum) GetSession(cookie string) UserSession {
 	return session
 }
 
-
-
+func (data *Forum) SaveChat(messagesender string, messagerecipient string) {
+	stmnt, err := data.DB.Prepare("INSERT INTO chat (username1, username2, creationDate) VALUES (?, ?, ?)")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmnt.Close()
+}
 
 //-------------------------  TABLES -------------------------//
-
 
 // Used when starting server - Ensures all tables are created to avoid errors
 func CheckTablesExist(db *sql.DB, table string) {
@@ -439,12 +469,46 @@ func CheckTablesExist(db *sql.DB, table string) {
 			}
 			sessions.Exec()
 		}
+		// draft table for message, maybe update fields?
+		if table == "messages" {
+			fmt.Println("Creating messages table...")
+			messages_table := `CREATE TABLE IF NOT EXISTS messages (
+					"messageID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+					"chatID" INTEGER REFERENCES chat(chatID),
+					"sender" TEXT REFERENCES users(username), 
+					"recipient" TEXT REFERENCES users(username),
+					"message" CHAR(200),
+					"creationDate" TIMESTAMP
+					);`
+
+			messages, errTable := db.Prepare(messages_table)
+			if errTable != nil {
+				log.Fatal(errTable)
+			}
+			messages.Exec()
+		}
+		// draft table for message, maybe update fields?
+		if table == "chat" {
+			fmt.Println("Creating chat table...")
+			chat_table := `CREATE TABLE IF NOT EXISTS chat (
+					"chatID" INTEGER PRIMARY KEY AUTOINCREMENT,
+					"username1" TEXT REFERENCES users(username), 
+					"username2" TEXT REFERENCES users(username),
+					"creationDate" TIMESTAMP
+					);`
+
+			chat, errTable := db.Prepare(chat_table)
+			if errTable != nil {
+				log.Fatal(errTable)
+			}
+			chat.Exec()
+		}
 	}
 }
 
 // Check all required tables exist in database, and create them if they don't
 func Connect(db *sql.DB) *Forum {
-	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions"} {
+	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions", "messages", "chat"} {
 		CheckTablesExist(db, table)
 	}
 	return &Forum{
