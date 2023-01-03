@@ -220,20 +220,47 @@ function onlineActivity() {
     .then((response) => {
       response.text().then(function (data) {
         let status = JSON.parse(data);
-        console.log("STATUS:", status);
+        
 
-        console.log("online: ");
-        for (let i = 0; i < status.length; i++) {
-          console.log(
-            status.Online[i].firstName + " " + status.Online[i].lastName
-          );
+        activityList = document.querySelector(".user-prompt");
+
+        activityList.innerHTML = "";
+
+        for (let i = 0; i < status.Online.length; i++) {
+          // console.log(status.Online[i].firstName);
+          activityList.innerHTML +=
+            `
+           <p>
+                <ul class="list" id="online">
+                  <li>` +
+            status.Online[i].firstName +
+            " " +
+            status.Online[i].lastName +
+            `</li>
+                </ul>
+              </p>
+              </div>
+          `;
         }
-
-        console.log("offline: ");
-        for (let i = 0; i < status.length; i++) {
-          console.log(
-            status.Offline[i].firstName + " " + status.Offline[i].lastName
-          );
+        if (status.Offline == null) {
+          console.log("empty");
+        } else {
+          for (let i = 0; i < status.Offline.length; i++) {
+            // console.log(status.Offline[i].firstName);
+            activityList.innerHTML +=
+              `
+             <p>
+                  <ul class="list" id="offline">
+                    <li>` +
+              status.Offline[i].firstName +
+              " " +
+              status.Offline[i].lastName +
+              `</li>
+                  </ul>
+                </p>
+                </div>
+            `;
+          }
         }
       });
     })
@@ -655,6 +682,7 @@ postsWrapper.addEventListener("click", (event) => {
 function checkCookies() {
   let cookie = document.cookie;
   if (cookie != "") {
+    onlineActivity();
     showFeed();
     refreshPosts();
     refreshHashtags();
