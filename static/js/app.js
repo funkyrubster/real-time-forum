@@ -12,7 +12,6 @@ function showRegistrationUI() {
 function showLoginUI() {
   document.querySelector("#login").style.display = "flex";
   document.querySelector("#registration").style.display = "none";
-  
 }
 
 function showChat() {
