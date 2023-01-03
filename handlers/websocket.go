@@ -183,6 +183,7 @@ func (h *Hub) LogConns() {
 			fmt.Printf("client %v have %v connections\n", userId, len(h.Clients))
 		}
 		fmt.Println()
+		fmt.Println()
 		time.Sleep(1 * time.Second)
 	}
 }
