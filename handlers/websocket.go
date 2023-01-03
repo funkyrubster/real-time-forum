@@ -158,8 +158,16 @@ func (h *Hub) Run() {
 		case client := <-h.Register:
 			h.Clients[client.UserId] = client
 		case client := <-h.Unregister:
+			fmt.Println()
+			fmt.Println()
+			fmt.Println()
+			fmt.Println("USERID:   ",client.UserId)
+			fmt.Println()
+			fmt.Println("CLient hub: ", h.Clients)
+			fmt.Println()
 			if _, ok := h.Clients[client.UserId]; ok {
 				delete(h.Clients, client.UserId)
+				fmt.Println("logging out user")
 				close(client.Send)
 			}
 		case message := <-h.Broadcast:

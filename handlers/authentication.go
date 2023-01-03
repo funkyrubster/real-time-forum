@@ -378,7 +378,7 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 
 	// JUST FOR TESTING
 	x := data.OfflineUser()
-  fmt.Println("offline:", x)
+  fmt.Println("offline:", x[0])
 	
 	y := data.OnlineUsers()
 	fmt.Println("online:",y)
