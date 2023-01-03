@@ -156,7 +156,6 @@ loginData.addEventListener("submit", function () {
   let user = {
     username: document.getElementById("username").value,
     password: document.getElementById("password").value,
-    // loggedIn: false 
   };
 
   let options = {
@@ -170,7 +169,6 @@ loginData.addEventListener("submit", function () {
   let fetchRes = fetch("http://localhost:8080/login", options);
   fetchRes
     .then((response) => {
-      console.log();
       if (response.status == "200") {
         // add alert login ok
         notyf.success("You have logged in successfully.");
@@ -183,6 +181,7 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
+      onlineActivity();
       // Fills the user's profile with their details
       updateUserDetails(data);
       // Pulls latest posts from database and displays them
@@ -197,11 +196,50 @@ loginData.addEventListener("submit", function () {
 
 // Concatenates the user's details within the HTML after login
 function updateUserDetails(data) {
+  console.log(
+    "updated User Details",
+    data.User.firstName,
+    data.User.lastName,
+    data.User.username
+  );
   document.querySelector("p.name").innerHTML =
     data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
   document.querySelector("#postBody").placeholder =
-    `What's on your mind, ` + data.User.firstName + `?`;
+    `What's new, ` + data.User.firstName + `?`;
+}
+
+function onlineActivity() {
+  fetch("/usersStatus", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  })
+    .then((response) => {
+      response.text().then(function (data) {
+        let status = JSON.parse(data);
+        console.log("STATUS:", status);
+
+        console.log("online: ");
+        for (let i = 0; i < status.length; i++) {
+          console.log(
+            status.Online[i].firstName + " " + status.Online[i].lastName
+          );
+        }
+
+        console.log("offline: ");
+        for (let i = 0; i < status.length; i++) {
+          console.log(
+            status.Offline[i].firstName + " " + status.Offline[i].lastName
+          );
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 function refreshPosts() {
@@ -222,6 +260,29 @@ function refreshPosts() {
     })
     .catch((error) => {
       console.log(error);
+    });
+}
+
+function refreshComments(postID) {
+  let commentData = {
+    postId: postID,
+  };
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(commentData),
+  };
+  let fetchRes = fetch("http://localhost:8080/sendComments", options);
+  fetchRes
+    .then((response) => {
+      return response.json();
+    })
+    .then(function (data) {
+      // sends latest comment data to getComments function
+      getComments(data, postID);
     });
 }
 
@@ -315,48 +376,75 @@ function displayPosts(posts) {
       `</p>
           </div>
         </div>
-        <!-- Category & Option Button -->
-        <div class="category-option-wrap">
-          <div class="category">` +
+        <!-- Category Button -->
+        <div class="category">` +
       posts[i].Hashtag +
       `</div>
-          <img src="../static/img/post-options.svg"/>
-        </div>
       </div>
       <!-- Post Body -->
-      <div class="body" onclick="getComments(this)" id="${
-        posts[i].PostID}" >
+      <div class="body">
         <p>` +
       posts[i].postBody +
       `</p>
       </div>
       <!-- Footer -->
+      <!-- Footer -->
       <div class="footer">
-        <!-- Comment -->
-        <div class="actions"> 
-          <textarea class="comBody" id="commentBody${
-            posts.length - i}" name="commentBody" style="width:100%" rows="2" cols="70" placeholder="create comment"></textarea>
-          <input type="submit" id="submitCom${
-            posts.length - i
-          }" class="submitCom" value="Submit", onclick="createCom(${
-        posts.length - i
-      })";>
+        <!-- Comment, Like, Dislike -->
+        <div class="actions">
+          <img src="../static/img/comments-icon.svg" onclick="refreshComments(${posts[i].PostID})" id="${posts[i].PostID}"/>
+          <img src="../static/img/like-icon.svg" />
+          <img src="../static/img/dislike-icon.svg" />
         </div>
-        <!-- Comment -->
+        <!-- Comment, Like & Dislike Statistics -->
         <div class="stats">
+          <div class="stat-wrapper">
+            <img src="../static/img/post/comments-icon.svg" width="17px" />
+            <p>0</p>
+          </div>
+          <div class="stat-wrapper">
+            <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" />
+            <p>0</p>
+          </div>
+          <div class="stat-wrapper">
+            <img src="../static/img/post/dislikes-icon.svg" width="17px" />
+            <p>0</p>
+          </div>
         </div>
       </div>
+
+      <div class="comments">
+                <!-- Create A Comment -->
+                <div class="separator"></div>
+                <div class="create-comment-wrap">
+                  <div class="comment-field-wrap">
+                    <!-- <img src="../static/img/profile.png" width="50px" id="composeCommentAuthor"> -->
+                    <div class="comment-field-submit-wrap">
+                      <input type="text" id="commentBody${posts[i].PostID}" placeholder="Write a comment...">
+                      <div class="comment-btn" onclick="createCom(${posts[i].PostID})">Comment</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="separator"></div>
+
+                <!-- Comments -->
+                <p class="title">Comments</p>
+                <div class="comments-wrap">
+                  <img src="../static/img/post/comments/no-comments.svg" width="600px" />
+                </div>
+              </div>
     </div>
     `;
   }
 }
-function createCom(i) {
-  let idCommentBody = "#commentBody" + i;
-  // let idSubmit = "#submitCom" + i;
-  // let submitCom = document.querySelector(idSubmit);
+
+function createCom(postID) {
+  console.log("postID: " + postID);
+  let idCommentBody = "#commentBody" + postID;
   let comBody = document.querySelector(idCommentBody);
+
   let commentObj = {
-    postid: i,
+    postid: postID,
     commentBody: comBody.value,
   };
   console.log(commentObj);
@@ -371,6 +459,7 @@ function createCom(i) {
   fetchRes.then((response) => {
     if (response.status == "200") {
       notyf.success("Your comment was created successfully.");
+      refreshComments(postID);
       comBody.value = " ";
     } else {
       notyf.error("Your comment failed to send.");
@@ -379,37 +468,42 @@ function createCom(i) {
   });
 }
 
-function getComments(e){
-  //console.log("hello", e.id);
+function getComments(comments, postID) {
+  // update comments counter
+  let commentsCounter = document.querySelector(
+    "#\\3" + postID + "  > div.footer > div.stats > div:nth-child(1) > p"
+  );
+  commentsCounter.innerHTML = comments.length;
 
-  let postid = parseInt(e.id)
+  console.log(comments);
+  console.log("first com", comments[1]);
 
-  let commentData = {
-    postId: postid
+  commentsWrap = document.querySelector(
+    "#\\3" + postID + "  > div.comments > div.comments-wrap"
+  );
+
+  // Clear all posts printed
+  commentsWrap.innerHTML = "";
+
+  // Loop through all comments and print them
+  for (let i = comments.length - 1; i >= 0; i--) {
+    commentsWrap.innerHTML +=
+      `
+        <div class="comment">
+        <div class="author">` +
+      comments[i].username +
+      `</div>
+        <img src="../static/img/profile.png" id="profile-picture" width="35px">
+        <div class="timestamp">` +
+      convertDate(comments[i].CreatedAt) +
+      `</div>
+        <div class="body">` +
+      comments[i].commentBody +
+      `</div>
+      </div>
+          `;
   }
-
-  let options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(commentData),
-  };
-  let fetchRes = fetch("http://localhost:8080/sendComments", options);
-  fetchRes.then((response) => {
-       return response.json();
-    })
-    .then(function (data) {
-      console.log(data);
-      }
-    )
-    .catch(function(err){
-      console.log(err);
-    })
-    };
-
-
-
+}
 
 function updateHashtagTable() {
   // Get the value of the hashtag with the class of selected
@@ -431,10 +525,9 @@ function updateHashtagTable() {
   let fetchRes = fetch("http://localhost:8080/updateHashtag", options);
   fetchRes.then((response) => {
     if (response.status == "200") {
-      notyf.success("Succesfully updated hashtag table.");
       refreshHashtags();
     } else {
-      notyf.error("Failed to update hashtag table.");
+      notyf.error("Failed to update trending hashtags.");
     }
     return response.text();
   });
@@ -484,62 +577,90 @@ function displayTrendingHashtags(hashtags) {
   }
 }
 
-const logout = function logoutUser(){
-let cookie = document.cookie
-let username = (cookie.split("="))[0]
+const logout = function logoutUser() {
+  let cookie = document.cookie;
+  let username = cookie.split("=")[0];
 
-console.log(username);
+  console.log(username);
 
-let logoutData = {
-  ok: ""
-}
+  let logoutData = {
+    ok: "",
+  };
 
-logoutData.ok = username
+  logoutData.ok = username;
 
-let options = {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(logoutData),
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(logoutData),
+  };
+
+  let fetchRes = fetch("http://localhost:8080/logout", options);
+  fetchRes
+    .then((response) => {
+      if (response.status === 200) {
+        console.log("ok");
+      }
+      return response.json();
+    })
+    .then(function (data) {
+      if (data.User.LoggedIn === "false") {
+        document.querySelector("main").style.display = "none";
+        document.querySelector(".auth-container").style.display = "flex";
+
+        // showRegistrationUI()
+        notyf.success("Succesfully logged out.");
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  socket.close();
 };
 
+// Get a reference to the posts wrapper div
+const postsWrapper = document.querySelector(".posts-wrap");
 
-let fetchRes = fetch("http://localhost:8080/logout", options);
-fetchRes
-.then((response) => {
-  if (response.status === 200){
-    console.log("ok");
+// Listen for clicks on the posts wrapper div
+postsWrapper.addEventListener("click", (event) => {
+  console.log(event.target);
+  // Check if the clicked element is a post, header, body, or footer
+  if (
+    event.target.matches(
+      "img, .name, .timestamp, .category-option-wrap, .post, .body, .stat-wrapper, .stats, .author, p, .create-comment-wrap, .header, .footer"
+    )
+  ) {
+    // Save the ID of the clicked post to a variable
+    const clickedPostId = event.target.id;
+
+    // Get a reference to the .comments child inside of the clicked post
+    const comments = event.target.closest(".post").querySelector(".comments");
+
+    // Check if the comments element exists
+    if (comments) {
+      // Check if the comments element is already visible
+      if (comments.style.display === "block") {
+        // If the comments element is already visible, set its display property to 'none'
+        comments.style.display = "none";
+      } else {
+        // If the comments element is not visible, set its display property to 'block'
+        comments.style.display = "block";
+      }
+    }
   }
-  return response.json();
-})
-.then(function (data) {
-  if(data.User.LoggedIn === "false"){
-    document.querySelector("main").style.display = "none";
-    document.querySelector(".auth-container").style.display = "flex";
+});
 
-    // showRegistrationUI()
-    notyf.success("Succesfully logged out.");
-
-  }
-})
-.catch(function(err){
-  console.log(err);
-})
-};
-
- 
-function checkCookies(){
-let cookie = document.cookie
-  if (cookie != ""){
+function checkCookies() {
+  let cookie = document.cookie;
+  if (cookie != "") {
     showFeed();
-    refreshPosts()
-    refreshHashtags()
+    refreshPosts();
+    refreshHashtags();
+  } else {
+    showLoginUI();
   }
-  else{
-    showLoginUI()
-  }
-  
-  // for extra security can be checked with backend and session in database 
-} 
 
+  // for extra security can be checked with backend and session in database
+}
