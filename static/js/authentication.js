@@ -680,6 +680,7 @@ postsWrapper.addEventListener("click", (event) => {
 function checkCookies() {
   let cookie = document.cookie;
   if (cookie != "") {
+    onlineActivity()
     showFeed();
     refreshPosts();
     refreshHashtags();
