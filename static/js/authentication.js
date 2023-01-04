@@ -181,6 +181,8 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
+      console.log(data);
+      userData = data
       onlineActivity();
       // Fills the user's profile with their details
       updateUserDetails(data);
@@ -220,7 +222,7 @@ function onlineActivity() {
     .then((response) => {
       response.text().then(function (data) {
         let status = JSON.parse(data);
-        
+
         activityList = document.querySelector(".user-prompt");
 
         activityList.innerHTML = "";
@@ -231,7 +233,7 @@ function onlineActivity() {
             `
            <p>
                 <ul class="list" id="online">
-                  <li>` +
+                  <li  class="fullname" onclick="startChat(${i})">` +
             status.Online[i].firstName +
             " " +
             status.Online[i].lastName +
@@ -267,6 +269,14 @@ function onlineActivity() {
       console.log(error);
     });
 }
+
+function startChat(index) {
+  onlineActivity();
+  let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".fullname"));
+  let fullName = arrayOfOnlineUsers[index].textContent;
+  document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
+}
+
 function refreshPosts() {
   fetch("/getPosts", {
     headers: {
@@ -680,8 +690,9 @@ postsWrapper.addEventListener("click", (event) => {
 function checkCookies() {
   let cookie = document.cookie;
   if (cookie != "") {
+    // check with backend if that cookie value if c value exist in db 
     onlineActivity()
-    showFeed();
+    showFeed()
     refreshPosts();
     refreshHashtags();
   } else {
