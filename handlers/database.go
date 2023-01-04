@@ -343,12 +343,17 @@ func (data *Forum) GetSession(cookie string) UserSession {
 	return session
 }
 
-func (data *Forum) SaveChat(messagesender string, messagerecipient string) {
-	stmnt, err := data.DB.Prepare("INSERT INTO chat (username1, username2, creationDate) VALUES (?, ?, ?)")
+func (data *Forum) SaveChat(chat Chat) Chat{
+	stmnt, err := data.DB.Prepare("INSERT INTO messages (sender, recipient ,message) VALUES (?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer stmnt.Close()
+
+	_, err = stmnt.Exec(chat.MessageSender, chat.MessageRecipient, chat.Message)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return chat
 }
 
 //-------------------------  TABLES -------------------------//
