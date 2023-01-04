@@ -220,7 +220,6 @@ function onlineActivity() {
     .then((response) => {
       response.text().then(function (data) {
         let status = JSON.parse(data);
-        
 
         activityList = document.querySelector(".user-prompt");
 
@@ -232,7 +231,7 @@ function onlineActivity() {
             `
            <p>
                 <ul class="list" id="online">
-                  <li>` +
+                  <li  class="fullname" onclick="startChat(${i})">` +
             status.Online[i].firstName +
             " " +
             status.Online[i].lastName +
@@ -267,6 +266,13 @@ function onlineActivity() {
     .catch((error) => {
       console.log(error);
     });
+}
+
+function startChat(index) {
+  onlineActivity();
+  let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".fullname"));
+  let fullName = arrayOfOnlineUsers[index].textContent;
+  document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
 }
 
 function refreshPosts() {
