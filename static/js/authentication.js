@@ -353,6 +353,34 @@ document.querySelectorAll(".category").forEach((category) => {
   });
 });
 
+const saveChat = function getChatContents() {
+  let receiver = document.querySelector("#chatReceiver").textContent
+  let chat = {
+    message: document.getElementById("msg").value,
+    messagerecipient: receiver,
+  };
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(chat),
+  };
+
+  let fetchRes = fetch("http://localhost:8080/chat", options);
+  fetchRes.then((response) => {
+    if (response.status == "200") {
+      message.value = "";
+      notyf.success("Your msg was sent successfully.");
+    } else {
+      notyf.error("Your post failed to send.");
+    }
+    return response.text()
+
+  });
+};
+
 // Sends the user's post to the server
 const createPost = function getInputValue() {
   // Get the value of the hashtag with the class of selected
