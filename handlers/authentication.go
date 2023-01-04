@@ -136,6 +136,7 @@ func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 	sessionvalue := x.Value
 
 	content := chat.Message
+	time := time.Now()
 	recipient := chat.MessageRecipient
 
 	sess := data.GetSession(sessionvalue)
@@ -144,8 +145,13 @@ func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 		MessageSender:    sess.username,
 		MessageRecipient: recipient,
 		Message:          content,
+		CreatedAt: time,
 	})
-	fmt.Println("SENDERS CHAT: ", chat.MessageSender, "RECEPIENT CHAT: ", chat.MessageRecipient, "ACTUAL MESSAGE: ", chat.Message)
+
+	fmt.Println("SENDER: ", chat.MessageSender)
+	fmt.Println("RECEPIENT: ", chat.MessageRecipient)
+	fmt.Println("ACTUAL MESSAGE: ", chat.Message)
+	fmt.Println("TIME: ", chat.CreatedAt)
 }
 
 func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
