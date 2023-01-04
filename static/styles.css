@@ -1368,7 +1368,8 @@ input#commentBody {
 ul li {
   list-style-type: none;
   position: relative;
-
+  cursor: pointer;
+  line-height: 0.5;
 }
 
 #online li:before {
