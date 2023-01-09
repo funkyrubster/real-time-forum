@@ -42,6 +42,26 @@ func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(js))
 }
 
+func (data *Forum) CheckCookie(w http.ResponseWriter, r *http.Request) {
+
+	var cookieValue CookieValue
+
+	// Decode the JSON data from the request body into the comment variable
+	json.NewDecoder(r.Body).Decode(&cookieValue)
+
+	u := data.GetSession(cookieValue.CookieValue)
+	userName := (u.username)
+
+	userInfo :=  data.GetUserProfile(userName)
+
+	js, err := json.Marshal(userInfo)
+	if err != nil {
+		log.Fatal(err)
+	} 
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(js))
+}
+
 // Handles receiving the comment data and adding it to the 'comments' table in the database
 func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 	var comment Comment
@@ -145,7 +165,7 @@ func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 		MessageSender:    sess.username,
 		MessageRecipient: recipient,
 		Message:          content,
-		CreatedAt: time,
+		CreatedAt:        time,
 	})
 
 	fmt.Println("SENDER: ", chat.MessageSender)
