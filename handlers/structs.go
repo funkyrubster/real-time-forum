@@ -85,3 +85,8 @@ type Chat struct {
 	UserWithHistroy  []Chat    `json:"userwithhistory"`
 	User             []User    `json:"users"`
 }
+
+
+type CookieValue struct{
+	CookieValue string
+}
