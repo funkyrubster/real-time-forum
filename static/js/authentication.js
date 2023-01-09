@@ -272,7 +272,8 @@ function startChat(index) {
   onlineActivity();
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".fullname"));
   let fullName = arrayOfOnlineUsers[index].textContent;
-  document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
+  document.querySelector("#chat > div.profile-header > div > p").innerHTML =
+    fullName;
 }
 
 function refreshPosts() {
@@ -614,8 +615,6 @@ const logout = function logoutUser() {
   let cookie = document.cookie;
   let username = cookie.split("=")[0];
 
-  console.log(username);
-
   let logoutData = {
     ok: "",
   };
@@ -687,14 +686,35 @@ postsWrapper.addEventListener("click", (event) => {
 
 function checkCookies() {
   let cookie = document.cookie;
+
+  let cookieValue = document.cookie.split("=")[1];
+
   if (cookie != "") {
-    onlineActivity();
-    showFeed();
-    refreshPosts();
-    refreshHashtags();
+    let data = {
+      cookieValue: cookieValue,
+    };
+
+    let options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+
+    fetch("http://localhost:8080/checkCookie", options)
+      .then((response) => response.json())
+      .then((data) => {
+        updateUserDetails(data);
+        onlineActivity();
+        showFeed();
+        refreshPosts();
+        refreshHashtags();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   } else {
     showLoginUI();
   }
-
-  // for extra security can be checked with backend and session in database
 }
