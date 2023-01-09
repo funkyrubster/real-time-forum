@@ -717,15 +717,35 @@ postsWrapper.addEventListener("click", (event) => {
 
 function checkCookies() {
   let cookie = document.cookie;
+
+  let cookieValue = document.cookie.split("=")[1];
+
   if (cookie != "") {
-    // check with backend if that cookie value if c value exist in db 
-    onlineActivity()
-    showFeed()
-    refreshPosts();
-    refreshHashtags();
+    let data = {
+      cookieValue: cookieValue,
+    };
+
+    let options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+
+    fetch("http://localhost:8080/checkCookie", options)
+      .then((response) => response.json())
+      .then((data) => {
+        updateUserDetails(data);
+        onlineActivity();
+        showFeed();
+        refreshPosts();
+        refreshHashtags();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   } else {
     showLoginUI();
   }
-
-  // for extra security can be checked with backend and session in database
 }
