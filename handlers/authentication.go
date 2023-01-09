@@ -25,7 +25,6 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "500 Internal error", http.StatusInternalServerError)
 		return
 	}
-
 }
 
 func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +44,6 @@ func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
 
 // Handles receiving the comment data and adding it to the 'comments' table in the database
 func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
-
 	var comment Comment
 
 	// Decode the JSON data from the request body into the comment variable
@@ -72,11 +70,9 @@ func (data *Forum) Comment(w http.ResponseWriter, r *http.Request) {
 	})
 
 	fmt.Println(comment)
-
 }
 
 func (data *Forum) SendComments(w http.ResponseWriter, r *http.Request) {
-
 	var comment Comment
 
 	json.NewDecoder(r.Body).Decode(&comment)
@@ -88,7 +84,6 @@ func (data *Forum) SendComments(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(js))
-
 }
 
 // Handles receiving the post data and adding it to the 'posts' table in the database
@@ -118,13 +113,45 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 
 	// Inserts post into the 'posts' table of the database
 	data.CreatePost(Post{
-		//username from current session
+		// username from current session
 		Username:  sess.username,
 		Content:   content,
 		Hashtag:   hashtag,
 		CreatedAt: time,
 	})
+}
 
+func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
+	var chat Chat
+
+	json.NewDecoder(r.Body).Decode(&chat)
+
+	w.Write([]byte("chat ok"))
+
+	// feches current session value
+	x, err := r.Cookie("session_token")
+	if err != nil {
+		log.Fatal()
+	}
+	sessionvalue := x.Value
+
+	content := chat.Message
+	time := time.Now()
+	recipient := chat.MessageRecipient
+
+	sess := data.GetSession(sessionvalue)
+
+	chat = data.SaveChat(Chat{
+		MessageSender:    sess.username,
+		MessageRecipient: recipient,
+		Message:          content,
+		CreatedAt: time,
+	})
+
+	fmt.Println("SENDER: ", chat.MessageSender)
+	fmt.Println("RECEPIENT: ", chat.MessageRecipient)
+	fmt.Println("ACTUAL MESSAGE: ", chat.Message)
+	fmt.Println("TIME: ", chat.CreatedAt)
 }
 
 func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
@@ -165,11 +192,9 @@ func (data *Forum) UpdateHashtag(w http.ResponseWriter, r *http.Request) {
 		Name:  hashName,
 		Count: hashCount,
 	})
-
 }
 
 func (data *Forum) SendLatestHashtags(w http.ResponseWriter, r *http.Request) {
-
 	// Send user information back to client using JSON format
 	hashtags := data.getLatestHashtags()
 
@@ -341,7 +366,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		// JUST FOR TESTING
 		x := data.OfflineUser()
 		fmt.Println("offline:", x)
-		
+
 		y := data.OnlineUsers()
 		fmt.Println("online:", y)
 
@@ -362,7 +387,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // // logout handle
 func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
-
 	c, err := r.Cookie("session_token")
 	if err != nil {
 		log.Fatal(err)
@@ -378,10 +402,10 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 
 	// JUST FOR TESTING
 	x := data.OfflineUser()
-  fmt.Println("offline:", x)
-	
+	fmt.Println("offline:", x[0])
+
 	y := data.OnlineUsers()
-	fmt.Println("online:",y)
+	fmt.Println("online:", y)
 
 	// Send user information back to client using JSON format
 	userInfo := data.GetUserProfile(sess.username)
@@ -393,4 +417,3 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
 }
-
