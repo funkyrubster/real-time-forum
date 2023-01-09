@@ -438,3 +438,28 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
 }
+
+var x = 0
+func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
+	var loading LoadingMessage
+fmt.Println("counter",x)
+x++
+	json.NewDecoder(r.Body).Decode(&loading)
+
+	w.Write([]byte("chat ok"))
+
+	conv := data.SelectingLoadingMessage(
+		loading.SendersUsername,
+		loading.RecipientsUsername,
+	)
+
+	fmt.Println("Conversation in ayuth: ", conv)
+
+	js, err := json.Marshal(conv)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
+}
