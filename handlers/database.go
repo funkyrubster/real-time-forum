@@ -343,6 +343,25 @@ func (data *Forum) GetSession(cookie string) UserSession {
 	return session
 }
 
+func (data *Forum) SelectingLoadingMessage(username, recipient string) []Chat {
+	var loading Chat
+	var conversation []Chat
+
+	rows, err := data.DB.Query(`SELECT sender, recipient, message, creationDate FROM messages where sender= ? OR recipient=?`, username, recipient)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for rows.Next() {
+		err := rows.Scan(&loading.MessageSender, &loading.MessageRecipient, &loading.Message, &loading.CreatedAt)
+		if err != nil {
+			log.Fatal("conversation error", err)
+		}
+		conversation = append(conversation, loading)
+	}
+	fmt.Println("Con", conversation)
+	return conversation
+}
+
 func (data *Forum) SaveChat(chat Chat) Chat {
 	stmnt, err := data.DB.Prepare("INSERT INTO messages (sender, recipient ,message, creationDate) VALUES (?, ?, ?, ?)")
 	if err != nil {
