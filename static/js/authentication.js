@@ -275,6 +275,37 @@ function startChat(index) {
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".fullname"));
   let fullName = arrayOfOnlineUsers[index].textContent;
   document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
+  let sendername = document.querySelector(".username").textContent
+  let newStr = sendername.replace('@', "")
+  let sname = {
+    sendersusername: newStr,
+    recipientsusername: fullName,
+  }
+
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(sname),
+  };
+
+  let fetchRes = fetch("http://localhost:8080/loadingmessage", options);
+
+  fetchRes
+    .then((response) => {
+      return response.json();
+    })
+  console.log("starting fetch")
+    .then(function (data) {
+
+      console.log(data);
+
+    });
+
+  // displayMessages()
+
 }
 
 function refreshPosts() {
