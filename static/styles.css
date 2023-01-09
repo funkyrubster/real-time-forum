@@ -464,10 +464,10 @@ select:hover {
 .title-bg p {
   font-family: "Bambino New";
   font-style: normal;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 13px;
   line-height: 18px;
-  color: #a6b3c1;
+  color: #55585f;
 }
 
 /* LEFT */
@@ -988,6 +988,7 @@ input#commentBody {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: auto;
 }
 
 .comment-btn {
@@ -1133,6 +1134,7 @@ input#commentBody {
   width: 265px;
   height: 365px;
   display: flex;
+  text-align: center;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
@@ -1149,11 +1151,17 @@ input#commentBody {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
   padding: 1rem 1.5rem;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 10px;
-  margin-right: 7.5px;
+  /* margin-right: auto; */
+  /* padding: 50px 50px; */
+  height: 100px;
+  width: 20em;
+
+
+
 }
 
 #recently-joined .user-prompt .info {
