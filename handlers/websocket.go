@@ -171,7 +171,13 @@ func (h *Hub) Run() {
 				close(client.Send)
 			}
 		case message := <-h.Broadcast:
+			//Websoclet message recieved here
+			//Unmarshall Object and check if recieverID is in websocket map
+		
+			//Add condition to only send message to specific user
+			// websocketConnection = h.Clients[userID]
 			for _, client := range h.Clients {
+				//
 				fmt.Println(client.UserId)
 				fmt.Println(string(message))
 				select {
