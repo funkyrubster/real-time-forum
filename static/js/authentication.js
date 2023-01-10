@@ -295,20 +295,61 @@ function startChat(index) {
 
   fetchRes
     .then((response) => {
-      return response.text();
+      return response.json();
     })
     // console.log("starting fetch") 
     .then(function (data) { // problem solved. Code wasn't reachable beause of print statement above.
 
+      // let messages = JSON.parse(data);
+      console.log("Messages here: ", data);
 
-      console.log("I DONT KNOW WHATS WRONG: ", data);
+      displayMessages(data)
 
     });
 
-  // displayMessages()
-
 }
 
+// document.querySelector("#log")
+
+function displayMessages(messages) {
+  let arrayOfUserMessages = Array.from(document.querySelectorAll(".fullname"));
+  console.log("INSIDE display: ", messages)
+
+  // let userMessages = arrayOfUserMessages[messages].textContent;
+  // console.log("UsersMessages: ", usersMessages);
+  // document.querySelector("#log").innerHTML += userMessages;
+
+  // showMessages = document.querySelector(".chat");
+
+  // showMessages.innerHTML = "";
+
+  // chatMessages = document.querySelector("#log")
+
+  // chatMessages.innerHTML = "";
+
+  for (let i = 0; i < messages.length; i++)
+    document.querySelector("#log").innerHTML +=
+    // chatMessages.innerHTML +=
+    `
+      <div class="bubbleWrapper">
+      <div class="inlineContainer">
+        
+        <div class="otherBubble other">`+
+      messages[i].message
+      +
+      `</div>
+      </div><span class="other">08:41</span>
+    </div>
+    <div class="bubbleWrapper">
+      <div class="inlineContainer own">
+        
+        <div class="ownBubble own">
+         ${messages[i].message}
+        </div>
+      </div><span class="own">08:55</span>
+    </div>
+  `;
+}
 // create a function that for each message create a div and the text will be inner html 
 // each one of the divs we make append into the log which is that middle of the chat
 // go over the array with 'FOR EACH' or create own loop
@@ -404,10 +445,10 @@ const saveChat = function getChatContents() {
     body: JSON.stringify(chat),
   };
 
-  let fetchRes = fetch("http://localhost:8080/chat", options);
-  fetchRes.then((response) => {
+  let fetchResChat = fetch("http://localhost:8080/chat", options);
+  fetchResChat.then((response) => {
     if (response.status == "200") {
-      message.value = "";
+      document.getElementById("msg").value = "";
       notyf.success("Your msg was sent successfully.");
     } else {
       notyf.error("Your post failed to send.");
