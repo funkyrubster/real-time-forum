@@ -226,12 +226,11 @@ function onlineActivity() {
         activityList.innerHTML = "";
 
         for (let i = 0; i < status.Online.length; i++) {
-          // console.log(status.Online[i].firstName);
           activityList.innerHTML +=
             `
            <p>
                 <ul class="list" id="online">
-                  <li  class="fullname" onclick="startChat(${i})">` +
+                  <li  class="fullname" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i})">` +
             status.Online[i].firstName +
             " " +
             status.Online[i].lastName +

@@ -415,7 +415,24 @@
               </div>
               <img src="../static/img/chat/cross.svg" width="15px" />
             </div>
-            <div id="log"></div>
+            <div id="log">
+              <div class="bubbleWrapper">
+                <div class="inlineContainer">
+                  <!-- <img class="inlineIcon" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png"> -->
+                  <div class="otherBubble other">
+                    No ninjas!
+                  </div>
+                </div><span class="other">08:41</span>
+              </div>
+              <div class="bubbleWrapper">
+                <div class="inlineContainer own">
+                  <!-- <img class="inlineIcon" src="https://www.pinclipart.com/picdir/middle/205-2059398_blinkk-en-mac-app-store-ninja-icon-transparent.png"> -->
+                  <div class="ownBubble own">
+                   The first rule of being a ninja is, 'Do no harm.'
+                  </div>
+                </div><span class="own">08:55</span>
+              </div>
+            </div>
             <form id="form">
               <input type="text" id="msg" placeholder="Start typing..." size="64" />
               <input type="submit" onclick="saveChat()" value="Send" />
