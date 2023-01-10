@@ -37,14 +37,21 @@ document.getElementById("form").onsubmit = function () {
   if (!msg.value) {
     return false;
   }
-  let cookieVal = document.cookie
+
+
+
+  let sendername = document.querySelector(".username").textContent;
+  let userID = document.querySelector("#chat > div.profile-header > div > p").getAttribute("data-reciverid")
+  console.log(userID);
+
   let msgObj = {
     value: msg.value,
-    sender: "",
-    reciever: "",
-    time: "",
+    sender:  sendername,
+    reciver: userID,
   }
-  socket.send(msg.value);
+
+  console.log("msg Object: ",msgObj);
+  socket.send(JSON.stringify(msgObj));
   msg.value = "";
   return false;
 };

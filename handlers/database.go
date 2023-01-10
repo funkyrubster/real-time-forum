@@ -358,7 +358,7 @@ func (data *Forum) SelectingLoadingMessage(username, recipient string) []Chat {
 		}
 		conversation = append(conversation, loading)
 	}
-	fmt.Println("Con", conversation)
+	// fmt.Println("Con", conversation)
 	return conversation
 }
 

@@ -437,12 +437,9 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(js))
 }
 
-var x = 0
-
 func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 	var loading LoadingMessage
-	fmt.Println("counter", x)
-	x++
+
 	err := json.NewDecoder(r.Body).Decode(&loading)
 	if err != nil {
 		log.Fatal("Loading handler error: ", err)
@@ -455,7 +452,7 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 		loading.RecipientsUsername,
 	)
 
-	fmt.Println("Conversation in auth: ", conv)
+	// fmt.Println("Conversation in auth: ", conv)
 
 	js, err := json.Marshal(conv)
 	if err != nil {

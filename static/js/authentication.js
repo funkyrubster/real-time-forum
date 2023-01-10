@@ -232,7 +232,7 @@ function onlineActivity() {
             `
           <p>
             <ul class="list" id="online">
-              <li  class="fullname" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i})">` +
+              <li  class="fullname" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">` +
             status.Online[i].firstName +
             " " +
             status.Online[i].lastName +
@@ -269,12 +269,14 @@ function onlineActivity() {
     });
 }
 
-function startChat(index) {
+function startChat(index, id) {
   onlineActivity();
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".fullname"));
   let fullName = arrayOfOnlineUsers[index].textContent;
   document.querySelector("#chat > div.profile-header > div > p").innerHTML =
     fullName;
+  document.querySelector("#chat > div.profile-header > div > p").setAttribute("data-reciverid", id)
+  //document.querySelector("#online > li").dataset.reciverid
   let sendername = document.querySelector(".username").textContent;
   let newStr = sendername.replace("@", "");
   let sname = {
@@ -428,6 +430,9 @@ document.querySelectorAll(".category").forEach((category) => {
 });
 
 const saveChat = function getChatContents() {
+
+  console.log(document.getElementById("log"))
+
   let receiver = document.querySelector("#chatReceiver").textContent;
   let chat = {
     message: document.getElementById("msg").value,
