@@ -18,6 +18,7 @@ type RegisterData struct {
 }
 
 type User struct {
+	UserID    int    `json:"userID"`
 	Firstname string `json:"firstName"`
 	Lastname  string `json:"lastName"`
 	Email     string `json:"email"`

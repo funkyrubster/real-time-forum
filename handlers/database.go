@@ -74,7 +74,7 @@ func (data *Forum) OnlineUsers() []User {
 	var onlineuser User
 	var onlineusers []User
 
-	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'true';`)
+	row, err1 := data.DB.Query(`SELECT userID, firstname, lastname, loggedin FROM users WHERE loggedin = 'true';`)
 	if err1 != nil {
 		fmt.Println("Error with OnlineUsers func")
 		return nil
@@ -82,7 +82,7 @@ func (data *Forum) OnlineUsers() []User {
 
 	// Scans through each column in the 'users' row and stores the data in the variables above
 	for row.Next() {
-		err := row.Scan(&onlineuser.Firstname, &onlineuser.Lastname, &onlineuser.LoggedIn)
+		err := row.Scan(&onlineuser.UserID, &onlineuser.Firstname, &onlineuser.Lastname, &onlineuser.LoggedIn)
 		if err != nil {
 			log.Fatal(err)
 		}
