@@ -182,7 +182,7 @@ loginData.addEventListener("submit", function () {
     })
     .then(function (data) {
       console.log(data);
-      userData = data
+      userData = data;
       onlineActivity();
       // Fills the user's profile with their details
       updateUserDetails(data);
@@ -228,20 +228,19 @@ function onlineActivity() {
         activityList.innerHTML = "";
 
         for (let i = 0; i < status.Online.length; i++) {
-          // console.log(status.Online[i].firstName);
           activityList.innerHTML +=
             `
-           <p>
-                <ul class="list" id="online">
-                  <li  class="fullname" onclick="startChat(${i})">` +
+          <p>
+            <ul class="list" id="online">
+              <li  class="fullname" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i})">` +
             status.Online[i].firstName +
             " " +
             status.Online[i].lastName +
             `</li>
-                </ul>
-              </p>
-              </div>
-          `;
+            </ul>
+          </p>
+          </div>
+      `;
         }
         if (status.Offline == null) {
           console.log("empty");
@@ -250,7 +249,7 @@ function onlineActivity() {
             // console.log(status.Offline[i].firstName);
             activityList.innerHTML +=
               `
-             <p>
+              <p>
                   <ul class="list" id="offline">
                     <li>` +
               status.Offline[i].firstName +
@@ -274,14 +273,14 @@ function startChat(index) {
   onlineActivity();
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".fullname"));
   let fullName = arrayOfOnlineUsers[index].textContent;
-  document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
-  let sendername = document.querySelector(".username").textContent
-  let newStr = sendername.replace('@', "")
+  document.querySelector("#chat > div.profile-header > div > p").innerHTML =
+    fullName;
+  let sendername = document.querySelector(".username").textContent;
+  let newStr = sendername.replace("@", "");
   let sname = {
     sendersusername: newStr,
     recipientsusername: fullName,
-  }
-
+  };
 
   let options = {
     method: "POST",
@@ -297,23 +296,22 @@ function startChat(index) {
     .then((response) => {
       return response.json();
     })
-    // console.log("starting fetch") 
-    .then(function (data) { // problem solved. Code wasn't reachable beause of print statement above.
+    // console.log("starting fetch")
+    .then(function (data) {
+      // problem solved. Code wasn't reachable beause of print statement above.
 
       // let messages = JSON.parse(data);
       console.log("Messages here: ", data);
 
-      displayMessages(data)
-
+      displayMessages(data);
     });
-
 }
 
 // document.querySelector("#log")
 
 function displayMessages(messages) {
   let arrayOfUserMessages = Array.from(document.querySelectorAll(".fullname"));
-  console.log("INSIDE display: ", messages)
+  console.log("INSIDE display: ", messages);
 
   // let userMessages = arrayOfUserMessages[messages].textContent;
   // console.log("UsersMessages: ", usersMessages);
@@ -329,14 +327,13 @@ function displayMessages(messages) {
 
   for (let i = 0; i < messages.length; i++)
     document.querySelector("#log").innerHTML +=
-    // chatMessages.innerHTML +=
-    `
+      // chatMessages.innerHTML +=
+      `
       <div class="bubbleWrapper">
       <div class="inlineContainer">
         
-        <div class="otherBubble other">`+
-      messages[i].message
-      +
+        <div class="otherBubble other">` +
+      messages[i].message +
       `</div>
       </div><span class="other">08:41</span>
     </div>
@@ -350,7 +347,7 @@ function displayMessages(messages) {
     </div>
   `;
 }
-// create a function that for each message create a div and the text will be inner html 
+// create a function that for each message create a div and the text will be inner html
 // each one of the divs we make append into the log which is that middle of the chat
 // go over the array with 'FOR EACH' or create own loop
 
@@ -431,7 +428,7 @@ document.querySelectorAll(".category").forEach((category) => {
 });
 
 const saveChat = function getChatContents() {
-  let receiver = document.querySelector("#chatReceiver").textContent
+  let receiver = document.querySelector("#chatReceiver").textContent;
   let chat = {
     message: document.getElementById("msg").value,
     messagerecipient: receiver,
@@ -453,8 +450,7 @@ const saveChat = function getChatContents() {
     } else {
       notyf.error("Your post failed to send.");
     }
-    return response.text()
-
+    return response.text();
   });
 };
 
