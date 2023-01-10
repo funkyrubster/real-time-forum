@@ -28,7 +28,6 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (data *Forum) CheckCookie(w http.ResponseWriter, r *http.Request) {
-
 	var cookieValue CookieValue
 
 	// Decode the JSON data from the request body into the comment variable
@@ -37,16 +36,15 @@ func (data *Forum) CheckCookie(w http.ResponseWriter, r *http.Request) {
 	u := data.GetSession(cookieValue.CookieValue)
 	userName := (u.username)
 
-	userInfo :=  data.GetUserProfile(userName)
+	userInfo := data.GetUserProfile(userName)
 
 	js, err := json.Marshal(userInfo)
 	if err != nil {
 		log.Fatal(err)
-	} 
+	}
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(js))
 }
-
 
 func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
 	// Send user information back to client using JSON format
@@ -166,7 +164,7 @@ func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 		MessageSender:    sess.username,
 		MessageRecipient: recipient,
 		Message:          content,
-		CreatedAt: time,
+		CreatedAt:        time,
 	})
 
 	fmt.Println("SENDER: ", chat.MessageSender)
@@ -440,11 +438,15 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 }
 
 var x = 0
+
 func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 	var loading LoadingMessage
-fmt.Println("counter",x)
-x++
-	json.NewDecoder(r.Body).Decode(&loading)
+	fmt.Println("counter", x)
+	x++
+	err := json.NewDecoder(r.Body).Decode(&loading)
+	if err != nil {
+		log.Fatal("Loading handler error: ", err)
+	}
 
 	w.Write([]byte("chat ok"))
 
@@ -453,7 +455,7 @@ x++
 		loading.RecipientsUsername,
 	)
 
-	fmt.Println("Conversation in ayuth: ", conv)
+	fmt.Println("Conversation in auth: ", conv)
 
 	js, err := json.Marshal(conv)
 	if err != nil {
