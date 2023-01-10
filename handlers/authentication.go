@@ -448,7 +448,7 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Loading handler error: ", err)
 	}
 
-	w.Write([]byte("chat ok"))
+	// w.Write([]byte("chat ok"))
 
 	conv := data.SelectingLoadingMessage(
 		loading.SendersUsername,
