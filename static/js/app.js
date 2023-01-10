@@ -37,6 +37,13 @@ document.getElementById("form").onsubmit = function () {
   if (!msg.value) {
     return false;
   }
+  let cookieVal = document.cookie
+  let msgObj = {
+    value: msg.value,
+    sender: "",
+    reciever: "",
+    time: "",
+  }
   socket.send(msg.value);
   msg.value = "";
   return false;
@@ -49,12 +56,25 @@ function showFeed() {
     console.log("Socket open", socket);
   };
   socket.onmessage = function (evt) {
-    var messages = evt.data.split("\n");
+    var messages = evt.data
+    // .split("\n");
     console.log(messages);
     for (var i = 0; i < messages.length; i++) {
-      var item = document.createElement("div");
-      item.innerText = messages[i];
-      appendLog(item);
+      var item = document.querySelector("#log");
+      item.innerHTML = `
+    <div class="bubbleWrapper">
+      <div class="inlineContainer own">
+        
+        <div class="ownBubble own">
+         ${messages}
+        </div>
+      </div><span class="own">08:55</span>
+    </div>
+  `; 
+      
+      
+      
+      // appendLog(item);
     }
   };
 }
