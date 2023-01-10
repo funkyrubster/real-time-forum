@@ -295,18 +295,23 @@ function startChat(index) {
 
   fetchRes
     .then((response) => {
-      return response.json();
+      return response.text();
     })
-  console.log("starting fetch")
-    .then(function (data) {
+    // console.log("starting fetch") 
+    .then(function (data) { // problem solved. Code wasn't reachable beause of print statement above.
 
-      console.log(data);
+
+      console.log("I DONT KNOW WHATS WRONG: ", data);
 
     });
 
   // displayMessages()
 
 }
+
+// create a function that for each message create a div and the text will be inner html 
+// each one of the divs we make append into the log which is that middle of the chat
+// go over the array with 'FOR EACH' or create own loop
 
 function refreshPosts() {
   fetch("/getPosts", {
