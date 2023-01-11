@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -161,7 +162,7 @@ func (h *Hub) Run() {
 			fmt.Println()
 			fmt.Println()
 			fmt.Println()
-			fmt.Println("USERID:   ",client.UserId)
+			fmt.Println("USERID:   ", client.UserId)
 			fmt.Println()
 			fmt.Println("CLient hub: ", h.Clients)
 			fmt.Println()
@@ -171,13 +172,23 @@ func (h *Hub) Run() {
 				close(client.Send)
 			}
 		case message := <-h.Broadcast:
+			msg_bytes := []byte(message)
+			var msg = &Chat{}
+			err := json.Unmarshal(msg_bytes, msg)
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(" recipient UserID:", msg.MessageRecipient, "Message sender: ", msg.SenderID)
+		
+
 			//Websoclet message recieved here
 			//Unmarshall Object and check if recieverID is in websocket map
-		
+
 			//Add condition to only send message to specific user
 			// websocketConnection = h.Clients[userID]
-			for _, client := range h.Clients {
-				//
+			for key, client := range h.Clients {
+				fmt.Println("KEY === ", key)
+				if key == msg.MessageRecipient || key == msg.SenderID{
 				fmt.Println(client.UserId)
 				fmt.Println(string(message))
 				select {
@@ -187,6 +198,7 @@ func (h *Hub) Run() {
 					delete(h.Clients, client.UserId)
 				}
 			}
+		}
 		}
 	}
 }

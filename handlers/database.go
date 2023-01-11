@@ -47,6 +47,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 		// This contains the specific user's data as well as all of their posts
 		user = UserProfile{
 			User: User{
+				UserID: userID,
 				Username:  nickname,
 				Firstname: firstname,
 				Lastname:  lastname,

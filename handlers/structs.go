@@ -80,10 +80,11 @@ type Comment struct {
 type Chat struct {
 	MessageSender    string    `json:"messagesender"`
 	MessageRecipient string    `json:"messagerecipient"`
+	SenderID         string    `json:"SenderID"`
 	Message          string    `json:"message"`
 	ChatID           int       `json:"chatID"`
 	MessageID        int       `json:"messageID"`
-	CreatedAt        time.Time // string `json:"chatDate"`
+	CreatedAt        time.Time //`json:"chatDate"`
 	UserWithHistroy  []Chat    `json:"userwithhistory"`
 	User             []User    `json:"users"`
 }

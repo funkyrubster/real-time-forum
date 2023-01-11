@@ -1,5 +1,4 @@
 let socket;
-
 const createWebsocket = () => {
   return new WebSocket("ws://localhost:8080/ws");
 };
@@ -39,15 +38,16 @@ document.getElementById("form").onsubmit = function () {
   }
 
 
-
+  var newDate = new Date();
   let sendername = document.querySelector(".username").textContent;
   let userID = document.querySelector("#chat > div.profile-header > div > p").getAttribute("data-reciverid")
-  console.log(userID);
-
+  let senderID = document.querySelector("p.username").dataset.userid
   let msgObj = {
-    value: msg.value,
-    sender:  sendername,
-    reciver: userID,
+    message: msg.value,
+    messagesender:  sendername,
+    messagerecipient: userID,
+    SenderID: senderID,
+    createdAt: newDate
   }
 
   console.log("msg Object: ",msgObj);
@@ -63,26 +63,24 @@ function showFeed() {
     console.log("Socket open", socket);
   };
   socket.onmessage = function (evt) {
-    var messages = evt.data
+    var messages = JSON.parse(evt.data)
+    console.log("reciving msg",messages);
     // .split("\n");
-    console.log(messages);
-    for (var i = 0; i < messages.length; i++) {
+    // console.log("This is messages: ",JSON.parse(messages));
+    // for (var i = 0; i < messages.length; i++) {
       var item = document.querySelector("#log");
-      item.innerHTML = `
-    <div class="bubbleWrapper">
+      item.innerHTML += `
+    <div id="sender" class="bubbleWrapper">
       <div class="inlineContainer own">
         
-        <div class="ownBubble own">
-         ${messages}
+        <div id="reciver" class="ownBubble own">
+         ${messages.message}
         </div>
-      </div><span class="own">08:55</span>
+      </div><span class="own">`+ convertTime(messages.createdAt) +`</span>
     </div>
   `; 
-      
-      
-      
       // appendLog(item);
-    }
+    
   };
 }
 

@@ -1,6 +1,20 @@
 // Used for sending notifications
 var notyf = new Notyf();
 
+
+function convertTime(date) {
+  // Seperate year, day, hour and minutes into vars
+  let yyyy = date.slice(0, 4);
+  let dd = date.slice(8, 10);
+  let hh = date.slice(11, 13);
+  let mm = date.slice(14, 16);
+
+  output = hh + ":" + mm;
+  return output
+
+}
+
+
 // Used for converting the date to a more readable format
 function convertDate(date) {
   // Seperate year, day, hour and minutes into vars
@@ -147,7 +161,7 @@ signUpData.addEventListener("submit", function () {
 function checkAgeOnlyNum(age) {
   return /^[0-9]+$/.test(age);
 }
-
+let userData
 /* ---------------------------------------------------------------- */
 /*                       AUTHENTICATING USERS                       */
 /* ---------------------------------------------------------------- */
@@ -181,7 +195,7 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
+      console.log("DAta === ", data);
       userData = data;
       onlineActivity();
       // Fills the user's profile with their details
@@ -207,6 +221,7 @@ function updateUserDetails(data) {
   document.querySelector("p.name").innerHTML =
     data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
+  document.querySelector("p.username").setAttribute("data-userId", data.User.userID);
   document.querySelector("#postBody").placeholder =
     `What's new, ` + data.User.firstName + `?`;
 }
@@ -326,7 +341,8 @@ function displayMessages(messages) {
   // chatMessages = document.querySelector("#log")
 
   // chatMessages.innerHTML = "";
-
+  document.querySelector("#log").innerHTML = "";
+  
   for (let i = 0; i < messages.length; i++)
     document.querySelector("#log").innerHTML +=
       // chatMessages.innerHTML +=
@@ -337,21 +353,17 @@ function displayMessages(messages) {
         <div class="otherBubble other">` +
       messages[i].message +
       `</div>
-      </div><span class="other">08:41</span>
+      </div><span class="other">`+ convertTime(messages[i].CreatedAt) +`</span>
     </div>
-    <div class="bubbleWrapper">
-      <div class="inlineContainer own">
-        
-        <div class="ownBubble own">
-         ${messages[i].message}
-        </div>
-      </div><span class="own">08:55</span>
-    </div>
-  `;
-}
-// create a function that for each message create a div and the text will be inner html
-// each one of the divs we make append into the log which is that middle of the chat
-// go over the array with 'FOR EACH' or create own loop
+    `;
+    // <div class="bubbleWrapper">
+    //   <div class="inlineContainer own">
+    //     <div id="reciver" class="ownBubble own">
+    //      ${messages[i].message}
+    //     </div>
+    //   </div><span class="own">`+ convertTime(messages[i].CreatedAt) +`</span>
+    // </div>
+  }
 
 function refreshPosts() {
   fetch("/getPosts", {
@@ -457,6 +469,7 @@ const saveChat = function getChatContents() {
     }
     return response.text();
   });
+  showChat()
 };
 
 // Sends the user's post to the server
@@ -815,8 +828,8 @@ function checkCookies() {
       .then((response) => response.json())
       .then((data) => {
         updateUserDetails(data);
-        onlineActivity();
         showFeed();
+        onlineActivity();
         refreshPosts();
         refreshHashtags();
       })
