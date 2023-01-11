@@ -1,7 +1,6 @@
 // Used for sending notifications
 var notyf = new Notyf();
 
-
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
   let yyyy = date.slice(0, 4);
@@ -10,10 +9,8 @@ function convertTime(date) {
   let mm = date.slice(14, 16);
 
   output = hh + ":" + mm;
-  return output
-
+  return output;
 }
-
 
 // Used for converting the date to a more readable format
 function convertDate(date) {
@@ -161,7 +158,7 @@ signUpData.addEventListener("submit", function () {
 function checkAgeOnlyNum(age) {
   return /^[0-9]+$/.test(age);
 }
-let userData
+let userData;
 /* ---------------------------------------------------------------- */
 /*                       AUTHENTICATING USERS                       */
 /* ---------------------------------------------------------------- */
@@ -221,7 +218,9 @@ function updateUserDetails(data) {
   document.querySelector("p.name").innerHTML =
     data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
-  document.querySelector("p.username").setAttribute("data-userId", data.User.userID);
+  document
+    .querySelector("p.username")
+    .setAttribute("data-userId", data.User.userID);
   document.querySelector("#postBody").placeholder =
     `What's new, ` + data.User.firstName + `?`;
 }
@@ -257,6 +256,13 @@ function onlineActivity() {
           </div>
       `;
         }
+        let nm = document.querySelector(".name").textContent;
+        let usnm = Array.from(document.querySelectorAll(".fullname"));
+        for (let i = 0; i < usnm.length; i++) {
+          if (nm == usnm[i].textContent) {
+            usnm[i].style.display = "none";
+          }
+        }
         if (status.Offline == null) {
           console.log("empty");
         } else {
@@ -290,9 +296,11 @@ function startChat(index, id) {
   let fullName = arrayOfOnlineUsers[index].textContent;
   document.querySelector("#chat > div.profile-header > div > p").innerHTML =
     fullName;
-  document.querySelector("#chat > div.profile-header > div > p").setAttribute("data-reciverid", id)
+  document
+    .querySelector("#chat > div.profile-header > div > p")
+    .setAttribute("data-reciverid", id);
   //document.querySelector("#online > li").dataset.reciverid
-  let sendername = document.querySelector(".username").textContent;
+  let sendername = document.querySelector(".name").textContent;
   let newStr = sendername.replace("@", "");
   let sname = {
     sendersusername: newStr,
@@ -342,10 +350,9 @@ function displayMessages(messages) {
 
   // chatMessages.innerHTML = "";
   document.querySelector("#log").innerHTML = "";
-  
+
   for (let i = 0; i < messages.length; i++)
     document.querySelector("#log").innerHTML +=
-      // chatMessages.innerHTML +=
       `
       <div class="bubbleWrapper">
       <div class="inlineContainer">
@@ -353,17 +360,19 @@ function displayMessages(messages) {
         <div class="otherBubble other">` +
       messages[i].message +
       `</div>
-      </div><span class="other">`+ convertTime(messages[i].CreatedAt) +`</span>
+      </div><span class="other">` +
+      convertTime(messages[i].CreatedAt) +
+      `</span>
     </div>
     `;
-    // <div class="bubbleWrapper">
-    //   <div class="inlineContainer own">
-    //     <div id="reciver" class="ownBubble own">
-    //      ${messages[i].message}
-    //     </div>
-    //   </div><span class="own">`+ convertTime(messages[i].CreatedAt) +`</span>
-    // </div>
-  }
+  // <div class="bubbleWrapper">
+  //   <div class="inlineContainer own">
+  //     <div id="reciver" class="ownBubble own">
+  //      ${messages[i].message}
+  //     </div>
+  //   </div><span class="own">`+ convertTime(messages[i].CreatedAt) +`</span>
+  // </div>
+}
 
 function refreshPosts() {
   fetch("/getPosts", {
@@ -442,8 +451,7 @@ document.querySelectorAll(".category").forEach((category) => {
 });
 
 const saveChat = function getChatContents() {
-
-  console.log(document.getElementById("log"))
+  console.log(document.getElementById("log"));
 
   let receiver = document.querySelector("#chatReceiver").textContent;
   let chat = {
@@ -461,15 +469,9 @@ const saveChat = function getChatContents() {
 
   let fetchResChat = fetch("http://localhost:8080/chat", options);
   fetchResChat.then((response) => {
-    if (response.status == "200") {
-      document.getElementById("msg").value = "";
-      notyf.success("Your msg was sent successfully.");
-    } else {
-      notyf.error("Your post failed to send.");
-    }
     return response.text();
   });
-  showChat()
+  showChat();
 };
 
 // Sends the user's post to the server

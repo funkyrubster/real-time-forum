@@ -65,21 +65,31 @@ function showFeed() {
   socket.onmessage = function (evt) {
     var messages = JSON.parse(evt.data)
     console.log("reciving msg",messages);
-    // .split("\n");
-    // console.log("This is messages: ",JSON.parse(messages));
-    // for (var i = 0; i < messages.length; i++) {
+  
+  let chatrec = document.querySelector("body > main > div.main > div.left > div.mini-profile > div > p.username")
       var item = document.querySelector("#log");
-      item.innerHTML += `
-    <div id="sender" class="bubbleWrapper">
-      <div class="inlineContainer own">
-        
-        <div id="reciver" class="ownBubble own">
-         ${messages.message}
-        </div>
-      </div><span class="own">`+ convertTime(messages.createdAt) +`</span>
-    </div>
-  `; 
+    
+      if (messages.messagesender === chatrec.innerHTML) {
+        item.innerHTML +=
+        `  <div class="bubbleWrapper">
+          <div class="inlineContainer own">
+           <div class="ownBubble own">${messages.message} </div>
+        </div><span class="own">`+ convertTime(messages.createdAt) +`</span>
+        </div>` }else if (messages.messagesender != chatrec) {
+ 
+          item.innerHTML += `
+          <div class="bubbleWrapper">
+            <div class="inlineContainer own"> 
+              <div class="otherBubble other">
+               ${messages.message}
+              </div>
+            </div><span class="other">`+ convertTime(messages.createdAt) +`</span>
+          </div>
+         ` 
+     }
       // appendLog(item);
+
+
     
   };
 }

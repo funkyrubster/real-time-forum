@@ -84,11 +84,12 @@ func (c *Client) WritePump() {
 				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-
+		
 			w, err := c.Conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				return
 			}
+			// c.Conn.WriteJSON(message)
 			w.Write(message)
 
 			// Add queued chat messages to the current websocket message
@@ -179,7 +180,6 @@ func (h *Hub) Run() {
 				fmt.Println(err)
 			}
 			fmt.Println(" recipient UserID:", msg.MessageRecipient, "Message sender: ", msg.SenderID)
-		
 
 			//Websoclet message recieved here
 			//Unmarshall Object and check if recieverID is in websocket map
@@ -188,17 +188,17 @@ func (h *Hub) Run() {
 			// websocketConnection = h.Clients[userID]
 			for key, client := range h.Clients {
 				fmt.Println("KEY === ", key)
-				if key == msg.MessageRecipient || key == msg.SenderID{
-				fmt.Println(client.UserId)
-				fmt.Println(string(message))
-				select {
-				case client.Send <- message:
-				default:
-					close(client.Send)
-					delete(h.Clients, client.UserId)
+				if key == msg.MessageRecipient || key == msg.SenderID {
+					fmt.Println(client.UserId)
+					fmt.Println(string(message))
+					select {
+					case client.Send <- message:
+					default:
+						close(client.Send)
+						delete(h.Clients, client.UserId)
+					}
 				}
 			}
-		}
 		}
 	}
 }
