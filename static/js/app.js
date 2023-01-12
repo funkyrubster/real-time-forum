@@ -53,17 +53,19 @@ document.getElementById("form").onsubmit = function () {
   };
   console.log("hello");
   var item = document.querySelector("#log");
-  console.log(item);
-  // We want to add the message to the chat box before we send it to the
-  // websocket but it keeps refreshing if we add the code below
-  // item.innerHTML +=
-  //   `  <div class="bubbleWrapper">
-  //   <div class="inlineContainer own">
-  //    <div class="ownBubble own">${msgObj.message} </div>
-  // </div><span class="own">` +
-  //   convertTime(msgObj.createdAt) +
-  //   `</span>
-  // </div>`;
+  console.log("item from form onsubmit");
+  console.log(msgObj.createdAt);
+  document.querySelector("#log").innerHTML += `
+  <div class="bubbleWrapper">
+    <div class="inlineContainer own">
+      <div class="ownBubble own">
+        ${msgObj.message}
+      </div>
+    </div>
+    <span class="own">
+    time
+    </span>
+  </div>`;
   socket.send(JSON.stringify(msgObj));
 
   msg.value = "";
@@ -99,18 +101,17 @@ function showFeed() {
     //     </div>`;
     // }
     if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
-      item.innerHTML +=
-        `
+      item.innerHTML += `
         <div class="bubbleWrapper">
-        <div class="inlineContainer">
-          <div class="otherBubble other">
+          <div class="inlineContainer">
+              <div class="otherBubble other">
                ${messages.message}
               </div>
-            </div><span class="other">` +
-        convertTime(messages.createdAt) +
-        `</span>
           </div>
-         `;
+          <span class="other">
+            ${convertTime(messages.createdAt)}
+          </span>
+        </div>`;
     }
     // appendLog(item);
   };

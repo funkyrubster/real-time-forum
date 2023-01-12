@@ -341,29 +341,32 @@ function displayMessages(messages) {
 
   for (let i = 0; i < messages.length; i++) {
     if (currUser.slice(1) !== messages[i].messagesender) {
-      document.querySelector("#log").innerHTML +=
-        `
-      <div class="bubbleWrapper">
-      <div class="inlineContainer">
-        <div class="otherBubble other">
-        ` +
-        messages[i].message +
-        `</div>
-      </div><span class="other">` +
-        convertTime(messages[i].CreatedAt) +
-        `</span>
-    </div>
+      document.querySelector("#log").innerHTML += `
+        <div class="bubbleWrapper">
+          <div class="inlineContainer">
+            <div class="otherBubble other">
+              ${messages[i].message}
+            </div>
+          </div>
+          <span class="other">
+            ${convertTime(messages[i].CreatedAt)}
+          </span>
+        </div>
     `;
     } else {
       console.log(messages[i].messagesender);
-      document.querySelector("#log").innerHTML +=
-        `  <div class="bubbleWrapper">
-            <div class="inlineContainer own">
-             <div class="ownBubble own">${messages[i].message} </div>
-          </div><span class="own">` +
-        convertTime(messages[i].CreatedAt) +
-        `</span>
-          </div>`;
+      document.querySelector("#log").innerHTML += `
+      <div class="bubbleWrapper">
+        <div class="inlineContainer own">
+          <div class="ownBubble own">
+            ${messages[i].message} 
+          </div>
+        </div>
+        <span class="own">
+          ${convertTime(messages[i].CreatedAt)}
+        </span>
+      </div>
+      `;
     }
   }
 }
