@@ -333,43 +333,39 @@ function startChat(index, id) {
 // document.querySelector("#log")
 
 function displayMessages(messages) {
-  let arrayOfUserMessages = Array.from(document.querySelectorAll(".fullname"));
   console.log("INSIDE display: ", messages);
+  let currUser = document.querySelector("#username-id").textContent;
+  console.log(currUser);
 
-  // let userMessages = arrayOfUserMessages[messages].textContent;
-  // console.log("UsersMessages: ", usersMessages);
-  // document.querySelector("#log").innerHTML += userMessages;
-
-  // showMessages = document.querySelector(".chat");
-
-  // showMessages.innerHTML = "";
-
-  // chatMessages = document.querySelector("#log")
-
-  // chatMessages.innerHTML = "";
   document.querySelector("#log").innerHTML = "";
 
-  for (let i = 0; i < messages.length; i++)
-    document.querySelector("#log").innerHTML +=
-      `
+  for (let i = 0; i < messages.length; i++) {
+    if (currUser.slice(1) !== messages[i].messagesender) {
+      document.querySelector("#log").innerHTML +=
+        `
       <div class="bubbleWrapper">
       <div class="inlineContainer">
         <div class="otherBubble other">
         ` +
-      messages[i].message +
-      `</div>
+        messages[i].message +
+        `</div>
       </div><span class="other">` +
-      convertTime(messages[i].CreatedAt) +
-      `</span>
+        convertTime(messages[i].CreatedAt) +
+        `</span>
     </div>
     `;
-  // <div class="bubbleWrapper">
-  //   <div class="inlineContainer own">
-  //     <div id="reciver" class="ownBubble own">
-  //      ${messages[i].message}
-  //     </div>
-  //   </div><span class="own">`+ convertTime(messages[i].CreatedAt) +`</span>
-  // </div>
+    } else {
+      console.log(messages[i].messagesender);
+      document.querySelector("#log").innerHTML +=
+        `  <div class="bubbleWrapper">
+            <div class="inlineContainer own">
+             <div class="ownBubble own">${messages[i].message} </div>
+          </div><span class="own">` +
+        convertTime(messages[i].CreatedAt) +
+        `</span>
+          </div>`;
+    }
+  }
 }
 
 function refreshPosts() {
