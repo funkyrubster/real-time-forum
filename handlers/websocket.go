@@ -179,26 +179,29 @@ func (h *Hub) Run() {
 			if err != nil {
 				fmt.Println(err)
 			}
+			// h.Database.SaveChat(*msg) saving the chat can be move here
 			fmt.Println(" recipient UserID:", msg.MessageRecipient, "Message sender: ", msg.SenderID)
-
+			if _, valid := h.Clients[msg.MessageRecipient]; valid{
+				h.Clients[msg.MessageRecipient].Send <- message
+			}
 			//Websoclet message recieved here
 			//Unmarshall Object and check if recieverID is in websocket map
 
 			//Add condition to only send message to specific user
 			// websocketConnection = h.Clients[userID]
-			for key, client := range h.Clients {
-				fmt.Println("KEY === ", key)
-				if key == msg.MessageRecipient || key == msg.SenderID {
-					fmt.Println(client.UserId)
-					fmt.Println(string(message))
-					select {
-					case client.Send <- message:
-					default:
-						close(client.Send)
-						delete(h.Clients, client.UserId)
-					}
-				}
-			}
+			// for key, client := range h.Clients {
+			// 	fmt.Println("KEY === ", key)
+			// 	if key == msg.MessageRecipient || key == msg.SenderID {
+			// 		fmt.Println(client.UserId)
+			// 		fmt.Println(string(message))
+			// 		select {
+			// 		case client.Send <- message:
+			// 		default:
+			// 			close(client.Send)
+			// 			delete(h.Clients, client.UserId)
+			// 		}
+			// 	}
+			// }
 		}
 	}
 }

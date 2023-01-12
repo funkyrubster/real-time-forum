@@ -192,7 +192,6 @@ loginData.addEventListener("submit", function () {
       return response.json();
     })
     .then(function (data) {
-      console.log("DAta === ", data);
       userData = data;
       onlineActivity();
       // Fills the user's profile with their details
@@ -209,12 +208,12 @@ loginData.addEventListener("submit", function () {
 
 // Concatenates the user's details within the HTML after login
 function updateUserDetails(data) {
-  console.log(
-    "updated User Details",
-    data.User.firstName,
-    data.User.lastName,
-    data.User.username
-  );
+  // console.log(
+  //   "updated User Details",
+  //   data.User.firstName,
+  //   data.User.lastName,
+  //   data.User.username
+  // );
   document.querySelector("p.name").innerHTML =
     data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
@@ -240,16 +239,14 @@ function onlineActivity() {
         activityList = document.querySelector(".user-prompt");
 
         activityList.innerHTML = "";
-
+        // console.log(status);
         for (let i = 0; i < status.Online.length; i++) {
           activityList.innerHTML +=
             `
           <p>
             <ul class="list" id="online">
               <li  class="fullname" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">` +
-            status.Online[i].firstName +
-            " " +
-            status.Online[i].lastName +
+            status.Online[i].username +
             `</li>
             </ul>
           </p>
@@ -264,7 +261,7 @@ function onlineActivity() {
           }
         }
         if (status.Offline == null) {
-          console.log("empty");
+          // console.log("empty");
         } else {
           for (let i = 0; i < status.Offline.length; i++) {
             // console.log(status.Offline[i].firstName);
@@ -300,7 +297,8 @@ function startChat(index, id) {
     .querySelector("#chat > div.profile-header > div > p")
     .setAttribute("data-reciverid", id);
   //document.querySelector("#online > li").dataset.reciverid
-  let sendername = document.querySelector(".name").textContent;
+  let sendername = document.querySelector("#username-id").textContent;
+  console.log(sendername);
   let newStr = sendername.replace("@", "");
   let sname = {
     sendersusername: newStr,
@@ -356,8 +354,8 @@ function displayMessages(messages) {
       `
       <div class="bubbleWrapper">
       <div class="inlineContainer">
-        
-        <div class="otherBubble other">` +
+        <div class="otherBubble other">
+        ` +
       messages[i].message +
       `</div>
       </div><span class="other">` +
@@ -385,7 +383,7 @@ function refreshPosts() {
     .then((response) => {
       response.text().then(function (data) {
         let posts = JSON.parse(data);
-        console.log("posts:", posts);
+        // console.log("posts:", posts);
         // 'posts' contains all latest posts from database, in JSON format
         displayPosts(posts);
       });
@@ -451,7 +449,7 @@ document.querySelectorAll(".category").forEach((category) => {
 });
 
 const saveChat = function getChatContents() {
-  console.log(document.getElementById("log"));
+  // console.log(document.getElementById("log"));
 
   let receiver = document.querySelector("#chatReceiver").textContent;
   let chat = {
@@ -471,7 +469,7 @@ const saveChat = function getChatContents() {
   fetchResChat.then((response) => {
     return response.text();
   });
-  showChat();
+  // showChat();
 };
 
 // Sends the user's post to the server
@@ -514,7 +512,7 @@ function displayPosts(posts) {
   postsWrap.innerHTML = "";
 
   // Loop through all posts and print them, concatenating each post data
-  for (let i = posts.length - 1; i >= 0; i--) {
+  for (let i = (posts ? posts.length : 0) - 1; i >= 0; i--) {
     postsWrap.innerHTML +=
       `
     <div class="post" id="` +
@@ -691,7 +689,7 @@ function updateHashtagTable() {
 
 // Displays all posts on the feed
 function displayTrendingHashtags(hashtags) {
-  console.log(hashtags);
+  // console.log(hashtags);
   trendingWrap = document.querySelector(".trending");
 
   // We need to check if there are any hashtag stats to print, otherwise leave at default order

@@ -140,7 +140,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
+func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) { 
 	var chat Chat
 
 	json.NewDecoder(r.Body).Decode(&chat)
@@ -438,6 +438,7 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("LOading Messages")
 	var loading LoadingMessage
 
 	err := json.NewDecoder(r.Body).Decode(&loading)
@@ -446,7 +447,7 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// w.Write([]byte("chat ok"))
-
+	fmt.Println(loading.SendersUsername,loading.RecipientsUsername)
 	conv := data.SelectingLoadingMessage(
 		loading.SendersUsername,
 		loading.RecipientsUsername,

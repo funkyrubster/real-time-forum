@@ -30,6 +30,7 @@ function appendLog(item) {
   }
 }
 document.getElementById("form").onsubmit = function () {
+  console.log("form");
   if (!socket) {
     return false;
   }
@@ -37,21 +38,34 @@ document.getElementById("form").onsubmit = function () {
     return false;
   }
 
-
   var newDate = new Date();
   let sendername = document.querySelector(".username").textContent;
-  let userID = document.querySelector("#chat > div.profile-header > div > p").getAttribute("data-reciverid")
-  let senderID = document.querySelector("p.username").dataset.userid
+  let userID = document
+    .querySelector("#chat > div.profile-header > div > p")
+    .getAttribute("data-reciverid");
+  let senderID = document.querySelector("p.username").dataset.userid;
   let msgObj = {
     message: msg.value,
-    messagesender:  sendername,
+    messagesender: sendername,
     messagerecipient: userID,
     SenderID: senderID,
-    createdAt: newDate
-  }
-
-  console.log("msg Object: ",msgObj);
+    createdAt: newDate,
+  };
+  console.log("hello");
+  var item = document.querySelector("#log");
+  console.log(item);
+  // We want to add the message to the chat box before we send it to the
+  // websocket but it keeps refreshing if we add the code below
+  // item.innerHTML +=
+  //   `  <div class="bubbleWrapper">
+  //   <div class="inlineContainer own">
+  //    <div class="ownBubble own">${msgObj.message} </div>
+  // </div><span class="own">` +
+  //   convertTime(msgObj.createdAt) +
+  //   `</span>
+  // </div>`;
   socket.send(JSON.stringify(msgObj));
+
   msg.value = "";
   return false;
 };
@@ -63,34 +77,42 @@ function showFeed() {
     console.log("Socket open", socket);
   };
   socket.onmessage = function (evt) {
-    var messages = JSON.parse(evt.data)
-    console.log("reciving msg",messages);
-  
-  let chatrec = document.querySelector("body > main > div.main > div.left > div.mini-profile > div > p.username")
-      var item = document.querySelector("#log");
-    
-      if (messages.messagesender === chatrec.innerHTML) {
-        item.innerHTML +=
-        `  <div class="bubbleWrapper">
-          <div class="inlineContainer own">
-           <div class="ownBubble own">${messages.message} </div>
-        </div><span class="own">`+ convertTime(messages.createdAt) +`</span>
-        </div>` }else if (messages.messagesender != chatrec) {
- 
-          item.innerHTML += `
-          <div class="bubbleWrapper">
-            <div class="inlineContainer own"> 
-              <div class="otherBubble other">
+    var messages = JSON.parse(evt.data);
+    console.log("receiving msg", messages);
+
+    let chatrec = document.querySelector(
+      "body > main > div.main > div.left > div.mini-profile > div > p.username"
+    );
+    let chatReceiver = document.querySelector("#chatReceiver");
+    console.log(chatReceiver);
+    var item = document.querySelector("#log");
+    console.log(messages.messagesender.slice(1), chatReceiver.innerHTML);
+    console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
+    // if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
+    //   item.innerHTML +=
+    //     `  <div class="bubbleWrapper">
+    //       <div class="inlineContainer own">
+    //        <div class="ownBubble own">${messages.message} </div>
+    //     </div><span class="own">` +
+    //     convertTime(messages.createdAt) +
+    //     `</span>
+    //     </div>`;
+    // }
+    if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
+      item.innerHTML +=
+        `
+        <div class="bubbleWrapper">
+        <div class="inlineContainer">
+          <div class="otherBubble other">
                ${messages.message}
               </div>
-            </div><span class="other">`+ convertTime(messages.createdAt) +`</span>
+            </div><span class="other">` +
+        convertTime(messages.createdAt) +
+        `</span>
           </div>
-         ` 
-     }
-      // appendLog(item);
-
-
-    
+         `;
+    }
+    // appendLog(item);
   };
 }
 
