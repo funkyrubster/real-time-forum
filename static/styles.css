@@ -449,6 +449,8 @@ select:hover {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  height: 699px;
+  justify-content: space-between;
 }
 
 .right .title-bg p {
@@ -461,7 +463,7 @@ select:hover {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 
-  margin-bottom: -12px;
+  margin-bottom: 5px;
 
   display: flex;
   align-items: center;
@@ -471,8 +473,8 @@ select:hover {
 .title-bg p {
   font-family: "Bambino New";
   font-style: normal;
-  font-weight: 800;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 13.5px;
   line-height: 18px;
   color: #55585f;
 }
@@ -494,6 +496,10 @@ select:hover {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+.left .mini-profile img {
+  border-radius: 20px;
 }
 
 .mini-profile p.name {
@@ -790,6 +796,10 @@ select:hover {
   gap: 0.75rem;
 }
 
+.post .author-category-wrap img {
+  border-radius: 20px;
+}
+
 .post .name-timestamp-wrap p.name {
   font-family: "Bambino New";
   font-style: normal;
@@ -883,6 +893,7 @@ select:hover {
 .post .actions img {
   cursor: pointer;
   width: 32px;
+  border-radius: 20px;
 }
 
 .post .footer,
@@ -1140,7 +1151,6 @@ input#commentBody {
 
 #recently-joined {
   width: 265px;
-  height: 365px;
   display: flex;
   text-align: center;
   align-items: center;
@@ -1157,7 +1167,6 @@ input#commentBody {
   max-width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
   gap: 0.3rem;
   padding: 1rem 1.5rem;
@@ -1165,8 +1174,39 @@ input#commentBody {
   border-radius: 10px;
   /* margin-right: auto; */
   /* padding: 50px 50px; */
-  height: 100px;
+  min-height: 55px;
+  max-height: 193px;
+  height: fit-content;
   width: 20em;
+  overflow: auto;
+}
+
+.user-prompt .user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.user-prompt .user p {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.user-prompt .user .online-status {
+  width: 9.5px;
+  height: 9.5px;
+  background: #59d73b;
+  box-shadow: 0px 0px 10px rgb(0 0 0 / 1%);
+  border-radius: 100px;
+}
+
+.user-prompt .user .offline-status {
+  width: 9.5px;
+  height: 9.5px;
+  background: #d73b3b;
+  box-shadow: 0px 0px 10px rgb(0 0 0 / 1%);
+  border-radius: 100px;
 }
 
 #recently-joined .user-prompt .info {
@@ -1243,6 +1283,10 @@ input#commentBody {
 }
 
 /* --------------------------- CHAT --------------------------- */
+/* .right .title-bg:nth-child(3) {
+  margin-top: 8.4rem;
+} */
+
 #chat {
   display: flex;
   flex-direction: column;
@@ -1258,7 +1302,7 @@ input#commentBody {
   display: block;
   background: white;
   width: 100%;
-  height: 275px;
+  height: 299px;
   overflow: auto;
   padding: 0 1rem;
 }
@@ -1325,6 +1369,11 @@ input#commentBody {
   gap: 0.3rem;
 }
 
+#chat .profile-header .img-name-wrap img {
+  border-radius: 20px;
+  width: 35px;
+}
+
 #chat .profile-header p.name {
   font-family: "Bambino New";
   font-style: normal;
@@ -1383,6 +1432,7 @@ ul li {
   position: relative;
   cursor: pointer;
   line-height: 0.5;
+  color: #4b607c;
 }
 
 #online li:before {

@@ -89,8 +89,7 @@ function convertDate(date) {
       month = "December";
       break;
   }
-  fullDate =
-    day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
+  fullDate = day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
   return fullDate;
 }
 
@@ -106,15 +105,15 @@ signUpData.addEventListener("submit", function () {
     newusername: document.getElementById("newusername").value,
     age: document.getElementById("age").value,
     gender: document.getElementById("gender").value,
-    newpassword: document.getElementById("newpassword").value,
+    newpassword: document.getElementById("newpassword").value
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(user),
+    body: JSON.stringify(user)
   };
 
   let fetchRes = fetch("http://localhost:8080/register", options);
@@ -166,15 +165,15 @@ const loginData = document.getElementById("login-form");
 loginData.addEventListener("submit", function () {
   let user = {
     username: document.getElementById("username").value,
-    password: document.getElementById("password").value,
+    password: document.getElementById("password").value
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(user),
+    body: JSON.stringify(user)
   };
 
   let fetchRes = fetch("http://localhost:8080/login", options);
@@ -214,43 +213,39 @@ function updateUserDetails(data) {
   //   data.User.lastName,
   //   data.User.username
   // );
-  document.querySelector("p.name").innerHTML =
-    data.User.firstName + ` ` + data.User.lastName;
+  document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
-  document
-    .querySelector("p.username")
-    .setAttribute("data-userId", data.User.userID);
-  document.querySelector("#postBody").placeholder =
-    `What's new, ` + data.User.firstName + `?`;
+  document.querySelector("p.username").setAttribute("data-userId", data.User.userID);
+  document.querySelector("#postBody").placeholder = `What's new, ` + data.User.firstName + `?`;
 }
 
 function onlineActivity() {
   fetch("/usersStatus", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    method: "POST",
+    method: "POST"
   })
     .then((response) => {
       response.text().then(function (data) {
         let status = JSON.parse(data);
 
-        activityList = document.querySelector(".user-prompt");
+        userActivityWrapper = document.querySelector("#recently-joined > div");
 
-        activityList.innerHTML = "";
+        userActivityWrapper.innerHTML = "";
         // console.log(status);
         for (let i = 0; i < status.Online.length; i++) {
-          activityList.innerHTML +=
+          userActivityWrapper.innerHTML +=
             `
-          <p>
-            <ul class="list" id="online">
-              <li  class="fullname" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">` +
-            status.Online[i].username +
-            `</li>
-            </ul>
-          </p>
-          </div>
+            <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
+              <div class="online-status"></div>
+              <p>` +
+            status.Online[i].firstName +
+            " " +
+            status.Online[i].lastName +
+            `</p>
+            </div>
       `;
         }
         let nm = document.querySelector(".name").textContent;
@@ -265,18 +260,16 @@ function onlineActivity() {
         } else {
           for (let i = 0; i < status.Offline.length; i++) {
             // console.log(status.Offline[i].firstName);
-            activityList.innerHTML +=
+            userActivityWrapper.innerHTML +=
               `
-              <p>
-                  <ul class="list" id="offline">
-                    <li>` +
+            <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
+              <div class="offline-status"></div>
+              <p>` +
               status.Offline[i].firstName +
               " " +
               status.Offline[i].lastName +
-              `</li>
-                  </ul>
-                </p>
-                </div>
+              `</p>
+            </div>
             `;
           }
         }
@@ -291,26 +284,23 @@ function startChat(index, id) {
   onlineActivity();
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".fullname"));
   let fullName = arrayOfOnlineUsers[index].textContent;
-  document.querySelector("#chat > div.profile-header > div > p").innerHTML =
-    fullName;
-  document
-    .querySelector("#chat > div.profile-header > div > p")
-    .setAttribute("data-reciverid", id);
+  document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
+  document.querySelector("#chat > div.profile-header > div > p").setAttribute("data-reciverid", id);
   //document.querySelector("#online > li").dataset.reciverid
   let sendername = document.querySelector("#username-id").textContent;
   console.log(sendername);
   let newStr = sendername.replace("@", "");
   let sname = {
     sendersusername: newStr,
-    recipientsusername: fullName,
+    recipientsusername: fullName
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(sname),
+    body: JSON.stringify(sname)
   };
 
   let fetchRes = fetch("http://localhost:8080/loadingmessage", options);
@@ -375,9 +365,9 @@ function refreshPosts() {
   fetch("/getPosts", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    method: "POST",
+    method: "POST"
   })
     .then((response) => {
       response.text().then(function (data) {
@@ -394,15 +384,15 @@ function refreshPosts() {
 
 function refreshComments(postID) {
   let commentData = {
-    postId: postID,
+    postId: postID
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(commentData),
+    body: JSON.stringify(commentData)
   };
   let fetchRes = fetch("http://localhost:8080/sendComments", options);
   fetchRes
@@ -419,9 +409,9 @@ function refreshHashtags() {
   fetch("/getHashtags", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    method: "POST",
+    method: "POST"
   })
     .then((response) => {
       response.text().then(function (data) {
@@ -453,15 +443,15 @@ const saveChat = function getChatContents() {
   let receiver = document.querySelector("#chatReceiver").textContent;
   let chat = {
     message: document.getElementById("msg").value,
-    messagerecipient: receiver,
+    messagerecipient: receiver
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(chat),
+    body: JSON.stringify(chat)
   };
 
   let fetchResChat = fetch("http://localhost:8080/chat", options);
@@ -478,15 +468,15 @@ const createPost = function getInputValue() {
 
   let post = {
     postBody: document.getElementById("postBody").value,
-    Hashtag: hashtag,
+    Hashtag: hashtag
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(post),
+    body: JSON.stringify(post)
   };
 
   let fetchRes = fetch("http://localhost:8080/post", options);
@@ -598,15 +588,15 @@ function createCom(postID) {
 
   let commentObj = {
     postid: postID,
-    commentBody: comBody.value,
+    commentBody: comBody.value
   };
   console.log(commentObj);
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(commentObj),
+    body: JSON.stringify(commentObj)
   };
   let fetchRes = fetch("http://localhost:8080/comment", options);
   fetchRes.then((response) => {
@@ -623,17 +613,13 @@ function createCom(postID) {
 
 function getComments(comments, postID) {
   // update comments counter
-  let commentsCounter = document.querySelector(
-    "#\\3" + postID + "  > div.footer > div.stats > div:nth-child(1) > p"
-  );
+  let commentsCounter = document.querySelector("#\\3" + postID + "  > div.footer > div.stats > div:nth-child(1) > p");
   commentsCounter.innerHTML = comments.length;
 
   console.log(comments);
   console.log("first com", comments[1]);
 
-  commentsWrap = document.querySelector(
-    "#\\3" + postID + "  > div.comments > div.comments-wrap"
-  );
+  commentsWrap = document.querySelector("#\\3" + postID + "  > div.comments > div.comments-wrap");
 
   // Clear all posts printed
   commentsWrap.innerHTML = "";
@@ -664,15 +650,15 @@ function updateHashtagTable() {
 
   let hashtag = {
     Name: hashtag_value,
-    Count: "1",
+    Count: "1"
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(hashtag),
+    body: JSON.stringify(hashtag)
   };
 
   let fetchRes = fetch("http://localhost:8080/updateHashtag", options);
@@ -737,7 +723,7 @@ const logout = function logoutUser() {
   console.log(username);
 
   let logoutData = {
-    ok: "",
+    ok: ""
   };
 
   logoutData.ok = username;
@@ -745,9 +731,9 @@ const logout = function logoutUser() {
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(logoutData),
+    body: JSON.stringify(logoutData)
   };
 
   let fetchRes = fetch("http://localhost:8080/logout", options);
@@ -780,11 +766,7 @@ const postsWrapper = document.querySelector(".posts-wrap");
 postsWrapper.addEventListener("click", (event) => {
   console.log(event.target);
   // Check if the clicked element is a post, header, body, or footer
-  if (
-    event.target.matches(
-      "img, .name, .timestamp, .category-option-wrap, .post, .body, .stat-wrapper, .stats, .author, p, .create-comment-wrap, .header, .footer"
-    )
-  ) {
+  if (event.target.matches("img, .name, .timestamp, .category-option-wrap, .post, .body, .stat-wrapper, .stats, .author, p, .create-comment-wrap, .header, .footer")) {
     // Save the ID of the clicked post to a variable
     const clickedPostId = event.target.id;
 
@@ -812,15 +794,15 @@ function checkCookies() {
 
   if (cookie != "") {
     let data = {
-      cookieValue: cookieValue,
+      cookieValue: cookieValue
     };
 
     let options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     };
 
     fetch("http://localhost:8080/checkCookie", options)
