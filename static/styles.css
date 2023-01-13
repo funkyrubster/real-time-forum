@@ -29,7 +29,7 @@ html {
 }
 
 main {
-  display: none;
+  display: block;
 }
 
 a {
@@ -40,7 +40,7 @@ a {
 .auth-container .left,
 .auth-container .right,
 .auth-container form {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
 }
@@ -983,7 +983,7 @@ img#composeCommentAuthor {
   top: -0.35rem;
 }
 
-input#commentBody {
+.comment-field-submit-wrap input {
   width: 100%;
   height: 40px;
 

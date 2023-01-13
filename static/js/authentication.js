@@ -563,7 +563,7 @@ function displayPosts(posts) {
                   <div class="comment-field-wrap">
                     <!-- <img src="../static/img/profile.png" width="50px" id="composeCommentAuthor"> -->
                     <div class="comment-field-submit-wrap">
-                      <input type="text" id="commentBody${posts[i].PostID}" placeholder="Write a comment...">
+                      <input type="text" id="commentBody${posts[i].PostID}" placeholder="Write a comment..." />
                       <div class="comment-btn" onclick="createCom(${posts[i].PostID})">Comment</div>
                     </div>
                   </div>
