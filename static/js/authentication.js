@@ -248,11 +248,11 @@ function onlineActivity() {
             </div>
       `;
         }
-        let nm = document.querySelector(".name").textContent;
-        let usnm = Array.from(document.querySelectorAll(".fullname"));
-        for (let i = 0; i < usnm.length; i++) {
-          if (nm == usnm[i].textContent) {
-            usnm[i].style.display = "none";
+        let name = document.querySelector(".name").textContent;
+        let username = Array.from(document.querySelectorAll(".fullname"));
+        for (let i = 0; i < username.length; i++) {
+          if (name == username[i].textContent) {
+            username[i].style.display = "none";
           }
         }
         if (status.Offline == null) {
@@ -282,7 +282,7 @@ function onlineActivity() {
 
 function startChat(index, id) {
   onlineActivity();
-  let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".fullname"));
+  let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".user p")); // changed here
   let fullName = arrayOfOnlineUsers[index].textContent;
   document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
   document.querySelector("#chat > div.profile-header > div > p").setAttribute("data-reciverid", id);
@@ -290,7 +290,7 @@ function startChat(index, id) {
   let sendername = document.querySelector("#username-id").textContent;
   console.log(sendername);
   let newStr = sendername.replace("@", "");
-  let sname = {
+  let senderuser = {
     sendersusername: newStr,
     recipientsusername: fullName
   };
@@ -300,7 +300,7 @@ function startChat(index, id) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(sname)
+    body: JSON.stringify(senderuser)
   };
 
   let fetchRes = fetch("http://localhost:8080/loadingmessage", options);
