@@ -248,6 +248,8 @@ function onlineActivity() {
               <p>` +
             status.Online[i].username +
             `</p>
+            <div class="notification" id = "${(status.Online[i].username) + "-notification"}">notification here
+            </div>
             </div>
       `;
         }
@@ -282,6 +284,8 @@ function onlineActivity() {
       console.log(error);
     });
 }
+
+// ISSUE: if we click an offline user, is recieves userid 1 private message.
 
 function startChat(index, id) {
   onlineActivity();
