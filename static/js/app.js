@@ -88,8 +88,17 @@ function showFeed() {
     let chatReceiver = document.querySelector("#chatReceiver");
     console.log(chatReceiver);
     var item = document.querySelector("#log");
-    console.log(messages.messagesender.slice(1), chatReceiver.innerHTML);
+    console.log("xxxxx", messages.messagesender.slice(1), chatReceiver.innerHTML);
     console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
+    let onlineusers = Array.from(document.querySelectorAll(".notification"))
+    for (let i = 0; i < onlineusers.length; i++) {
+      if (onlineusers[i].id == messages.messagesender.slice(1) + "-notification") {
+        ////////////notification
+
+        alert("notif")
+        // 
+      }
+    }
     // if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
     //   item.innerHTML +=
     //     `  <div class="bubbleWrapper">
