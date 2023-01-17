@@ -1534,3 +1534,16 @@ span.other {
   font-size: 14px;
   color: grey;
 }
+
+/* Media Queries */
+@media (max-width: 1300px) {
+  .main .right {
+    display: none;
+  }
+}
+
+@media (max-width: 1025px) {
+  .main .left {
+    display: none;
+  }
+}

@@ -438,7 +438,7 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("LOading Messages")
+	fmt.Println("Loading Messages")
 	var loading LoadingMessage
 
 	err := json.NewDecoder(r.Body).Decode(&loading)
@@ -453,12 +453,12 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 		loading.RecipientsUsername,
 	)
 
-	// fmt.Println("Conversation in auth: ", conv)
-
 	js, err := json.Marshal(conv)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Conversation in auth: ", conv)
 
 	// w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
