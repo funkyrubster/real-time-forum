@@ -5,10 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login | Real-Time-Forum</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="../static/styles.css" />
   </head>
@@ -26,29 +23,12 @@
         </div>
         <!-- Login UI -->
         <div class="right">
-          <lord-icon
-            src="https://cdn.lordicon.com/rqqkvjqf.json"
-            trigger="loop"
-            delay="5000"
-            colors="primary:#f3f7ff,secondary:#d4dceb"
-            style="width: 75px; height: 75px"
-          >
-          </lord-icon>
+          <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
           <p class="title">Welcome Back</p>
           <p class="desc">Let’s get you logged in.</p>
           <form action="javascript:void(0)" id="login-form">
-            <input
-              type="text"
-              name="username"
-              id="username"
-              placeholder="Email/Username"
-            />
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Password"
-            />
+            <input type="text" name="username" id="username" placeholder="Email/Username" />
+            <input type="password" name="password" id="password" placeholder="Password" />
             <button class="animate slide" type="submit" name="login" id="login">
               <!-- <button onclick="showChat()" href="chat.html"> -->
               Login
@@ -71,54 +51,22 @@
         </div>
         <!-- Registration UI -->
         <div class="right">
-          <lord-icon
-            src="https://cdn.lordicon.com/rqqkvjqf.json"
-            trigger="loop"
-            delay="5000"
-            colors="primary:#f3f7ff,secondary:#d4dceb"
-            style="width: 75px; height: 75px"
-          >
-          </lord-icon>
+          <lord-icon src="https://cdn.lordicon.com/rqqkvjqf.json" trigger="loop" delay="5000" colors="primary:#f3f7ff,secondary:#d4dceb" style="width: 75px; height: 75px"> </lord-icon>
           <p class="title">Registration</p>
           <p class="desc">Let’s get you started.</p>
 
           <form action="javascript:void(0)" id="sign-up-form">
             <div class="name-wrapper">
-              <input
-                type="text"
-                name="firstName"
-                id="firstName"
-                placeholder="First Name"
-              />
-              <input
-                type="text"
-                name="lastName"
-                id="lastName"
-                placeholder="Last Name"
-              />
+              <input type="text" name="firstName" id="firstName" placeholder="First Name" />
+              <input type="text" name="lastName" id="lastName" placeholder="Last Name" />
             </div>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email Address"
-            />
+            <input type="email" name="email" id="email" placeholder="Email Address" />
             <div class="age-username-wrapper">
-              <input
-                type="text"
-                name="newusername"
-                id="newusername"
-                placeholder="Username"
-              />
+              <input type="text" name="newusername" id="newusername" placeholder="Username" />
               <input type="text" name="age" id="age" placeholder="Age" />
             </div>
             <div class="password-gender-wrapper">
-              <input
-                type="password"
-                name="newpassword"
-                id="newpassword"
-                placeholder="Password"
-              />
+              <input type="password" name="newpassword" id="newpassword" placeholder="Password" />
               <select id="gender" name="gender">
                 <option selected disabled hidden>Gender</option>
                 <option value="male" class="gender">Male</option>
@@ -126,14 +74,7 @@
               </select>
             </div>
             <div class="submit animate slide">
-              <button
-                class="animate slide"
-                type="submit"
-                name="register"
-                id="register"
-              >
-                Register
-              </button>
+              <button class="animate slide" type="submit" name="register" id="register">Register</button>
             </div>
           </form>
           <p class="sign-up-text">Already have an account?</p>
@@ -251,14 +192,7 @@
           <!-- Create A Post -->
           <div class="create-post">
             <img src="../static/img/profile.png" width="50px" alt="" />
-            <textarea
-              id="postBody"
-              name="postBody"
-              rows="4"
-              cols="50"
-              placeholder="What’s new, Loretta?"
-              autofocus
-            ></textarea>
+            <textarea id="postBody" name="postBody" rows="4" cols="50" placeholder="What’s new, Loretta?" autofocus></textarea>
             <div class="category-post-wrap">
               <!-- radio button options -->
               <div class="categories">
@@ -271,12 +205,7 @@
                 <div class="category" id="misc">#Misc</div>
               </div>
 
-              <input
-                id="submit"
-                type="submit"
-                value="Create Post"
-                onclick="createPost();"
-              />
+              <input id="submit" type="submit" value="Create Post" onclick="createPost();" />
             </div>
           </div>
 
@@ -313,25 +242,15 @@
                 <!-- Comment, Like & Dislike Statistics -->
                 <div class="stats">
                   <div class="stat-wrapper">
-                    <img
-                      src="../static/img/post/comments-icon.svg"
-                      width="17px"
-                    />
+                    <img src="../static/img/post/comments-icon.svg" width="17px" />
                     <p>0</p>
                   </div>
                   <div class="stat-wrapper">
-                    <img
-                      src="../static/img/post/likes-icon.svg"
-                      width="15px"
-                      height="13px"
-                    />
+                    <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" />
                     <p>0</p>
                   </div>
                   <div class="stat-wrapper">
-                    <img
-                      src="../static/img/post/dislikes-icon.svg"
-                      width="17px"
-                    />
+                    <img src="../static/img/post/dislikes-icon.svg" width="17px" />
                     <p>0</p>
                   </div>
                 </div>
@@ -344,11 +263,7 @@
                   <div class="comment-field-wrap">
                     <!-- <img src="../static/img/profile.png" width="50px" id="composeCommentAuthor"> -->
                     <div class="comment-field-submit-wrap">
-                      <input
-                        type="text"
-                        id="commentBody"
-                        placeholder="Write a comment..."
-                      />
+                      <input type="text" id="commentBody" placeholder="Write a comment..." />
                       <div class="comment-btn">Comment</div>
                     </div>
                   </div>
@@ -360,45 +275,24 @@
                 <div class="comments-wrap">
                   <div class="comment">
                     <div class="author">Klaudia B</div>
-                    <img
-                      src="../static/img/profile.png"
-                      id="profile-picture"
-                      width="35px"
-                    />
+                    <img src="../static/img/profile.png" id="profile-picture" width="35px" />
                     <div class="timestamp">5:29am</div>
-                    <div class="body">
-                      This is a comment. I love writing comments. Hello hello
-                      hello hello hello hello hello.
-                    </div>
+                    <div class="body">This is a comment. I love writing comments. Hello hello hello hello hello hello hello.</div>
                   </div>
                   <div class="comment">
                     <div class="author">Connor H</div>
-                    <img
-                      src="../static/img/profile.png"
-                      id="profile-picture"
-                      width="35px"
-                    />
+                    <img src="../static/img/profile.png" id="profile-picture" width="35px" />
                     <div class="timestamp">5:29am</div>
                     <div class="body">
-                      Blah blah blah Lorem ipsum dolor, sit amet consectetur
-                      adipisicing elit. Consequatur harum quas beatae error ut
-                      aut inventore ipsa dolores fugiat, unde eaque quasi nulla
-                      culpa esse et quae magnam atque incidunt.
+                      Blah blah blah Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consequatur harum quas beatae error ut aut inventore ipsa dolores fugiat, unde eaque quasi nulla culpa
+                      esse et quae magnam atque incidunt.
                     </div>
                   </div>
                   <div class="comment">
                     <div class="author">Mo Rubie</div>
-                    <img
-                      src="../static/img/profile.png"
-                      id="profile-picture"
-                      width="35px"
-                    />
+                    <img src="../static/img/profile.png" id="profile-picture" width="35px" />
                     <div class="timestamp">5:29am</div>
-                    <div class="body">
-                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Sapiente mollitia eum repudiandae aut. Quam nihil
-                      accusamus laboriosam veniam.
-                    </div>
+                    <div class="body">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sapiente mollitia eum repudiandae aut. Quam nihil accusamus laboriosam veniam.</div>
                   </div>
                 </div>
               </div>
@@ -432,25 +326,15 @@
                 <!-- Comment, Like & Dislike Statistics -->
                 <div class="stats">
                   <div class="stat-wrapper">
-                    <img
-                      src="../static/img/post/comments-icon.svg"
-                      width="17px"
-                    />
+                    <img src="../static/img/post/comments-icon.svg" width="17px" />
                     <p>0</p>
                   </div>
                   <div class="stat-wrapper">
-                    <img
-                      src="../static/img/post/likes-icon.svg"
-                      width="15px"
-                      height="13px"
-                    />
+                    <img src="../static/img/post/likes-icon.svg" width="15px" height="13px" />
                     <p>0</p>
                   </div>
                   <div class="stat-wrapper">
-                    <img
-                      src="../static/img/post/dislikes-icon.svg"
-                      width="17px"
-                    />
+                    <img src="../static/img/post/dislikes-icon.svg" width="17px" />
                     <p>0</p>
                   </div>
                 </div>
@@ -460,22 +344,11 @@
                 <!-- Create A Comment -->
                 <div class="separator"></div>
                 <div class="create-comment-wrap">
-                  <img
-                    src="../static/img/post/comments/chat-bubbles.svg"
-                    id="bubbles"
-                  />
+                  <img src="../static/img/post/comments/chat-bubbles.svg" id="bubbles" />
                   <div class="comment-field-wrap">
-                    <img
-                      src="../static/img/profile.png"
-                      width="50px"
-                      id="composeCommentAuthor"
-                    />
+                    <img src="../static/img/profile.png" width="50px" id="composeCommentAuthor" />
                     <div class="comment-field-submit-wrap">
-                      <input
-                        type="text"
-                        id="commentBody"
-                        placeholder="Start typing..."
-                      />
+                      <input type="text" id="commentBody" placeholder="Start typing..." />
                       <div class="comment-btn">Comment</div>
                     </div>
                   </div>
@@ -487,29 +360,15 @@
                 <div class="comments-wrap">
                   <div class="comment">
                     <div class="author">Loretta Turner</div>
-                    <img
-                      src="../static/img/profile.png"
-                      id="profile-picture"
-                      width="35px"
-                    />
+                    <img src="../static/img/profile.png" id="profile-picture" width="35px" />
                     <div class="timestamp">5:29am</div>
-                    <div class="body">
-                      This is a comment. I love writing comments. Hello hello
-                      hello hello hello hello hello.
-                    </div>
+                    <div class="body">This is a comment. I love writing comments. Hello hello hello hello hello hello hello.</div>
                   </div>
                   <div class="comment">
                     <div class="author">Loretta Turner</div>
-                    <img
-                      src="../static/img/profile.png"
-                      id="profile-picture"
-                      width="35px"
-                    />
+                    <img src="../static/img/profile.png" id="profile-picture" width="35px" />
                     <div class="timestamp">5:29am</div>
-                    <div class="body">
-                      This is a comment. I love writing comments. Hello hello
-                      hello hello hello hello hello.
-                    </div>
+                    <div class="body">This is a comment. I love writing comments. Hello hello hello hello hello hello hello.</div>
                   </div>
                 </div>
               </div>
@@ -536,13 +395,13 @@
           </div>
 
           <div class="your-messages">
-            <div class="title-bg">
+            <!-- <div class="title-bg">
               <p>Your Messages</p>
-            </div>
+            </div> -->
 
             <div class="chat">
               <!-- Trending Topics -->
-              <div id="chat">
+              <div id="chat" data-aos="fade-up" data-aos-anchor-placement="bottom-bottom">
                 <div class="profile-header">
                   <div class="img-name-wrap">
                     <img src="../static/img/profile.png" width="37.5px" />
@@ -551,20 +410,17 @@
                     </div>
                     <p id="chatReceiver" class="name">Full Name</p>
                   </div>
-                  <img src="../static/img/chat/cross.svg" width="15px" />
+                  <img src="../static/img/chat/cross.svg" width="15px" onclick="toggleChat()" />
                 </div>
                 <div id="log"></div>
                 <form id="form">
-                  <input
-                    type="text"
-                    id="msg"
-                    placeholder="Start typing..."
-                    size="64"
-                  />
+                  <input type="text" id="msg" placeholder="Start typing..." size="64" />
                   <input type="submit" onclick="saveChat()" value="Send" />
                 </form>
               </div>
             </div>
+
+            <div class="chat-popup" id="myForm" onclick="toggleChat()">Messages</div>
           </div>
         </div>
       </div>
