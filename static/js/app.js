@@ -8,6 +8,11 @@ function showRegistrationUI() {
   document.querySelector("#login").style.display = "none";
 }
 
+function blockChat() {
+  document.querySelector("#chat").style.display = "none";
+  document.querySelector("#chat-popup").style.display = "block";
+}
+
 function showLoginUI() {
   document.querySelector("#login").style.display = "flex";
   document.querySelector("#registration").style.display = "none";
