@@ -824,6 +824,7 @@ function checkCookies() {
         updateUserDetails(data);
         showFeed();
         onlineActivity();
+        blockChat();
         refreshPosts();
         refreshHashtags();
       })
