@@ -328,21 +328,26 @@ function startChat(index, id) {
 
       // let messages = JSON.parse(data);
       console.log("Messages here: ", data);
-
+      document.querySelector("#log").innerHTML = ""; // clears the chat box
       displayMessages(data);
     });
 }
 
-// document.querySelector("#log")
+// check the current position and then the next after the next 10 is loaded.
+//
 
 function displayMessages(messages) {
   console.log("INSIDE display: ", messages);
+  let start = document.querySelector("#log").childElementCount;
+
   let currUser = document.querySelector("#username-id").textContent;
   console.log(currUser);
 
   document.querySelector("#log").innerHTML = "";
 
-  for (let i = 0; i < messages.length; i++) {
+  messages = messages.reverse(); // gets the latest 10 messages in database
+  for (let i = start; i < start + 10; i++) {
+
     if (currUser.slice(1) !== messages[i].messagesender) {
       document.querySelector("#log").innerHTML += `
         <div class="bubbleWrapper">
