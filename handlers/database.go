@@ -349,7 +349,7 @@ func (data *Forum) SelectingLoadingMessage(username, recipient string) []Chat {
 	var loading Chat
 	var conversation []Chat
 
-	rows, err := data.DB.Query(`SELECT sender, recipient, message, creationDate FROM messages where (sender = ? AND recipient = ?) OR (sender = ? AND recipient = ?) ORDER BY messageID DESC LIMIT 10 `, username, recipient, recipient, username)
+	rows, err := data.DB.Query(`SELECT sender, recipient, message, creationDate FROM messages where (sender = ? AND recipient = ?) OR (sender = ? AND recipient = ?)`, username, recipient, recipient, username)
 	if err != nil {
 		log.Fatal(err)
 	}
