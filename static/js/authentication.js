@@ -283,16 +283,17 @@ function onlineActivity() {
 function toggleChat() {
   chatDiv = document.querySelector(".chat");
 
-  if (chatDiv.style.display === "none") {
-    chatDiv.style.display = "flex";
-    chatDiv.classList.add("show");
-  } else {
+  if (chatDiv.style.display === "flex") {
     chatDiv.style.display = "none";
     chatDiv.classList.remove("show");
+  } else {
+    chatDiv.style.display = "flex";
+    chatDiv.classList.add("show");
   }
 }
 // ISSUE: if we click an offline user, is recieves userid 1 private message.
-
+chatDiv.style.display = "flex";
+chatDiv.classList.add("show");
 function startChat(index, id) {
   onlineActivity();
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".user p")); // changed here
@@ -347,7 +348,6 @@ function displayMessages(messages) {
 
   messages = messages.reverse(); // gets the latest 10 messages in database
   for (let i = start; i < start + 10; i++) {
-
     if (currUser.slice(1) !== messages[i].messagesender) {
       document.querySelector("#log").innerHTML += `
         <div class="bubbleWrapper">
