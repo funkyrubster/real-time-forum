@@ -291,9 +291,9 @@ function toggleChat() {
     chatDiv.classList.add("show");
   }
 }
+
 // ISSUE: if we click an offline user, is recieves userid 1 private message.
-chatDiv.style.display = "flex";
-chatDiv.classList.add("show");
+
 function startChat(index, id) {
   onlineActivity();
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".user p")); // changed here
@@ -480,7 +480,7 @@ const saveChat = function getChatContents() {
 };
 
 // Sends the user's post to the server
-const createPost = function getInputValue() {
+function createPost() {
   // Get the value of the hashtag with the class of selected
   let hashtag = document.querySelector(".category.selected").innerHTML;
 
@@ -509,7 +509,7 @@ const createPost = function getInputValue() {
     }
     return response.text();
   });
-};
+}
 
 // Displays all posts on the feed
 function displayPosts(posts) {
@@ -839,20 +839,3 @@ function checkCookies() {
     showLoginUI();
   }
 }
-
-const button = document.getElementById("show-div-button");
-const animatedDiv = document.getElementById("animated-div");
-
-button.addEventListener("click", function () {
-  if (!animatedDiv.classList.contains("slide-up")) {
-    animatedDiv.style.display = "block";
-    setTimeout(() => {
-      animatedDiv.classList.add("slide-up");
-    }, 10);
-  } else {
-    animatedDiv.classList.remove("slide-up");
-    setTimeout(() => {
-      animatedDiv.style.display = "none";
-    }, 500);
-  }
-});

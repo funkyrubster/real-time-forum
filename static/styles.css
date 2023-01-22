@@ -130,17 +130,23 @@ lord-icon {
 .auth-container form input,
 select {
   height: 37px;
-
   font-size: 16px;
   line-height: 20px;
-
   color: #747b88;
   background: #ffffff;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03);
   border-radius: 6px;
   border: none;
-
   padding: 0.75rem;
+
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.auth-container form input:hover,
+select:hover {
+  transform: scale(1.005);
 }
 
 /* Gender dropdown box */
@@ -251,25 +257,12 @@ select:focus {
   outline: none;
 }
 
-.auth-container form input:hover,
-select:hover {
-  transform: scale(1.005);
-  transition-duration: 0.3s ease-in-out;
-  transition-property: transform;
-}
-
-.auth-container form #login:hover,
-#register:hover {
-  transform: scale(1.02);
-  transition-duration: 0.3s ease-in-out;
-  transition-property: transform;
-}
-
 /* Login/Register Buttons */
 .auth-container form #login,
 #register {
   width: 153px;
   height: 32px;
+  margin-bottom: 1rem;
 
   font-weight: 300;
   font-size: 16px;
@@ -281,7 +274,14 @@ select:hover {
   border: none;
   cursor: pointer;
 
-  margin-bottom: 1rem;
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.auth-container form #login:hover,
+#register:hover {
+  transform: scale(1.05);
 }
 
 /* Sign up text/link */
@@ -547,6 +547,13 @@ select:hover {
   padding: 0.7rem;
   cursor: pointer;
   width: 100%;
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.nav-item:hover {
+  transform: scale(1.025);
 }
 
 .nav-item:nth-last-child(1) {
@@ -609,6 +616,14 @@ select:hover {
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 8px;
   padding: 0 0.85rem;
+  cursor: pointer;
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.trending .hashtag:hover {
+  transform: scale(1.075);
 }
 
 .trending .hashtag p#name {
@@ -711,7 +726,15 @@ select:hover {
   font-size: 14px;
   line-height: 19px;
   color: #4b607c;
+
+  /* backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.1s ease-in-out; */
 }
+
+/* .category:hover {
+  transform: scale(1.075);
+} */
 
 .category.selected {
   background: #a6b3c1;
@@ -758,6 +781,14 @@ select:hover {
   font-size: 14px;
   line-height: 19px;
   color: #ffffff;
+
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.create-post #submit:hover {
+  transform: scale(1.075);
 }
 
 /* Posts */
@@ -769,6 +800,7 @@ select:hover {
   overflow: auto;
   width: 100%;
   height: 65vh;
+  padding: 0.5rem 0.75rem 0rem 0.75rem;
 }
 
 /* makes last post viewable */
@@ -789,6 +821,14 @@ select:hover {
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 10px;
   padding: 1.5rem;
+
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.post:hover {
+  transform: scale(1.025);
 }
 
 .post .author-category-wrap {
