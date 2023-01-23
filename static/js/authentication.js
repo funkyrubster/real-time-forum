@@ -227,23 +227,33 @@ function onlineActivity() {
       response.text().then(function (data) {
         let status = JSON.parse(data);
 
-        userActivityWrapper = document.querySelector("#recently-joined > div");
+        userListDiv = document.querySelector("#user-list");
 
-        userActivityWrapper.innerHTML = "";
+        userListDiv.innerHTML = "";
         // console.log(status);
         for (let i = 0; i < status.Online.length; i++) {
-          userActivityWrapper.innerHTML +=
+          userListDiv.innerHTML +=
             `
             <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
-              <div class="online-status"></div>
-              <p>` +
+              <div class="img-name-wrap">
+                <img src="../static/img/profile.png" />
+                <div class="status-wrap">
+                  <div class="online-status"></div>
+                </div>
+                <div class="name-wrap">
+                  <p id="chatReceiver" class="name">` +
             status.Online[i].username +
             `</p>
-            <div class="notification" id = "${status.Online[i].username + "-notification"}">notification here
+                  <p id="start-chat" class="name">Start a chat</p>
+                </div>
+              </div>
             </div>
-            </div>
-      `;
+            `;
         }
+
+        // Notification code below still needs to be added
+        // <div class="notification" id = "${status.Online[i].username + "-notification"}">notification here</div>
+
         let name = document.querySelector(".name").textContent;
         let username = Array.from(document.querySelectorAll(".fullname"));
         for (let i = 0; i < username.length; i++) {
@@ -256,8 +266,25 @@ function onlineActivity() {
         } else {
           for (let i = 0; i < status.Offline.length; i++) {
             // console.log(status.Offline[i].firstName);
-            userActivityWrapper.innerHTML +=
+            userListDiv.innerHTML +=
               `
+            <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
+              <div class="img-name-wrap">
+                <img src="../static/img/profile.png" />
+                <div class="status-wrap">
+                  <div class="offline-status"></div>
+                </div>
+                <div class="name-wrap">
+                  <p id="chatReceiver" class="name">` +
+              status.Online[i].username +
+              `</p>
+                  <p id="start-chat" class="name">Start a chat</p>
+                </div>
+              </div>
+            </div>
+            `;
+
+            `
             <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
               <div class="offline-status"></div>
               <p>` +
@@ -277,21 +304,33 @@ function onlineActivity() {
 }
 
 function toggleChat() {
+  userListDiv = document.querySelector("#user-list");
   chatDiv = document.querySelector(".chat");
-  console.log("Inside ToggleChat:", chatDiv);
 
+  // Handle entire div visibility
   if (chatDiv.style.display === "flex") {
     chatDiv.style.display = "none";
-    chatDiv.classList.remove("show");
   } else {
     chatDiv.style.display = "flex";
-    chatDiv.classList.add("show");
   }
+}
+
+function closeChat() {
+  userListDiv = document.querySelector("#user-list");
+  chatDiv = document.querySelector("#chat");
+
+  chatDiv.style.display = "none";
+  userListDiv.style.display = "flex";
 }
 
 // ISSUE: if we click an offline user, is recieves userid 1 private message.
 
 function startChat(index, id) {
+  // Hide users list
+  document.querySelector("#user-list").style.display = "none";
+  // Show chat
+  document.querySelector("#chat").style.display = "flex";
+
   onlineActivity();
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".user p")); // changed here
   let fullName = arrayOfOnlineUsers[index].textContent;
@@ -326,10 +365,6 @@ function startChat(index, id) {
 
       document.querySelector("#log").innerHTML = ""; // clears the chat box
       chatDiv = document.querySelector(".chat");
-
-      if (chatDiv.style.display !== "flex") {
-        toggleChat();
-      }
 
       currentChat = data;
       displayMessages(data);
