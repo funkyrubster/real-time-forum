@@ -380,7 +380,7 @@
         <div class="right">
           <div class="user-activity">
             <div class="title-bg">
-              <p>User Activity</p>
+              <p>Sample Widget</p>
             </div>
 
             <!-- Newest Users -->
@@ -388,7 +388,7 @@
               <div class="user-prompt">
                 <div class="user">
                   <div class="online-status"></div>
-                  <p>John Smith</p>
+                  <!-- <p>Widget</p> -->
                 </div>
               </div>
             </div>
@@ -400,7 +400,20 @@
             </div> -->
 
             <div class="chat">
-              <!-- Trending Topics -->
+              <div id="user-list">
+                <div class="user">
+                  <div class="img-name-wrap">
+                    <img src="../static/img/profile.png" />
+                    <div class="status-wrap">
+                      <div class="online-status"></div>
+                    </div>
+                    <div class="name-wrap">
+                      <p id="chatReceiver" class="name">Full Name</p>
+                      <p id="start-chat" class="name">Start a chat</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div id="chat" data-aos="fade-up" data-aos-anchor-placement="bottom-bottom">
                 <div class="profile-header">
                   <div class="img-name-wrap">
@@ -410,7 +423,7 @@
                     </div>
                     <p id="chatReceiver" class="name">Full Name</p>
                   </div>
-                  <img src="../static/img/chat/cross.svg" width="15px" onclick="toggleChat()" />
+                  <img src="../static/img/chat/cross.svg" width="15px" onclick="closeChat()" />
                 </div>
                 <div id="log"></div>
                 <form id="form">
