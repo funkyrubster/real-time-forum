@@ -1,7 +1,7 @@
 // Used for sending notifications
 var notyf = new Notyf();
 
-let currentChat
+let currentChat;
 
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
@@ -209,7 +209,6 @@ loginData.addEventListener("submit", function () {
 
 // Concatenates the user's details within the HTML after login
 function updateUserDetails(data) {
-
   document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
   document.querySelector("p.username").setAttribute("data-userId", data.User.userID);
@@ -279,7 +278,7 @@ function onlineActivity() {
 
 function toggleChat() {
   chatDiv = document.querySelector(".chat");
-  console.log("Inside ToggleChat: ");
+  console.log("Inside ToggleChat:", chatDiv);
 
   if (chatDiv.style.display === "flex") {
     chatDiv.style.display = "none";
@@ -326,9 +325,13 @@ function startChat(index, id) {
       // problem solved. Code wasn't reachable beause of print statement above.
 
       document.querySelector("#log").innerHTML = ""; // clears the chat box
+      chatDiv = document.querySelector(".chat");
 
-      toggleChat();
-      currentChat = data
+      if (chatDiv.style.display !== "flex") {
+        toggleChat();
+      }
+
+      currentChat = data;
       displayMessages(data);
     });
 }
@@ -339,11 +342,11 @@ function startChat(index, id) {
 function displayMessages(messages) {
   // console.log("Inside display func: ", messages);
 
-  let chats = messages
+  let chats = messages;
   console.log("I'm Here: ", chats);
 
   let start = document.querySelector("#log").childElementCount;
-  let prevHeight = document.getElementById("log").scrollHeight
+  let prevHeight = document.getElementById("log").scrollHeight;
 
   let currUser = document.querySelector("#username-id").textContent;
   console.log(currUser);
@@ -353,10 +356,11 @@ function displayMessages(messages) {
   messages = messages.reverse(); // gets the latest 10 messages in database
   for (let i = start; i < start + 10; i++) {
     if (!messages[i]) {
-      break
+      break;
     }
     if (currUser.slice(1) !== messages[i].messagesender) {
-      document.querySelector("#log").innerHTML = `
+      document.querySelector("#log").innerHTML =
+        `
         <div class="bubbleWrapper">
           <div class="inlineContainer">
             <div class="otherBubble other">
@@ -367,10 +371,11 @@ function displayMessages(messages) {
             ${convertTime(messages[i].CreatedAt)}
           </span>
         </div>
-    ` + document.querySelector("#log").innerHTML
+    ` + document.querySelector("#log").innerHTML;
     } else {
       console.log(messages[i].messagesender);
-      document.querySelector("#log").innerHTML = `
+      document.querySelector("#log").innerHTML =
+        `
       <div class="bubbleWrapper">
         <div class="inlineContainer own">
           <div class="ownBubble own">
@@ -381,20 +386,18 @@ function displayMessages(messages) {
           ${convertTime(messages[i].CreatedAt)}
         </span>
       </div>
-      ` + document.querySelector("#log").innerHTML
-
+      ` + document.querySelector("#log").innerHTML;
     }
   }
-  let heightAfter = document.getElementById("log").scrollHeight
-  document.querySelector("#log").scrollTo({ top: heightAfter - prevHeight })
+  let heightAfter = document.getElementById("log").scrollHeight;
+  document.querySelector("#log").scrollTo({ top: heightAfter - prevHeight });
 }
-document.querySelector("#log").addEventListener('scroll', (event) => {
-
+document.querySelector("#log").addEventListener("scroll", (event) => {
   if (event.target.scrollTop === 0) {
     console.log("y position", event.target.scrollTop);
     displayMessages(currentChat);
   }
-})
+});
 
 function refreshPosts() {
   fetch("/getPosts", {
