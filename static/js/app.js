@@ -1,4 +1,5 @@
 let socket;
+
 const createWebsocket = () => {
   return new WebSocket("ws://localhost:8080/ws");
 };
@@ -18,17 +19,20 @@ function showChat() {
   document.querySelector("#login").style.display = "none";
   document.querySelector("#registration").style.display = "none";
 }
+
 var conn;
 var msg = document.getElementById("msg");
 var log = document.getElementById("log");
 
 function appendLog(item) {
+
   var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
   log.appendChild(item);
   if (doScroll) {
     log.scrollTop = log.scrollHeight - log.clientHeight;
   }
 }
+
 document.getElementById("form").onsubmit = function () {
   console.log("form");
   if (!socket) {
@@ -51,7 +55,7 @@ document.getElementById("form").onsubmit = function () {
     SenderID: senderID,
     createdAt: newDate,
   };
-  console.log("hello");
+  console.log("Our Message Object: ", msgObj);
   var item = document.querySelector("#log");
   console.log("item from form onsubmit");
   console.log(msgObj.createdAt);
@@ -62,8 +66,8 @@ document.getElementById("form").onsubmit = function () {
         ${msgObj.message}
       </div>
     </div>
-    <span class="own">
-    time
+    <span class="own"> 
+    ${newDate.getHours()}:${newDate.getMinutes()}
     </span>
   </div>`;
   socket.send(JSON.stringify(msgObj));
