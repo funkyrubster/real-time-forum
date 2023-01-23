@@ -1,6 +1,8 @@
 // Used for sending notifications
 var notyf = new Notyf();
 
+let currentChat
+
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
   let yyyy = date.slice(0, 4);
@@ -207,12 +209,7 @@ loginData.addEventListener("submit", function () {
 
 // Concatenates the user's details within the HTML after login
 function updateUserDetails(data) {
-  // console.log(
-  //   "updated User Details",
-  //   data.User.firstName,
-  //   data.User.lastName,
-  //   data.User.username
-  // );
+
   document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
   document.querySelector("p.username").setAttribute("data-userId", data.User.userID);
@@ -282,6 +279,7 @@ function onlineActivity() {
 
 function toggleChat() {
   chatDiv = document.querySelector(".chat");
+  console.log("Inside ToggleChat: ");
 
   if (chatDiv.style.display === "flex") {
     chatDiv.style.display = "none";
@@ -327,9 +325,10 @@ function startChat(index, id) {
     .then(function (data) {
       // problem solved. Code wasn't reachable beause of print statement above.
 
-      // let messages = JSON.parse(data);
-      console.log("Messages here: ", data);
       document.querySelector("#log").innerHTML = ""; // clears the chat box
+
+      toggleChat();
+      currentChat = data
       displayMessages(data);
     });
 }
@@ -338,18 +337,26 @@ function startChat(index, id) {
 //
 
 function displayMessages(messages) {
-  console.log("INSIDE display: ", messages);
+  // console.log("Inside display func: ", messages);
+
+  let chats = messages
+  console.log("I'm Here: ", chats);
+
   let start = document.querySelector("#log").childElementCount;
+  let prevHeight = document.getElementById("log").scrollHeight
 
   let currUser = document.querySelector("#username-id").textContent;
   console.log(currUser);
 
-  document.querySelector("#log").innerHTML = "";
+  // document.querySelector("#log").innerHTML = "";
 
   messages = messages.reverse(); // gets the latest 10 messages in database
   for (let i = start; i < start + 10; i++) {
+    if (!messages[i]) {
+      break
+    }
     if (currUser.slice(1) !== messages[i].messagesender) {
-      document.querySelector("#log").innerHTML += `
+      document.querySelector("#log").innerHTML = `
         <div class="bubbleWrapper">
           <div class="inlineContainer">
             <div class="otherBubble other">
@@ -360,10 +367,10 @@ function displayMessages(messages) {
             ${convertTime(messages[i].CreatedAt)}
           </span>
         </div>
-    `;
+    ` + document.querySelector("#log").innerHTML
     } else {
       console.log(messages[i].messagesender);
-      document.querySelector("#log").innerHTML += `
+      document.querySelector("#log").innerHTML = `
       <div class="bubbleWrapper">
         <div class="inlineContainer own">
           <div class="ownBubble own">
@@ -374,10 +381,20 @@ function displayMessages(messages) {
           ${convertTime(messages[i].CreatedAt)}
         </span>
       </div>
-      `;
+      ` + document.querySelector("#log").innerHTML
+
     }
   }
+  let heightAfter = document.getElementById("log").scrollHeight
+  document.querySelector("#log").scrollTo({ top: heightAfter - prevHeight })
 }
+document.querySelector("#log").addEventListener('scroll', (event) => {
+
+  if (event.target.scrollTop === 0) {
+    console.log("y position", event.target.scrollTop);
+    displayMessages(currentChat);
+  }
+})
 
 function refreshPosts() {
   fetch("/getPosts", {
