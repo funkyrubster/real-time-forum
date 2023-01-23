@@ -1222,27 +1222,16 @@ img#composeCommentAuthor {
   overflow: auto;
 }
 
-.user-prompt .user {
+.chat #user-list .user {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   gap: 0.5rem;
+  cursor: pointer;
 }
 
-.user-prompt .user p {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-}
-
-.user-prompt .user .online-status {
-  width: 9.5px;
-  height: 9.5px;
-  background: #59d73b;
-  box-shadow: 0px 0px 10px rgb(0 0 0 / 1%);
-  border-radius: 100px;
-}
-
-.user-prompt .user .offline-status {
+.chat .user .offline-status {
   width: 9.5px;
   height: 9.5px;
   background: #d73b3b;
@@ -1267,15 +1256,13 @@ img#composeCommentAuthor {
   color: #4b607c;
 }
 
-#recently-joined .user-prompt p {
+.chat .user p {
   font-family: "Bambino New";
   font-style: normal;
-  font-weight: 600;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 19px;
   letter-spacing: -0.02em;
-  color: #1e3a5f;
-
+  color: #4b607c;
   text-align: left;
 }
 
@@ -1332,6 +1319,21 @@ img#composeCommentAuthor {
   width: 100%;
 }
 
+#user-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  justify-content: flex-start;
+  height: 425.8px;
+  width: 265px;
+  box-shadow: 0px 0px 10px 5px rgb(0 0 0 / 1%);
+  border-radius: 10px;
+  gap: 1.085rem;
+  padding: 1.5rem;
+  overflow: auto;
+}
+
 .chat-popup {
   margin-top: 15px;
   margin-bottom: 2px;
@@ -1369,7 +1371,7 @@ img#composeCommentAuthor {
 }
 
 #chat {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
@@ -1409,7 +1411,7 @@ img#composeCommentAuthor {
 }
 
 /* Profile Header */
-#chat .profile-header {
+.chat .profile-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1425,7 +1427,7 @@ img#composeCommentAuthor {
   position: relative;
 }
 
-#chat .profile-header .status-wrap {
+.chat .profile-header .status-wrap {
   width: 15px;
   height: 15px;
   background: white;
@@ -1437,7 +1439,7 @@ img#composeCommentAuthor {
   top: 34px;
 }
 
-#chat .profile-header .online-status {
+.chat .online-status {
   width: 9.5px;
   height: 9.5px;
   background: #59d73b;
@@ -1449,26 +1451,81 @@ img#composeCommentAuthor {
   top: 3px;
 }
 
-#chat .profile-header .img-name-wrap {
+.chat .img-name-wrap {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.7rem;
+  width: 100%;
 }
 
-#chat .profile-header .img-name-wrap img {
+.chat #user-list .status-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 15px;
+  height: 15px;
+  background: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.01);
+  border-radius: 100px;
+
+  position: absolute;
+  left: 25px;
+  top: 25px;
+}
+
+.chat #user-list .online-status {
+  width: 10px;
+  height: 10.5px;
+  background: #59d73b;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.01);
+  border-radius: 100px;
+
+  position: unset;
+}
+
+.chat #user-list .img-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  position: relative;
+}
+
+.chat #user-list .img-name-wrap img {
+  width: 40px;
+}
+
+.chat .img-name-wrap img {
+  position: relative;
   border-radius: 20px;
   width: 35px;
 }
 
-#chat .profile-header p.name {
+.chat .name-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.chat p#chatReceiver {
   font-family: "Bambino New";
   font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 700 !important;
+  font-size: 13.75px;
   line-height: 19px;
   letter-spacing: -0.02em;
   color: #4b607c;
-  margin-left: 5px;
+}
+
+.chat p#start-chat {
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 19px;
+  letter-spacing: -0.02em;
+  color: #76889d;
 }
 
 #form input#msg::placeholder {
