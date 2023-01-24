@@ -130,17 +130,23 @@ lord-icon {
 .auth-container form input,
 select {
   height: 37px;
-
   font-size: 16px;
   line-height: 20px;
-
   color: #747b88;
   background: #ffffff;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03);
   border-radius: 6px;
   border: none;
-
   padding: 0.75rem;
+
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.auth-container form input:hover,
+select:hover {
+  transform: scale(1.005);
 }
 
 /* Gender dropdown box */
@@ -236,7 +242,8 @@ select {
   font-weight: 300;
   font-size: 16px;
   line-height: 20px;
-  opacity: 1; /* Firefox */
+  opacity: 1;
+  /* Firefox */
 
   color: #a5aab5;
 }
@@ -250,25 +257,12 @@ select:focus {
   outline: none;
 }
 
-.auth-container form input:hover,
-select:hover {
-  transform: scale(1.005);
-  transition-duration: 0.3s ease-in-out;
-  transition-property: transform;
-}
-
-.auth-container form #login:hover,
-#register:hover {
-  transform: scale(1.02);
-  transition-duration: 0.3s ease-in-out;
-  transition-property: transform;
-}
-
 /* Login/Register Buttons */
 .auth-container form #login,
 #register {
   width: 153px;
   height: 32px;
+  margin-bottom: 1rem;
 
   font-weight: 300;
   font-size: 16px;
@@ -280,7 +274,14 @@ select:hover {
   border: none;
   cursor: pointer;
 
-  margin-bottom: 1rem;
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.auth-container form #login:hover,
+#register:hover {
+  transform: scale(1.05);
 }
 
 /* Sign up text/link */
@@ -355,21 +356,27 @@ select:hover {
 .div1 {
   grid-area: 1 / 1 / 2 / 2;
 }
+
 .div2 {
   grid-area: 1 / 2 / 2 / 3;
 }
+
 .div3 {
   grid-area: 2 / 1 / 3 / 2;
 }
+
 .div4 {
   grid-area: 2 / 2 / 3 / 3;
 }
+
 .div5 {
   grid-area: 3 / 1 / 4 / 3;
 }
+
 .div6 {
   grid-area: 4 / 1 / 5 / 3;
 }
+
 .div7 {
   grid-area: 5 / 1 / 6 / 2;
 }
@@ -442,6 +449,8 @@ select:hover {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  height: 699px;
+  justify-content: space-between;
 }
 
 .right .title-bg p {
@@ -454,7 +463,7 @@ select:hover {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 
-  margin-bottom: -12px;
+  margin-bottom: 5px;
 
   display: flex;
   align-items: center;
@@ -464,8 +473,8 @@ select:hover {
 .title-bg p {
   font-family: "Bambino New";
   font-style: normal;
-  font-weight: 800;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 13.5px;
   line-height: 18px;
   color: #55585f;
 }
@@ -486,7 +495,11 @@ select:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+}
+
+.left .mini-profile img {
+  border-radius: 20px;
 }
 
 .mini-profile p.name {
@@ -534,6 +547,13 @@ select:hover {
   padding: 0.7rem;
   cursor: pointer;
   width: 100%;
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.nav-item:hover {
+  transform: scale(1.025);
 }
 
 .nav-item:nth-last-child(1) {
@@ -596,6 +616,14 @@ select:hover {
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 8px;
   padding: 0 0.85rem;
+  cursor: pointer;
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.trending .hashtag:hover {
+  transform: scale(1.075);
 }
 
 .trending .hashtag p#name {
@@ -698,7 +726,15 @@ select:hover {
   font-size: 14px;
   line-height: 19px;
   color: #4b607c;
+
+  /* backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.1s ease-in-out; */
 }
+
+/* .category:hover {
+  transform: scale(1.075);
+} */
 
 .category.selected {
   background: #a6b3c1;
@@ -745,6 +781,14 @@ select:hover {
   font-size: 14px;
   line-height: 19px;
   color: #ffffff;
+
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.create-post #submit:hover {
+  transform: scale(1.075);
 }
 
 /* Posts */
@@ -755,11 +799,13 @@ select:hover {
   max-height: 100vh;
   overflow: auto;
   width: 100%;
+  height: 65vh;
+  padding: 0.5rem 0.75rem 0rem 0.75rem;
 }
 
 /* makes last post viewable */
 .post:last-child {
-  margin-bottom: 26.35rem;
+  /* margin-bottom: 26.35rem; */
 }
 
 .post {
@@ -775,12 +821,24 @@ select:hover {
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.01);
   border-radius: 10px;
   padding: 1.5rem;
+
+  backface-visibility: hidden;
+  transform: scale(1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.post:hover {
+  transform: scale(1.025);
 }
 
 .post .author-category-wrap {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.post .author-category-wrap img {
+  border-radius: 20px;
 }
 
 .post .name-timestamp-wrap p.name {
@@ -876,6 +934,7 @@ select:hover {
 .post .actions img {
   cursor: pointer;
   width: 32px;
+  border-radius: 20px;
 }
 
 .post .footer,
@@ -935,7 +994,7 @@ select:hover {
 }
 
 .separator {
-  width: 708px;
+  width: 100%;
   height: 0px;
   border: 0.3px solid #9aa7b624;
 }
@@ -965,7 +1024,7 @@ img#composeCommentAuthor {
   top: -0.35rem;
 }
 
-input#commentBody {
+.comment-field-submit-wrap input {
   width: 100%;
   height: 40px;
 
@@ -978,7 +1037,8 @@ input#commentBody {
   font-weight: 300;
   font-size: 16px;
   line-height: 20px;
-  opacity: 1; /* Firefox */
+  opacity: 1;
+  /* Firefox */
 
   color: #4c5b6e;
   border-radius: 20px;
@@ -1132,7 +1192,6 @@ input#commentBody {
 
 #recently-joined {
   width: 265px;
-  height: 365px;
   display: flex;
   text-align: center;
   align-items: center;
@@ -1149,7 +1208,6 @@ input#commentBody {
   max-width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
   gap: 0.3rem;
   padding: 1rem 1.5rem;
@@ -1157,11 +1215,39 @@ input#commentBody {
   border-radius: 10px;
   /* margin-right: auto; */
   /* padding: 50px 50px; */
-  height: 100px;
+  min-height: 55px;
+  max-height: 193px;
+  height: fit-content;
   width: 20em;
+  overflow: auto;
+}
 
+.user-prompt .user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
 
+.user-prompt .user p {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
 
+.user-prompt .user .online-status {
+  width: 9.5px;
+  height: 9.5px;
+  background: #59d73b;
+  box-shadow: 0px 0px 10px rgb(0 0 0 / 1%);
+  border-radius: 100px;
+}
+
+.user-prompt .user .offline-status {
+  width: 9.5px;
+  height: 9.5px;
+  background: #d73b3b;
+  box-shadow: 0px 0px 10px rgb(0 0 0 / 1%);
+  border-radius: 100px;
 }
 
 #recently-joined .user-prompt .info {
@@ -1238,22 +1324,71 @@ input#commentBody {
 }
 
 /* --------------------------- CHAT --------------------------- */
+/* .right .title-bg:nth-child(3) {
+  margin-top: 8.4rem;
+} */
+
+.your-messages {
+  width: 100%;
+}
+
+.chat-popup {
+  margin-top: 15px;
+  margin-bottom: 2px;
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  box-shadow: 0px 0px 10px 5px rgb(0 0 0 / 1%);
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  font-family: "Bambino New";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  color: #4b607c;
+}
+
+#animated-div {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-in-out;
+}
+
+.slide-up {
+  height: 100px;
+}
+
+.chat {
+  display: none;
+}
+
 #chat {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  height: 80%;
+  height: 70%;
   width: 265px;
   box-shadow: 0px 0px 10px 5px rgb(0 0 0 / 1%);
-  border-radius: 10px;
+  border-radius: 5px;
+}
+
+#chat .profile-header img {
+  cursor: pointer;
+  /* padding: 1px; */
 }
 
 #log {
   display: block;
   background: white;
   width: 100%;
-  height: 275px;
+  height: 299px;
   overflow: auto;
   padding: 0 1rem;
 }
@@ -1320,6 +1455,11 @@ input#commentBody {
   gap: 0.3rem;
 }
 
+#chat .profile-header .img-name-wrap img {
+  border-radius: 20px;
+  width: 35px;
+}
+
 #chat .profile-header p.name {
   font-family: "Bambino New";
   font-style: normal;
@@ -1364,6 +1504,7 @@ input#commentBody {
   border-radius: 8px;
   border: none;
   padding: 0.5rem;
+  cursor: pointer;
 
   font-family: "Bambino New";
   font-style: normal;
@@ -1378,6 +1519,7 @@ ul li {
   position: relative;
   cursor: pointer;
   line-height: 0.5;
+  color: #4b607c;
 }
 
 #online li:before {
@@ -1389,6 +1531,7 @@ ul li {
   height: 20px;
   width: 20px;
 }
+
 #offline li:before {
   content: counter(item, disc) " ";
   color: rgb(206, 29, 29);
@@ -1398,9 +1541,6 @@ ul li {
   height: 20px;
   width: 20px;
 }
-  
-
-
 
 /* --------------------------- ANIMATIONS --------------------------- */
 .animate {
@@ -1419,6 +1559,7 @@ ul li {
     opacity: 0;
     transform: translate(0, 20px);
   }
+
   100% {
     opacity: 1;
     transform: translate(0, 0);
@@ -1426,51 +1567,108 @@ ul li {
 }
 
 .bubbleWrapper {
-	padding: 10px 10px;
-	display: flex;
-	justify-content: flex-end;
-	flex-direction: column;
-	align-self: flex-end;
+  padding: 0 10px;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  align-self: flex-end;
   color: #fff;
 }
+
 .inlineContainer {
   display: inline-flex;
 }
+
 .inlineContainer.own {
   flex-direction: row-reverse;
 }
+
 .inlineIcon {
-  width:20px;
+  width: 20px;
   object-fit: contain;
 }
+
 .ownBubble {
-	min-width: 60px;
-	max-width: 700px;
-	padding: 14px 18px;
+  min-width: 30px;
+  max-width: 350px;
+  padding: 7px 15px;
   margin: 6px 8px;
-	background-color: #5b5377;
-	border-radius: 16px 16px 0 16px;
-	border: 1px solid #443f56;
- 
+  background-color: #5b5377;
+  border-radius: 16px 16px 0 16px;
+  border: 1px solid #443f56;
 }
+
 .otherBubble {
-	min-width: 60px;
-	max-width: 700px;
-	padding: 14px 18px;
+  min-width: 30px;
+  max-width: 350px;
+  padding: 7px 15px;
   margin: 6px 8px;
-	background-color: #6C8EA4;
-	border-radius: 16px 16px 16px 0;
-	border: 1px solid #54788e;
-  
+  background-color: #6c8ea4;
+  border-radius: 16px 16px 16px 0;
+  border: 1px solid #54788e;
 }
+
 .own {
-	align-self: flex-end;
+  align-self: flex-end;
 }
+
 .other {
-	align-self: flex-start;
+  align-self: flex-start;
 }
+
 span.own,
-span.other{
+span.other {
   font-size: 14px;
   color: grey;
+}
+
+/* Media Queries */
+@media (max-width: 1300px) {
+  .main .right {
+    display: none;
+  }
+}
+
+@media (max-width: 1025px) {
+  .main .left {
+    display: none;
+  }
+
+  .mid {
+    width: 100%;
+    min-width: 420px;
+  }
+
+  .create-post {
+    width: 100%;
+  }
+
+  .create-post #postBody {
+    width: 100%;
+  }
+}
+
+/* Removing create post categories */
+@media (max-width: 795px) {
+  .category#misc {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .category#travel {
+    display: none;
+  }
+}
+
+@media (max-width: 634px) {
+  .category#fitness {
+    display: none;
+  }
+}
+
+@media (max-width: 542px) {
+  .category#sports {
+    display: none;
+  }
 }
