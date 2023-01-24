@@ -47,6 +47,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 		// This contains the specific user's data as well as all of their posts
 		user = UserProfile{
 			User: User{
+				UserID:    userID,
 				Username:  nickname,
 				Firstname: firstname,
 				Lastname:  lastname,
@@ -74,7 +75,7 @@ func (data *Forum) OnlineUsers() []User {
 	var onlineuser User
 	var onlineusers []User
 
-	row, err1 := data.DB.Query(`SELECT userID, firstname, lastname, loggedin FROM users WHERE loggedin = 'true';`)
+	row, err1 := data.DB.Query(`SELECT userID, firstname, lastname, loggedin , username FROM users WHERE loggedin = 'true';`)
 	if err1 != nil {
 		fmt.Println("Error with OnlineUsers func")
 		return nil
@@ -82,7 +83,7 @@ func (data *Forum) OnlineUsers() []User {
 
 	// Scans through each column in the 'users' row and stores the data in the variables above
 	for row.Next() {
-		err := row.Scan(&onlineuser.UserID, &onlineuser.Firstname, &onlineuser.Lastname, &onlineuser.LoggedIn)
+		err := row.Scan(&onlineuser.UserID, &onlineuser.Firstname, &onlineuser.Lastname, &onlineuser.LoggedIn, &onlineuser.Username)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -98,14 +99,14 @@ func (data *Forum) OfflineUser() []User {
 	var offlineuser User
 	var offlineusers []User
 
-	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin FROM users WHERE loggedin = 'false';`)
+	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin, username FROM users WHERE loggedin = 'false';`)
 	if err1 != nil {
 		fmt.Println("Error with OfflineUsers func")
 		return nil
 	}
 	// Scans through each column in the 'users' row and stores the data in the variables above
 	for row.Next() {
-		err := row.Scan(&offlineuser.Firstname, &offlineuser.Lastname, &offlineuser.LoggedIn)
+		err := row.Scan(&offlineuser.Firstname, &offlineuser.Lastname, &offlineuser.LoggedIn, &offlineuser.Username)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -341,6 +342,29 @@ func (data *Forum) GetSession(cookie string) UserSession {
 	}
 
 	return session
+}
+
+func (data *Forum) SelectingLoadingMessage(username, recipient string) []Chat {
+	fmt.Println("SelectingLoadingMessage")
+	var loading Chat
+	var conversation []Chat
+
+	rows, err := data.DB.Query(`SELECT sender, recipient, message, creationDate FROM messages where (sender = ? AND recipient = ?) OR (sender = ? AND recipient = ?)`, username, recipient, recipient, username)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("after sql:", rows)
+	for rows.Next() {
+		fmt.Println("inside query loop")
+		err := rows.Scan(&loading.MessageSender, &loading.MessageRecipient, &loading.Message, &loading.CreatedAt)
+		if err != nil {
+			log.Fatal("conversation error", err)
+		}
+		fmt.Println("Messages", username, recipient, ":", &loading.Message)
+		conversation = append(conversation, loading)
+	}
+	// fmt.Println("Con", conversation)
+	return conversation
 }
 
 func (data *Forum) SaveChat(chat Chat) Chat {
