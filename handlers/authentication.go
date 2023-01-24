@@ -27,6 +27,25 @@ func (data *Forum) Home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (data *Forum) CheckCookie(w http.ResponseWriter, r *http.Request) {
+	var cookieValue CookieValue
+
+	// Decode the JSON data from the request body into the comment variable
+	json.NewDecoder(r.Body).Decode(&cookieValue)
+
+	u := data.GetSession(cookieValue.CookieValue)
+	userName := (u.username)
+
+	userInfo := data.GetUserProfile(userName)
+
+	js, err := json.Marshal(userInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(js))
+}
+
 func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
 	// Send user information back to client using JSON format
 	onlineactivity := OnlineActivity{
@@ -39,26 +58,6 @@ func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
-	w.Write([]byte(js))
-}
-
-func (data *Forum) CheckCookie(w http.ResponseWriter, r *http.Request) {
-
-	var cookieValue CookieValue
-
-	// Decode the JSON data from the request body into the comment variable
-	json.NewDecoder(r.Body).Decode(&cookieValue)
-
-	u := data.GetSession(cookieValue.CookieValue)
-	userName := (u.username)
-
-	userInfo :=  data.GetUserProfile(userName)
-
-	js, err := json.Marshal(userInfo)
-	if err != nil {
-		log.Fatal(err)
-	} 
-	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(js))
 }
 
@@ -141,7 +140,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
+func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) { 
 	var chat Chat
 
 	json.NewDecoder(r.Body).Decode(&chat)
@@ -435,5 +434,32 @@ func (data *Forum) LogoutUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
+}
+
+func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Loading Messages")
+	var loading LoadingMessage
+
+	err := json.NewDecoder(r.Body).Decode(&loading)
+	if err != nil {
+		log.Fatal("Loading handler error: ", err)
+	}
+
+	// w.Write([]byte("chat ok"))
+	fmt.Println(loading.SendersUsername,loading.RecipientsUsername)
+	conv := data.SelectingLoadingMessage(
+		loading.SendersUsername,
+		loading.RecipientsUsername,
+	)
+
+	js, err := json.Marshal(conv)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Conversation in auth: ", conv)
+
+	// w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
 }
