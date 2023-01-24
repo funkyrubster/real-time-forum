@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -83,11 +84,12 @@ func (c *Client) WritePump() {
 				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-
+		
 			w, err := c.Conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				return
 			}
+			// c.Conn.WriteJSON(message)
 			w.Write(message)
 
 			// Add queued chat messages to the current websocket message
@@ -161,7 +163,7 @@ func (h *Hub) Run() {
 			fmt.Println()
 			fmt.Println()
 			fmt.Println()
-			fmt.Println("USERID:   ",client.UserId)
+			fmt.Println("USERID:   ", client.UserId)
 			fmt.Println()
 			fmt.Println("CLient hub: ", h.Clients)
 			fmt.Println()
@@ -171,16 +173,35 @@ func (h *Hub) Run() {
 				close(client.Send)
 			}
 		case message := <-h.Broadcast:
-			for _, client := range h.Clients {
-				fmt.Println(client.UserId)
-				fmt.Println(string(message))
-				select {
-				case client.Send <- message:
-				default:
-					close(client.Send)
-					delete(h.Clients, client.UserId)
-				}
+			msg_bytes := []byte(message)
+			var msg = &Chat{}
+			err := json.Unmarshal(msg_bytes, msg)
+			if err != nil {
+				fmt.Println(err)
 			}
+			// h.Database.SaveChat(*msg) saving the chat can be move here
+			fmt.Println(" recipient UserID:", msg.MessageRecipient, "Message sender: ", msg.SenderID)
+			if _, valid := h.Clients[msg.MessageRecipient]; valid{
+				h.Clients[msg.MessageRecipient].Send <- message
+			}
+			//Websoclet message recieved here
+			//Unmarshall Object and check if recieverID is in websocket map
+
+			//Add condition to only send message to specific user
+			// websocketConnection = h.Clients[userID]
+			// for key, client := range h.Clients {
+			// 	fmt.Println("KEY === ", key)
+			// 	if key == msg.MessageRecipient || key == msg.SenderID {
+			// 		fmt.Println(client.UserId)
+			// 		fmt.Println(string(message))
+			// 		select {
+			// 		case client.Send <- message:
+			// 		default:
+			// 			close(client.Send)
+			// 			delete(h.Clients, client.UserId)
+			// 		}
+			// 	}
+			// }
 		}
 	}
 }
