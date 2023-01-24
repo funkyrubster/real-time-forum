@@ -1,12 +1,14 @@
 package main
 
 import (
-	"net/http" // Provides functions for creating and hosting HTTP servers, as well as handling HTTP requests
-	"real-time-forum/handlers" // Contains code for handling HTTP requests in the application
 	"database/sql" // Provides a generic interface for working with SQL databases
-	_ "github.com/mattn/go-sqlite3" // Provides an SQLite3 driver for the database/sql package
 	"fmt"
 	"log"
+	"net/http" // Provides functions for creating and hosting HTTP servers, as well as handling HTTP requests
+
+	"real-time-forum/handlers" // Contains code for handling HTTP requests in the application
+
+	_ "github.com/mattn/go-sqlite3" // Provides an SQLite3 driver for the database/sql package
 )
 
 func main() {
@@ -17,6 +19,14 @@ func main() {
 	}
 	data := handlers.Connect(database)
 	defer database.Close() // This ensures that the database is properly closed when the program exits
+
+	// THIS IS TO DELETE A TABLE WITHOUT DELETING THE WHOLE DATABASE! (USEFUL)
+	// rmv := `DROP TABLE IF EXISTS messages;`
+	// _, err = data.DB.Exec(rmv)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("should be deleted")
 
 	// Create a file server to serve content from the static directory
 	fileServer := http.FileServer(http.Dir("./static"))
@@ -31,6 +41,7 @@ func main() {
 	http.HandleFunc("/post", data.Post)
 	http.HandleFunc("/comment", data.Comment)
 	http.HandleFunc("/chat", data.Chat)
+	http.HandleFunc("/loadingmessage", data.LoadingMessage)
 	http.HandleFunc("/logout", data.LogoutUser)
 	http.HandleFunc("/getPosts", data.SendLatestPosts)
 	http.HandleFunc("/getHashtags", data.SendLatestHashtags)
@@ -38,7 +49,6 @@ func main() {
 	http.HandleFunc("/sendComments", data.SendComments)
 	http.HandleFunc("/usersStatus", data.SendLatestActivity)
 	http.HandleFunc("/checkCookie", data.CheckCookie)
-
 
 	// Create the hub that will manage the connections and communication with clients
 	hub := handlers.NewHub(data)
