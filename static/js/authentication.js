@@ -2,6 +2,7 @@
 var notyf = new Notyf();
 
 let currentChat;
+let offlineUsers;
 
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
@@ -226,6 +227,7 @@ function onlineActivity() {
     .then((response) => {
       response.text().then(function (data) {
         let status = JSON.parse(data);
+        offlineUsers = status.Offline
 
         userActivityWrapper = document.querySelector("#recently-joined > div");
 
@@ -253,15 +255,15 @@ function onlineActivity() {
         if (status.Offline == null) {
           // console.log("empty");
         } else {
-          for (let i = 0; i < status.Offline.length ; i++) {
+          for (let i = 0; i < status.Offline.length; i++) {
             // console.log(status.Offline[i].firstName);
             userActivityWrapper.innerHTML +=
               `
             <div class="user" data-reciverid="${status.Offline[i].userID}" onclick="startChat(${i + status.Online.length}, ${status.Offline[i].userID})">
               <div class="offline-status"></div>
               <p>` +
-            status.Offline[i].username +
-            `</p>
+              status.Offline[i].username +
+              `</p>
             <div class="notification" id = "${status.Offline[i].username + "-notification"}">notification here
             </div>
             `;
@@ -330,6 +332,7 @@ function startChat(index, id) {
       }
       currentChat = data.reverse();
       // currentChat.reverse()
+
       displayMessages(currentChat);
     });
 }
@@ -473,6 +476,46 @@ document.querySelectorAll(".category").forEach((category) => {
   });
 });
 
+function getNotfication() {
+  console.log("Im here in noti func");
+  onlineActivity();
+
+  let receiver = document.querySelector("#chatReceiver").textContent;
+  let notification = 0
+  let sender = document.querySelector("#username-id").textContent;
+
+  let newStr = sender.replace("@", "")
+console.log("Offline users: ",offlineUsers)
+  if (offlineUsers != null) {
+    for (var i = 0; i < offlineUsers.length; i++) {
+      if (offlineUsers[i].username === receiver) {
+        notification++
+    
+      }
+    }
+  }
+  console.log("Inside notification: ", notification);
+
+  let noti = {
+    sendernotification: newStr,
+    recipientnotification: receiver,
+    noti: notification
+  }
+
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(noti)
+  };
+
+  let fetchResChat = fetch("http://localhost:8080/notification", options);
+  fetchResChat.then((response) => {
+    return response.text();
+  });
+}
+
 const saveChat = function getChatContents() {
   // console.log(document.getElementById("log"));
 
@@ -495,6 +538,7 @@ const saveChat = function getChatContents() {
     return response.text();
   });
   // showChat();
+  getNotfication();
 };
 
 // Sends the user's post to the server

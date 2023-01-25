@@ -58,7 +58,7 @@ func (c *Client) ReadPump() {
 			}
 			break
 		}
-		//fmt.Println(string(message))
+		// fmt.Println(string(message))
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		c.Hub.Broadcast <- message
 	}
@@ -84,7 +84,7 @@ func (c *Client) WritePump() {
 				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-		
+
 			w, err := c.Conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				return
@@ -120,7 +120,6 @@ func (data *Forum) ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO: userID need to be replace by the userId of the current user from the cookie
 	cookie, err := r.Cookie("session_token")
-
 	if err != nil {
 		log.Println(err)
 		return
@@ -174,20 +173,23 @@ func (h *Hub) Run() {
 			}
 		case message := <-h.Broadcast:
 			msg_bytes := []byte(message)
-			var msg = &Chat{}
+			msg := &Chat{}
 			err := json.Unmarshal(msg_bytes, msg)
 			if err != nil {
 				fmt.Println(err)
 			}
 			// h.Database.SaveChat(*msg) saving the chat can be move here
 			fmt.Println(" recipient UserID:", msg.MessageRecipient, "Message sender: ", msg.SenderID)
-			if _, valid := h.Clients[msg.MessageRecipient]; valid{
+			if _, valid := h.Clients[msg.MessageRecipient]; valid {
 				h.Clients[msg.MessageRecipient].Send <- message
+			} else {
+				//Reciever is offline
+				//Increment notification for this chat
 			}
-			//Websoclet message recieved here
-			//Unmarshall Object and check if recieverID is in websocket map
+			// Websoclet message recieved here
+			// Unmarshall Object and check if recieverID is in websocket map
 
-			//Add condition to only send message to specific user
+			// Add condition to only send message to specific user
 			// websocketConnection = h.Clients[userID]
 			// for key, client := range h.Clients {
 			// 	fmt.Println("KEY === ", key)
@@ -205,14 +207,18 @@ func (h *Hub) Run() {
 		}
 	}
 }
+
 func (h *Hub) LogConns() {
 	for {
 		fmt.Println(len(h.Clients), "clients connected")
+
 		for userId := range h.Clients {
 			fmt.Printf("client %v have %v connections\n", userId, len(h.Clients))
 		}
+
 		fmt.Println()
 		fmt.Println()
 		time.Sleep(1 * time.Second)
+		break
 	}
 }

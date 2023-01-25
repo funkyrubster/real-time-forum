@@ -97,3 +97,9 @@ type LoadingMessage struct {
 	SendersUsername    string `json:"sendersusername"`
 	RecipientsUsername string `json:"recipientsusername"`
 }
+
+type Notifications struct {
+	Sender       string `json:"sendernotification"`
+	Recipient    string `json:"recipientnotification"`
+	Notification int    `json:"noti"`
+}

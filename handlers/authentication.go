@@ -140,7 +140,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) { 
+func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 	var chat Chat
 
 	json.NewDecoder(r.Body).Decode(&chat)
@@ -447,7 +447,7 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// w.Write([]byte("chat ok"))
-	fmt.Println(loading.SendersUsername,loading.RecipientsUsername)
+	fmt.Println(loading.SendersUsername, loading.RecipientsUsername)
 	conv := data.SelectingLoadingMessage(
 		loading.SendersUsername,
 		loading.RecipientsUsername,
@@ -462,4 +462,16 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 
 	// w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
+}
+
+func (data *Forum) SendNotification(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Sending Notifications")
+	var notification Notifications
+
+	err := json.NewDecoder(r.Body).Decode(&notification)
+	if err != nil {
+		log.Fatal("SendNotification Handler error: ", err)
+	}
+	fmt.Println("This should be our notifications: ", notification)
+	w.Write([]byte("ok from noti handler"))
 }
