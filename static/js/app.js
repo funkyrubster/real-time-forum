@@ -83,35 +83,42 @@ function showFeed() {
     console.log("Socket open", socket);
   };
   socket.onmessage = function (evt) {
-    console.log("here");
-    var messages = JSON.parse(evt.data);
-    console.log("receiving msg", messages);
-
-    let chatrec = document.querySelector(
-      "body > main > div.main > div.left > div.mini-profile > div > p.username"
-    );
-    let chatReceiver = document.querySelector("#chatReceiver");
-    
-    console.log(chatReceiver);
-
-    var item = document.querySelector("#log");
-    chatDiv = document.querySelector(".chat");
-    
-    console.log("xxxxx", messages.messagesender.slice(1), chatReceiver.innerHTML);
-    console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
-
-    let onlineusers = Array.from(document.querySelectorAll(".notification"))
-    console.log("online users",onlineusers);
-    for (let i = 0; i < onlineusers.length; i++) {
-      console.log(onlineusers[i].messages);
-      if (onlineusers[i].id == messages.messagesender.slice(1) + "-notification") {
-    
-        ////////////notification
-
-        alert("notif")
-        // 
-      }
+    var data = JSON.parse(evt.data);
+    console.log(data);
+    if (data.type === "messages"){
+      var notification = new Notification(data.username, {
+  
+        body: data.message
+    });
     }
+
+    // console.log("receiving msg", messages);
+
+    // let chatrec = document.querySelector(
+    //   "body > main > div.main > div.left > div.mini-profile > div > p.username"
+    // );
+    // let chatReceiver = document.querySelector("#chatReceiver");
+    
+    // console.log(chatReceiver);
+
+    // var item = document.querySelector("#log");
+    // chatDiv = document.querySelector(".chat");
+    
+    // console.log("xxxxx", messages.messagesender.slice(1), chatReceiver.innerHTML);
+    // console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
+
+    // let onlineusers = Array.from(document.querySelectorAll(".notification"))
+    // console.log("online users",onlineusers);
+    // for (let i = 0; i < onlineusers.length; i++) {
+    //   console.log(onlineusers[i].messages);
+    //   if (onlineusers[i].id == messages.messagesender.slice(1) + "-notification") {
+    
+    //     ////////////notification
+
+    //     alert("notif")
+    //     // 
+    //   }
+    // }
     // if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
     //   item.innerHTML +=
     //     `  <div class="bubbleWrapper">
