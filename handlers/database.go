@@ -353,14 +353,14 @@ func (data *Forum) SelectingLoadingMessage(username, recipient string) []Chat {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("after sql:", rows)
+	// fmt.Println("after sql:", rows)
 	for rows.Next() {
-		fmt.Println("inside query loop")
+		// fmt.Println("inside query loop")
 		err := rows.Scan(&loading.MessageSender, &loading.MessageRecipient, &loading.Message, &loading.CreatedAt)
 		if err != nil {
 			log.Fatal("conversation error", err)
 		}
-		fmt.Println("Messages", username, recipient, ":", &loading.Message)
+		// fmt.Println("Messages", username, recipient, ":", &loading.Message)
 		conversation = append(conversation, loading)
 	}
 	// fmt.Println("Con", conversation)
@@ -378,6 +378,19 @@ func (data *Forum) SaveChat(chat Chat) Chat {
 		log.Fatal(err)
 	}
 	return chat
+}
+
+func (data *Forum) SaveNotifications(noti Notifications) Notifications {
+	stmnt, err := data.DB.Prepare("INSERT INTO notifications (sender, recipient, notification) VALUES (?, ?, ?)")
+	if err != nil {
+		log.Fatal("Error inserting to noti table: ", err)
+	}
+
+	_, err = stmnt.Exec(noti.Sender, noti.Recipient, noti.Notification)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return noti
 }
 
 //-------------------------  TABLES -------------------------//
@@ -532,12 +545,27 @@ func CheckTablesExist(db *sql.DB, table string) {
 			}
 			chat.Exec()
 		}
+		if table == "notifications" {
+			fmt.Println("Creating notifications table...")
+			notifications_table := `CREATE TABLE IF NOT EXISTS notifications(
+                    "sender" TEXT NOT NULL,
+                    "recipient" TEXT,
+                    "notification" INTEGER NOT NULL
+                    );`
+
+			notify, errNotify := db.Prepare(notifications_table)
+			if errNotify != nil {
+				log.Fatal(errNotify)
+			}
+			notify.Exec()
+		}
+
 	}
 }
 
 // Check all required tables exist in database, and create them if they don't
 func Connect(db *sql.DB) *Forum {
-	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions", "messages", "chat"} {
+	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions", "messages", "chat", "notifications"} {
 		CheckTablesExist(db, table)
 	}
 	return &Forum{

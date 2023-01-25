@@ -83,21 +83,15 @@ function showFeed() {
     console.log("Socket open", socket);
   };
   socket.onmessage = function (evt) {
-    var data = JSON.parse(evt.data);
-    console.log(data);
-    if (data.type === "messages"){
-      var notification = new Notification(data.username, {
-  
-        body: data.message
-    });
-    }
+    var messages = JSON.parse(evt.data);
+    
 
     // console.log("receiving msg", messages);
 
     // let chatrec = document.querySelector(
     //   "body > main > div.main > div.left > div.mini-profile > div > p.username"
     // );
-    // let chatReceiver = document.querySelector("#chatReceiver");
+    let chatReceiver = document.querySelector("#chatReceiver");
     
     // console.log(chatReceiver);
 
@@ -141,6 +135,9 @@ function showFeed() {
             ${convertTime(messages.createdAt)}
           </span>
         </div>`;
+    } else{
+      //send notification to the backend
+      //Display notrification on specific chat
     }
     // appendLog(item);
   };
