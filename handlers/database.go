@@ -532,12 +532,26 @@ func CheckTablesExist(db *sql.DB, table string) {
 			}
 			chat.Exec()
 		}
+		if table == "notifications" {
+			fmt.Println("Creating notifications table...")
+			notifications_table := `CREATE TABLE IF NOT EXISTS notifications(
+					"sender" TEXT NOT NULL,
+					"recipient" TEXT,
+					"notification" INTEGER NOT NULL
+					);`
+
+			notify, errNotify := db.Prepare(notifications_table)
+			if errNotify != nil {
+				log.Fatal(errNotify)
+			}
+			notify.Exec()
+		}
 	}
 }
 
 // Check all required tables exist in database, and create them if they don't
 func Connect(db *sql.DB) *Forum {
-	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions", "messages", "chat"} {
+	for _, table := range []string{"users", "posts", "comments", "hashtags", "sessions", "messages", "chat", "notifications"} {
 		CheckTablesExist(db, table)
 	}
 	return &Forum{

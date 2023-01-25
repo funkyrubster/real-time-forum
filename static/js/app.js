@@ -34,7 +34,6 @@ function appendLog(item) {
 }
 
 document.getElementById("form").onsubmit = function () {
-  console.log("form");
   if (!socket) {
     return false;
   }
@@ -57,8 +56,8 @@ document.getElementById("form").onsubmit = function () {
   };
   console.log("Our Message Object: ", msgObj);
   var item = document.querySelector("#log");
-  console.log("item from form onsubmit");
-  console.log(msgObj.createdAt);
+  // console.log("item from form onsubmit");
+  // console.log(msgObj.createdAt);
   document.querySelector("#log").innerHTML += `
   <div class="bubbleWrapper">
     <div class="inlineContainer own">
@@ -83,42 +82,33 @@ function showFeed() {
     console.log("Socket open", socket);
   };
   socket.onmessage = function (evt) {
-    var data = JSON.parse(evt.data);
-    console.log(data);
-    if (data.type === "messages"){
-      var notification = new Notification(data.username, {
-  
-        body: data.message
-    });
+    var messages = JSON.parse(evt.data);
+    console.log("receiving msg", messages);
+
+    let chatrec = document.querySelector(
+      "body > main > div.main > div.left > div.mini-profile > div > p.username"
+    );
+    let chatReceiver = document.querySelector("#chatReceiver");
+    
+
+    var item = document.querySelector("#log");
+    chatDiv = document.querySelector(".chat");
+    
+    console.log("xxxxx", messages.messagesender.slice(1), chatReceiver.innerHTML);
+    console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
+
+    let onlineusers = Array.from(document.querySelectorAll(".notification"))
+    console.log("online users",onlineusers);
+    for (let i = 0; i < onlineusers.length; i++) {
+      console.log(onlineusers[i].messages);
+      if (onlineusers[i].id == messages.messagesender.slice(1) + "-notification") {
+    
+        ////////////notification
+
+        alert("notif")
+        // 
+      }
     }
-
-    // console.log("receiving msg", messages);
-
-    // let chatrec = document.querySelector(
-    //   "body > main > div.main > div.left > div.mini-profile > div > p.username"
-    // );
-    // let chatReceiver = document.querySelector("#chatReceiver");
-    
-    // console.log(chatReceiver);
-
-    // var item = document.querySelector("#log");
-    // chatDiv = document.querySelector(".chat");
-    
-    // console.log("xxxxx", messages.messagesender.slice(1), chatReceiver.innerHTML);
-    // console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
-
-    // let onlineusers = Array.from(document.querySelectorAll(".notification"))
-    // console.log("online users",onlineusers);
-    // for (let i = 0; i < onlineusers.length; i++) {
-    //   console.log(onlineusers[i].messages);
-    //   if (onlineusers[i].id == messages.messagesender.slice(1) + "-notification") {
-    
-    //     ////////////notification
-
-    //     alert("notif")
-    //     // 
-    //   }
-    // }
     // if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
     //   item.innerHTML +=
     //     `  <div class="bubbleWrapper">

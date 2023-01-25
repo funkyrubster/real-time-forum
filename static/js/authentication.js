@@ -2,6 +2,7 @@
 var notyf = new Notyf();
 
 let currentChat;
+let offlineUsers
 
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
@@ -225,7 +226,8 @@ function onlineActivity() {
   })
     .then((response) => {
       response.text().then(function (data) {
-        let status = JSON.parse(data);
+       let status = JSON.parse(data);
+       offlineUsers = status.Offline
 
         userActivityWrapper = document.querySelector("#recently-joined > div");
 
@@ -276,7 +278,7 @@ function onlineActivity() {
 
 function toggleChat() {
   chatDiv = document.querySelector(".chat");
-  console.log("Inside ToggleChat:", chatDiv);
+  // console.log("Inside ToggleChat:", chatDiv);
 
   if (chatDiv.style.display === "flex") {
     chatDiv.style.display = "none";
@@ -289,6 +291,7 @@ function toggleChat() {
 
 function startChat(index, id) {
   onlineActivity();
+  
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".user p")); // changed here
   // let arrayOfUsers = Array.from(document.querySelector("#recently-joined > div"))
   // console.log(arrayOfUsers);
@@ -297,7 +300,7 @@ function startChat(index, id) {
   document.querySelector("#chat > div.profile-header > div > p").setAttribute("data-reciverid", id);
   //document.querySelector("#online > li").dataset.reciverid
   let sendername = document.querySelector("#username-id").textContent;
-  console.log(sendername);
+
   let newStr = sendername.replace("@", "");
   let senderuser = {
     sendersusername: newStr,
@@ -392,7 +395,7 @@ function displayMessages(messages) {
 }
 document.querySelector("#log").addEventListener("scroll", (event) => {
   if (event.target.scrollTop === 0) {
-    console.log("y position", event.target.scrollTop);
+    // console.log("y position", event.target.scrollTop);
     displayMessages(currentChat);
   }
 });
@@ -477,9 +480,24 @@ const saveChat = function getChatContents() {
   // console.log(document.getElementById("log"));
 
   let receiver = document.querySelector("#chatReceiver").textContent;
+
+
+  if (offlineUsers != null) {
+    for (var i = 0; i < offlineUsers.length; i++){
+       if (offlineUsers[i].firstName === receiver) {
+        notification++
+        console.log(notification);
+       }else {
+        console.log(false);
+       }
+    }
+  }
+  console.log(notification);
+  
   let chat = {
     message: document.getElementById("msg").value,
-    messagerecipient: receiver
+    messagerecipient: receiver,
+    notification: notification,
   };
 
   let options = {
