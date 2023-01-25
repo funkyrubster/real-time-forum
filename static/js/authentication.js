@@ -230,7 +230,6 @@ function onlineActivity() {
         userActivityWrapper = document.querySelector("#recently-joined > div");
 
         userActivityWrapper.innerHTML = "";
-        // console.log(status);
         for (let i = 0; i < status.Online.length; i++) {
           userActivityWrapper.innerHTML +=
             `
@@ -263,7 +262,7 @@ function onlineActivity() {
               <p>` +
             status.Offline[i].username +
             `</p>
-            <div class="notification" id = "${status.Online[i].username + "-notification"}">notification here
+            <div class="notification" id = "${status.Offline[i].username + "-notification"}">notification here
             </div>
             `;
           }
@@ -287,10 +286,6 @@ function toggleChat() {
     chatDiv.classList.add("show");
   }
 }
-
-
-
-// ISSUE: if we click an offline user, is recieves userid 1 private message.
 
 function startChat(index, id) {
   onlineActivity();
@@ -328,15 +323,13 @@ function startChat(index, id) {
       // problem solved. Code wasn't reachable beause of print statement above.
 
       document.querySelector("#log").innerHTML = ""; // clears the chat box
-      // chatDiv = document.querySelector(".chat");
+      chatDiv = document.querySelector(".chat");
 
-      // if (chatDiv.style.display !== "flex") {
-      //   toggleChat();
-      // }
-
-      toggleChat();
-      currentChat = data;
-      currentChat.reverse()
+      if (chatDiv.style.display !== "flex") {
+        toggleChat();
+      }
+      currentChat = data.reverse();
+      // currentChat.reverse()
       displayMessages(currentChat);
     });
 }
