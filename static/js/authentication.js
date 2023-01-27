@@ -3,6 +3,7 @@ var notyf = new Notyf();
 
 let currentChat;
 let offlineUsers;
+let dataNotif
 
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
@@ -195,6 +196,7 @@ loginData.addEventListener("submit", function () {
     })
     .then(function (data) {
       userData = data;
+      dataNotif = userData.Notification 
       onlineActivity();
       // Fills the user's profile with their details
       updateUserDetails(data);
@@ -233,6 +235,11 @@ function onlineActivity() {
 
         userActivityWrapper.innerHTML = "";
         for (let i = 0; i < status.Online.length; i++) {
+          // TODO if status.Online[i].username == dataNotif.sendernotification 
+          // loop over it and {
+            // change color 
+  
+
           userActivityWrapper.innerHTML +=
             `
             <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
@@ -476,48 +483,8 @@ document.querySelectorAll(".category").forEach((category) => {
   });
 });
 
-function getNotfication() {
-  console.log("Im here in noti func");
-  onlineActivity();
-
-  let receiver = document.querySelector("#chatReceiver").textContent;
-  let notification = 0
-  let sender = document.querySelector("#username-id").textContent;
-
-  let newStr = sender.replace("@", "")
-console.log("Offline users: ",offlineUsers)
-  if (offlineUsers != null) {
-    for (var i = 0; i < offlineUsers.length; i++) {
-      if (offlineUsers[i].username === receiver) {
-        notification++
-    
-      }
-    }
-  }
-  console.log("Inside notification: ", notification);
-
-  let noti = {
-    sendernotification: newStr,
-    recipientnotification: receiver,
-    noti: notification
-  }
-
-  let options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(noti)
-  };
-
-  let fetchResChat = fetch("http://localhost:8080/notification", options);
-  fetchResChat.then((response) => {
-    return response.text();
-  });
-}
-
 const saveChat = function getChatContents() {
-  // console.log(document.getElementById("log"));
+  // console.log(document.getElementById("log"));// toDO: check if the user is online/offline 
 
   let receiver = document.querySelector("#chatReceiver").textContent;
   let chat = {

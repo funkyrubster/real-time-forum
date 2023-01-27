@@ -54,7 +54,8 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 				Email:     email,
 				LoggedIn:  loggedin,
 			},
-			CreatedPosts: data.GetPosts(username),
+			CreatedPosts:  data.GetPosts(username),
+			Notifications: data.GetNotifications(username),
 		}
 	}
 	return user
@@ -114,6 +115,63 @@ func (data *Forum) OfflineUser() []User {
 
 	}
 	return offlineusers
+}
+
+// ------------------ notifications--------------------//
+
+func (data *Forum) GetNotifications(username string) []Notifications {
+
+	var noti Notifications
+
+	var notifi []Notifications
+
+	rows, err := data.DB.Query(`SELECT * FROM notifications WHERE recipient =?`, username)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&noti.Sender, &noti.Recipient, &noti.Notification)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		notifi = append(notifi, noti)
+	}
+
+	return notifi
+}
+
+func (data *Forum) DeleteNotification(sender, recipient string) {
+
+	_, err := data.DB.Query("DELETE FROM notifications WHERE sender=? AND recipient=?", sender, recipient)
+	if err != nil {
+		log.Fatal("ERROR Deleting Noti", err)
+	}
+
+}
+
+func (data *Forum) CheckNotifications(sender, recipient string) bool {
+
+	var noti Notifications
+
+	fmt.Println("inside notification", recipient, sender)
+
+	rows, err := data.DB.Query(`SELECT * FROM notifications WHERE recipient = ? AND sender = ?`,recipient, sender)
+	if err != nil {
+		log.Fatal(err)
+	}
+	n := 0
+	for rows.Next() {
+		err := rows.Scan(&noti.Sender, &noti.Recipient, &noti.Notification)
+		if err != nil {
+			log.Fatal(err)
+		}
+		n++
+	}
+	fmt.Println("check notif", n != 0)
+	fmt.Println(noti)
+	return n != 0
 }
 
 // --------------------------- POSTS ------------------------//

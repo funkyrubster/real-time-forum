@@ -160,6 +160,14 @@ func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 
 	sess := data.GetSession(sessionvalue)
 
+	if !data.CheckNotifications(sess.username, recipient){
+			data.SaveNotifications(Notifications{
+				Sender: sess.username,
+				Recipient: recipient,
+				Notification: 1,
+			})
+		}
+
 	chat = data.SaveChat(Chat{
 		MessageSender:    sess.username,
 		MessageRecipient: recipient,
@@ -369,6 +377,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		sess.max_age = 18000
 		sess.session = (uuid.NewV4().String() + "&" + strconv.Itoa(sess.userID))
 		user.LoggedIn = "true"
+
 
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
