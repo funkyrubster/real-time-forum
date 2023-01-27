@@ -35,6 +35,7 @@ type UserProfile struct {
 	User         User
 	CreatedPosts []Post
 	Hashtags     []Hashtag
+	Notifications []Notifications
 }
 
 type Hashtags struct {

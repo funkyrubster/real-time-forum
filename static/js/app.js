@@ -25,7 +25,6 @@ var msg = document.getElementById("msg");
 var log = document.getElementById("log");
 
 function appendLog(item) {
-
   var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
   log.appendChild(item);
   if (doScroll) {
@@ -84,35 +83,50 @@ function showFeed() {
   };
   socket.onmessage = function (evt) {
     var messages = JSON.parse(evt.data);
-    
 
-    // console.log("receiving msg", messages);
+    console.log("receiving msg", messages);
 
-    // let chatrec = document.querySelector(
-    //   "body > main > div.main > div.left > div.mini-profile > div > p.username"
-    // );
     let chatReceiver = document.querySelector("#chatReceiver");
-    
-    // console.log(chatReceiver);
 
-    // var item = document.querySelector("#log");
-    // chatDiv = document.querySelector(".chat");
-    
-    // console.log("xxxxx", messages.messagesender.slice(1), chatReceiver.innerHTML);
-    // console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
+    console.log(chatReceiver);
 
-    // let onlineusers = Array.from(document.querySelectorAll(".notification"))
-    // console.log("online users",onlineusers);
-    // for (let i = 0; i < onlineusers.length; i++) {
-    //   console.log(onlineusers[i].messages);
-    //   if (onlineusers[i].id == messages.messagesender.slice(1) + "-notification") {
-    
-    //     ////////////notification
+    var item = document.querySelector("#log");
+    chatDiv = document.querySelector(".chat");
 
-    //     alert("notif")
-    //     // 
-    //   }
-    // }
+    console.log(
+      "xxxxx",
+      messages.messagesender.slice(1),
+      chatReceiver.innerHTML
+    );
+    console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
+
+    let onlineusers = Array.from(document.querySelectorAll(".notification"));
+    console.log("online users", onlineusers);
+    for (let i = 0; i < onlineusers.length; i++) {
+      console.log(onlineusers[i].messages);
+      if (
+        onlineusers[i].id ==
+        messages.messagesender.slice(1) + "-notification"
+      ) {
+        let isChatOpen =
+          document.querySelector(".chat").style.display === "flex"
+            ? true
+            : false;
+        if (isChatOpen) {
+          console.log(
+            chatReceiver.innerHTML,
+            messages.messagesender.slice(1),
+            chatReceiver.innerHTML === messages.messagesender.slice(1)
+          );
+        } else {
+          console.log(
+            chatReceiver.innerHTML,
+            messages.messagesender.slice(1),
+            chatReceiver.innerHTML === messages.messagesender.slice(1)
+          );
+        }
+      }
+    }
     // if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
     //   item.innerHTML +=
     //     `  <div class="bubbleWrapper">
@@ -135,7 +149,7 @@ function showFeed() {
             ${convertTime(messages.createdAt)}
           </span>
         </div>`;
-    } else{
+    } else {
       //send notification to the backend
       //Display notrification on specific chat
     }
