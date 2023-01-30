@@ -144,11 +144,13 @@ func (data *Forum) GetNotifications(username string) []Notifications {
 
 func (data *Forum) DeleteNotification(sender, recipient string) {
 
-	_, err := data.DB.Query("DELETE FROM notifications WHERE sender=? AND recipient=?", sender, recipient)
+	rows, err := data.DB.Prepare("DELETE FROM notifications WHERE sender=? AND recipient=?")
 	if err != nil {
 		log.Fatal("ERROR Deleting Noti", err)
 	}
-
+	defer rows.Close()
+	rows.Exec(sender,recipient)
+fmt.Println("DELETING ROW", sender, recipient)
 }
 
 func (data *Forum) CheckNotifications(sender, recipient string) bool {

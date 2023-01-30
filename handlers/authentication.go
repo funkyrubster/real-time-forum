@@ -48,9 +48,20 @@ func (data *Forum) CheckCookie(w http.ResponseWriter, r *http.Request) {
 
 func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
 	// Send user information back to client using JSON format
+
+	x, err := r.Cookie("session_token")
+	if err != nil {
+		log.Fatal(err)
+	}
+	sessionvalue := x.Value
+
+	sess := data.GetSession(sessionvalue)
+
+
 	onlineactivity := OnlineActivity{
 		Online:  data.OnlineUsers(),
 		Offline: data.OfflineUser(),
+		Notifications: data.GetNotifications(sess.username),
 	}
 
 	js, err := json.Marshal(onlineactivity)
@@ -461,6 +472,8 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 		loading.SendersUsername,
 		loading.RecipientsUsername,
 	)
+
+	data.DeleteNotification(loading.RecipientsUsername,loading.SendersUsername)
 
 	js, err := json.Marshal(conv)
 	if err != nil {
