@@ -220,6 +220,25 @@ function updateUserDetails(data) {
   document.querySelector("#postBody").placeholder = `What's new, ` + data.User.firstName + `?`;
 }
 
+function fetchAllMessages() {
+  fetch("/fetchAllMessages", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "POST"
+  })
+    .then((response) => {
+      response.text().then(function (data) {
+        let messages = JSON.parse(data);
+        console.log("all messages:", messages);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
 function onlineActivity() {
   fetch("/usersStatus", {
     headers: {
@@ -248,22 +267,26 @@ function onlineActivity() {
           }
         }
 
+        // check if array is null or undefined
+        allUsers = allUsers.filter(function (user) {
+          return user !== null && typeof user !== "undefined";
+        });
+
         // sort usernames by alphabetical order
         allUsers.sort(function (a, b) {
-          var nameA = a.username.toUpperCase(); // ignore upper and lowercase
-          var nameB = b.username.toUpperCase(); // ignore upper and lowercase
+          var nameA = a.username.toUpperCase();
+          var nameB = b.username.toUpperCase();
           if (nameA < nameB) {
             return -1;
           }
           if (nameA > nameB) {
             return 1;
           }
-
-          // names must be equal
           return 0;
         });
 
         console.log("all users:", allUsers);
+        fetchAllMessages();
 
         userActivityWrapper = document.querySelector("#recently-joined > div");
 
@@ -895,6 +918,7 @@ function checkCookies() {
       .then((data) => {
         updateUserDetails(data);
         showFeed();
+        fetchAllMessages();
         onlineActivity();
         refreshPosts();
         refreshHashtags();
