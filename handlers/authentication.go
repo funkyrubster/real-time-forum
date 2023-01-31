@@ -204,6 +204,18 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(js))
 }
 
+func (data *Forum) FetchAllMessages(w http.ResponseWriter, r *http.Request) {
+	// Send user information back to client using JSON format
+	messages := data.getAllMessages()
+	// fmt.Println(userInfo)
+	js, err := json.Marshal(messages)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	w.Write([]byte(js))
+}
+
 // Updates hashtag count for specific hashtag when called
 func (data *Forum) UpdateHashtag(w http.ResponseWriter, r *http.Request) {
 	// Decodes posts data into post variable

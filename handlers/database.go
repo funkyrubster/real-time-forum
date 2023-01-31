@@ -241,6 +241,31 @@ func (data *Forum) getLatestPosts() []Post {
 	return posts
 }
 
+
+func (data *Forum) getAllMessages() []Message {
+	// Used to store all of the messages
+	var messages []Message
+	// Used to store invidiual post data
+	var message Message
+
+	rows, err := data.DB.Query(`SELECT * FROM messages`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Scans through every post
+	for rows.Next() {
+		// Populates post var with data from each post found in table
+		err := rows.Scan(&message.messageID, &message.sender, &message.recipient, &message.message, &message.creationDate)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// Adds each post found from specific user to messages slice
+		messages = append(messages, message)
+	}
+	return messages
+}
+
 // ----------------------- COMMENTS -------------------------//
 
 func (data *Forum) CreateComment(comment Comment) {
@@ -576,7 +601,6 @@ func CheckTablesExist(db *sql.DB, table string) {
 			fmt.Println("Creating messages table...")
 			messages_table := `CREATE TABLE IF NOT EXISTS messages (
 					"messageID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-					"chatID" INTEGER REFERENCES chat(chatID),
 					"sender" TEXT REFERENCES users(username), 
 					"recipient" TEXT REFERENCES users(username),
 					"message" CHAR(200),

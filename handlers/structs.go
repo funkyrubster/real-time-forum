@@ -51,6 +51,14 @@ type Post struct {
 	CreatedAt time.Time
 }
 
+type Message struct {
+	messageID    int
+	sender  string
+	recipient   string
+	message   string
+	creationDate time.Time
+}
+
 type Hashtag struct {
 	ID    int
 	Name  string `json:"name"`

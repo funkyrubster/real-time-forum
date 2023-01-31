@@ -50,6 +50,7 @@ func main() {
 	http.HandleFunc("/usersStatus", data.SendLatestActivity)
 	http.HandleFunc("/checkCookie", data.CheckCookie)
 	http.HandleFunc("/notification", data.SendNotification)
+	http.HandleFunc("/fetchAllMessages", data.FetchAllMessages)
 
 	// Create the hub that will manage the connections and communication with clients
 	hub := handlers.NewHub(data)
