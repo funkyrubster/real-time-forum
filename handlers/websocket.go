@@ -175,7 +175,7 @@ func (h *Hub) Run() {
 			msg_bytes := []byte(message)
 			msg := &Chat{}
 			err := json.Unmarshal(msg_bytes, msg)
-			// data.GetNotifications(msg.MessageRecipient)
+			h.Database.GetNotifications(msg.MessageRecipient)
 			if err != nil {
 				fmt.Println(err)
 			}
