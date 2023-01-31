@@ -237,6 +237,17 @@ function onlineActivity() {
         console.log(status);
 
         allUsers = status.Online.concat(status.Offline);
+
+        // remove loggedInUsername from allUsers
+        loggedInUsername = document.querySelector("p.username").innerHTML.slice(1);
+
+        for (let i = 0; i < allUsers.length; i++) {
+          if (allUsers[i].username === loggedInUsername) {
+            allUsers.splice(i, 1);
+            break;
+          }
+        }
+
         // sort usernames by alphabetical order
         allUsers.sort(function (a, b) {
           var nameA = a.username.toUpperCase(); // ignore upper and lowercase
@@ -254,15 +265,12 @@ function onlineActivity() {
 
         console.log("all users:", allUsers);
 
-        loggedInUsername = document.querySelector("p.username").innerHTML.slice(1);
-
         userActivityWrapper = document.querySelector("#recently-joined > div");
+
         userActivityWrapper.innerHTML = "";
         for (let i = 0; i < allUsers.length; i++) {
-          // check to make sure allUsers[i].username is not the same as loggedInUsername
-          if (allUsers[i].username !== loggedInUsername) {
-            let className = allUsers[i].LoggedIn === "true" ? "online-status" : "offline-status";
-            userActivityWrapper.innerHTML += `
+          let className = allUsers[i].LoggedIn === "true" ? "online-status" : "offline-status";
+          userActivityWrapper.innerHTML += `
     <div class="user" data-reciverid="${allUsers[i].userID}" onclick="startChat(${i}, ${allUsers[i].userID});removeNot(${allUsers[i].userID})">
       <div class="${className}"></div>
       <p id="${allUsers[i].userID}">${allUsers[i].username}</p>
@@ -270,12 +278,11 @@ function onlineActivity() {
     </div>
   `;
 
-            if (dataNotif !== null) {
-              for (let k = 0; k < dataNotif.length; k++) {
-                if (dataNotif[k].sendernotification === allUsers[i].username) {
-                  let notification = document.querySelector("#" + allUsers[i].username + "-notification");
-                  notification.classList.add("-newNotification");
-                }
+          if (dataNotif !== null) {
+            for (let k = 0; k < dataNotif.length; k++) {
+              if (dataNotif[k].sendernotification === allUsers[i].username) {
+                let notification = document.querySelector("#" + allUsers[i].username + "-notification");
+                notification.classList.add("-newNotification");
               }
             }
           }
