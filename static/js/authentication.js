@@ -236,52 +236,63 @@ function onlineActivity() {
         offlineUsers = status.Offline;
         console.log(status);
 
-        console.log("user activity object:", status);
+        allUsers = status.Online.concat(status.Offline);
+        // sort usernames by alphabetical order
+        allUsers.sort(function (a, b) {
+          var nameA = a.username.toUpperCase(); // ignore upper and lowercase
+          var nameB = b.username.toUpperCase(); // ignore upper and lowercase
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+
+          // names must be equal
+          return 0;
+        });
+
+        console.log("all users:", allUsers);
 
         userActivityWrapper = document.querySelector("#recently-joined > div");
 
         userActivityWrapper.innerHTML = "";
-        for (let i = 0; i < status.Online.length; i++) {
-          userActivityWrapper.innerHTML +=
-            `
-            <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID});removeNot(${status.Online[i].userID})">
-            <div class="online-status"></div>
-            <p  id="${status.Online[i].userID}">` +
-            status.Online[i].username +
-            `</p>
-          <div class="notification" id = "${status.Online[i].username + "-notification"}">!</div>
-          </div>
-    `;
-          console.log({ dataNotif });
+        for (let i = 0; i < allUsers.length; i++) {
+          let className = allUsers[i].LoggedIn === "true" ? "online-status" : "offline-status";
+          userActivityWrapper.innerHTML += `
+    <div class="user" data-reciverid="${allUsers[i].userID}" onclick="startChat(${i}, ${allUsers[i].userID});removeNot(${allUsers[i].userID})">
+      <div class="${className}"></div>
+      <p id="${allUsers[i].userID}">${allUsers[i].username}</p>
+      <div class="notification" id="${allUsers[i].username + "-notification"}">!</div>
+    </div>
+  `;
+
           if (dataNotif !== null) {
             for (let k = 0; k < dataNotif.length; k++) {
-              console.log("list:", status.Online[i].username);
-              console.log("sender:", dataNotif[k].sendernotification);
-              if (dataNotif[k].sendernotification === status.Online[i].username) {
-                let x = document.querySelector("#" + status.Online[i].username + "-notification");
-                console.log("adding notif");
-                x.classList.add("-newNotification");
+              if (dataNotif[k].sendernotification === allUsers[i].username) {
+                let notification = document.querySelector("#" + allUsers[i].username + "-notification");
+                notification.classList.add("-newNotification");
               }
             }
           }
         }
 
-        if (status.Offline == null) {
-          // console.log("empty");
-        } else {
-          for (let i = 0; i < status.Offline.length; i++) {
-            // console.log(status.Offline[i].firstName);
-            userActivityWrapper.innerHTML +=
-              `
-            <div class="user" data-reciverid="${status.Offline[i].userID}" onclick="startChat(${i + status.Online.length}, ${status.Offline[i].userID})">
-              <div class="offline-status"></div>
-              <p>` +
-              status.Offline[i].username +
-              `</p>
-            <div class="notification" id = "${status.Offline[i].username + "-notification"}"></div>
-            `;
-          }
-        }
+        // if (status.Offline == null) {
+        //   // console.log("empty");
+        // } else {
+        //   for (let i = 0; i < status.Offline.length; i++) {
+        //     // console.log(status.Offline[i].firstName);
+        //     userActivityWrapper.innerHTML +=
+        //       `
+        //     <div class="user" data-reciverid="${status.Offline[i].userID}" onclick="startChat(${i + status.Online.length}, ${status.Offline[i].userID})">
+        //       <div class="offline-status"></div>
+        //       <p>` +
+        //       status.Offline[i].username +
+        //       `</p>
+        //     <div class="notification" id = "${status.Offline[i].username + "-notification"}"></div>
+        //     `;
+        //   }
+        // }
       });
     })
     .catch((error) => {
