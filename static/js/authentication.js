@@ -286,7 +286,6 @@ function onlineActivity() {
         });
 
         console.log("all users:", allUsers);
-        fetchAllMessages();
 
         userActivityWrapper = document.querySelector("#recently-joined > div");
 
@@ -566,7 +565,7 @@ const saveChat = function getChatContents() {
     return response.text();
   });
   // showChat();
-  getNotfication();
+  // getNotfication();
 };
 
 // Sends the user's post to the server

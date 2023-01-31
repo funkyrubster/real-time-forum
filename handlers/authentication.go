@@ -207,6 +207,9 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 func (data *Forum) FetchAllMessages(w http.ResponseWriter, r *http.Request) {
 	// Send user information back to client using JSON format
 	messages := data.getAllMessages()
+
+	fmt.Println(messages)
+	
 	// fmt.Println(userInfo)
 	js, err := json.Marshal(messages)
 	if err != nil {
