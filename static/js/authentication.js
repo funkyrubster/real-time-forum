@@ -2,6 +2,8 @@
 var notyf = new Notyf();
 
 let currentChat;
+let offlineUsers;
+let dataNotif;
 
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
@@ -91,7 +93,8 @@ function convertDate(date) {
       month = "December";
       break;
   }
-  fullDate = day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
+  fullDate =
+    day + ", " + dd + " " + month + ", " + yyyy + " @ " + hh + ":" + mm;
   return fullDate;
 }
 
@@ -107,15 +110,15 @@ signUpData.addEventListener("submit", function () {
     newusername: document.getElementById("newusername").value,
     age: document.getElementById("age").value,
     gender: document.getElementById("gender").value,
-    newpassword: document.getElementById("newpassword").value
+    newpassword: document.getElementById("newpassword").value,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(user)
+    body: JSON.stringify(user),
   };
 
   let fetchRes = fetch("http://localhost:8080/register", options);
@@ -167,15 +170,15 @@ const loginData = document.getElementById("login-form");
 loginData.addEventListener("submit", function () {
   let user = {
     username: document.getElementById("username").value,
-    password: document.getElementById("password").value
+    password: document.getElementById("password").value,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(user)
+    body: JSON.stringify(user),
   };
 
   let fetchRes = fetch("http://localhost:8080/login", options);
@@ -194,6 +197,9 @@ loginData.addEventListener("submit", function () {
     })
     .then(function (data) {
       userData = data;
+      console.log(userData);
+      // dataNotif = userData.Notifications;
+      // console.log(dataNotif);
       onlineActivity();
       // Fills the user's profile with their details
       updateUserDetails(data);
@@ -209,90 +215,85 @@ loginData.addEventListener("submit", function () {
 
 // Concatenates the user's details within the HTML after login
 function updateUserDetails(data) {
-  document.querySelector("p.name").innerHTML = data.User.firstName + ` ` + data.User.lastName;
+  document.querySelector("p.name").innerHTML =
+    data.User.firstName + ` ` + data.User.lastName;
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
-  document.querySelector("p.username").setAttribute("data-userId", data.User.userID);
-  document.querySelector("#postBody").placeholder = `What's new, ` + data.User.firstName + `?`;
+  document
+    .querySelector("p.username")
+    .setAttribute("data-userId", data.User.userID);
+  document.querySelector("#postBody").placeholder =
+    `What's new, ` + data.User.firstName + `?`;
 }
 
 function onlineActivity() {
   fetch("/usersStatus", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    method: "POST"
+    method: "POST",
   })
     .then((response) => {
       response.text().then(function (data) {
         let status = JSON.parse(data);
+        dataNotif = status.Notifications
+        console.log(dataNotif);
+        offlineUsers = status.Offline;
+        console.log(status);
 
-        userListDiv = document.querySelector("#user-list");
+        userActivityWrapper = document.querySelector("#recently-joined > div");
 
-        userListDiv.innerHTML = "";
-        // console.log(status);
+        userActivityWrapper.innerHTML = "";
         for (let i = 0; i < status.Online.length; i++) {
-          userListDiv.innerHTML +=
+          userActivityWrapper.innerHTML +=
             `
-            <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
-              <div class="img-name-wrap">
-                <img src="../static/img/profile.png" />
-                <div class="status-wrap">
-                  <div class="online-status"></div>
-                </div>
-                <div class="name-wrap">
-                  <p id="chatReceiver" class="name">` +
+            <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID});removeNot(${status.Online[i].userID})">
+            <div class="online-status"></div>
+            <p  id="${status.Online[i].userID}">` +
             status.Online[i].username +
             `</p>
-                  <p id="start-chat" class="name">Start a chat</p>
-                </div>
-              </div>
-            </div>
-            `;
-        }
-
-        // Notification code below still needs to be added
-        // <div class="notification" id = "${status.Online[i].username + "-notification"}">notification here</div>
-
-        let name = document.querySelector(".name").textContent;
-        let username = Array.from(document.querySelectorAll(".fullname"));
-        for (let i = 0; i < username.length; i++) {
-          if (name == username[i].textContent) {
-            username[i].style.display = "none";
+          <div class="notification" id = "${
+            status.Online[i].username + "-notification"
+          }">!</div>
+          </div>
+    `;
+          console.log({ dataNotif });
+          if (dataNotif !== null) {
+            for (let k = 0; k < dataNotif.length; k++) {
+              console.log("list:", status.Online[i].username);
+              console.log("sender:", dataNotif[k].sendernotification);
+              if (
+                dataNotif[k].sendernotification === status.Online[i].username
+              ) {
+                let x = document.querySelector(
+                  "#" + status.Online[i].username + "-notification"
+                );
+                console.log("adding notif");
+                x.classList.add("-newNotification");
+              } 
+            }
           }
         }
+
         if (status.Offline == null) {
           // console.log("empty");
         } else {
           for (let i = 0; i < status.Offline.length; i++) {
             // console.log(status.Offline[i].firstName);
-            userListDiv.innerHTML +=
+            userActivityWrapper.innerHTML +=
               `
-            <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
-              <div class="img-name-wrap">
-                <img src="../static/img/profile.png" />
-                <div class="status-wrap">
-                  <div class="offline-status"></div>
-                </div>
-                <div class="name-wrap">
-                  <p id="chatReceiver" class="name">` +
-              status.Online[i].username +
-              `</p>
-                  <p id="start-chat" class="name">Start a chat</p>
-                </div>
-              </div>
-            </div>
-            `;
-
-            `
-            <div class="user" data-reciverid="${status.Online[i].userID}" onclick="startChat(${i}, ${status.Online[i].userID})">
+            <div class="user" data-reciverid="${
+              status.Offline[i].userID
+            }" onclick="startChat(${i + status.Online.length}, ${
+                status.Offline[i].userID
+              })">
               <div class="offline-status"></div>
               <p>` +
-              status.Offline[i].firstName +
-              " " +
-              status.Offline[i].lastName +
+              status.Offline[i].username +
               `</p>
-            </div>
+            <div class="notification" id = "${
+              status.Offline[i].username + "-notification"
+            }"></div>
             `;
           }
         }
@@ -304,53 +305,55 @@ function onlineActivity() {
 }
 
 function toggleChat() {
-  userListDiv = document.querySelector("#user-list");
   chatDiv = document.querySelector(".chat");
+  console.log("Inside ToggleChat:", chatDiv);
 
-  // Handle entire div visibility
   if (chatDiv.style.display === "flex") {
     chatDiv.style.display = "none";
+    chatDiv.classList.remove("show");
   } else {
     chatDiv.style.display = "flex";
+    chatDiv.classList.add("show");
   }
 }
-
-function closeChat() {
-  userListDiv = document.querySelector("#user-list");
-  chatDiv = document.querySelector("#chat");
-
-  chatDiv.style.display = "none";
-  userListDiv.style.display = "flex";
+function removeNot(idNmbr) {
+  console.log(idNmbr);
+  let q = document.getElementById(idNmbr);
+  let usname = q.textContent;
+  let idStr = " #" + usname + "-notification";
+  let x = document.querySelector(idStr);
+  console.log({ x });
+  if (x.classList.contains("-newNotification")) {
+    x.className = "notification";
+  } 
 }
 
-// ISSUE: if we click an offline user, is recieves userid 1 private message.
-
 function startChat(index, id) {
-  // Hide users list
-  document.querySelector("#user-list").style.display = "none";
-  // Show chat
-  document.querySelector("#chat").style.display = "flex";
-
   onlineActivity();
   let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".user p")); // changed here
+  // let arrayOfUsers = Array.from(document.querySelector("#recently-joined > div"))
+  // console.log(arrayOfUsers);
   let fullName = arrayOfOnlineUsers[index].textContent;
-  document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
-  document.querySelector("#chat > div.profile-header > div > p").setAttribute("data-reciverid", id);
+  document.querySelector("#chat > div.profile-header > div > p").innerHTML =
+    fullName;
+  document
+    .querySelector("#chat > div.profile-header > div > p")
+    .setAttribute("data-reciverid", id);
   //document.querySelector("#online > li").dataset.reciverid
   let sendername = document.querySelector("#username-id").textContent;
   console.log(sendername);
   let newStr = sendername.replace("@", "");
   let senderuser = {
     sendersusername: newStr,
-    recipientsusername: fullName
+    recipientsusername: fullName,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(senderuser)
+    body: JSON.stringify(senderuser),
   };
 
   let fetchRes = fetch("http://localhost:8080/loadingmessage", options);
@@ -366,8 +369,13 @@ function startChat(index, id) {
       document.querySelector("#log").innerHTML = ""; // clears the chat box
       chatDiv = document.querySelector(".chat");
 
-      currentChat = data;
-      displayMessages(data);
+      if (chatDiv.style.display !== "flex") {
+        toggleChat();
+      }
+      currentChat = data.reverse();
+      // currentChat.reverse()
+
+      displayMessages(currentChat);
     });
 }
 
@@ -378,17 +386,16 @@ function displayMessages(messages) {
   // console.log("Inside display func: ", messages);
 
   let chats = messages;
-  console.log("I'm Here: ", chats);
+  // console.log("I'm Here: ", chats);
 
   let start = document.querySelector("#log").childElementCount;
   let prevHeight = document.getElementById("log").scrollHeight;
 
   let currUser = document.querySelector("#username-id").textContent;
-  console.log(currUser);
 
   // document.querySelector("#log").innerHTML = "";
 
-  messages = messages.reverse(); // gets the latest 10 messages in database
+  // gets the latest 10 messages in database
   for (let i = start; i < start + 10; i++) {
     if (!messages[i]) {
       break;
@@ -438,9 +445,9 @@ function refreshPosts() {
   fetch("/getPosts", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    method: "POST"
+    method: "POST",
   })
     .then((response) => {
       response.text().then(function (data) {
@@ -457,15 +464,15 @@ function refreshPosts() {
 
 function refreshComments(postID) {
   let commentData = {
-    postId: postID
+    postId: postID,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(commentData)
+    body: JSON.stringify(commentData),
   };
   let fetchRes = fetch("http://localhost:8080/sendComments", options);
   fetchRes
@@ -482,9 +489,9 @@ function refreshHashtags() {
   fetch("/getHashtags", {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    method: "POST"
+    method: "POST",
   })
     .then((response) => {
       response.text().then(function (data) {
@@ -511,20 +518,20 @@ document.querySelectorAll(".category").forEach((category) => {
 });
 
 const saveChat = function getChatContents() {
-  // console.log(document.getElementById("log"));
+  // console.log(document.getElementById("log"));// toDO: check if the user is online/offline
 
   let receiver = document.querySelector("#chatReceiver").textContent;
   let chat = {
     message: document.getElementById("msg").value,
-    messagerecipient: receiver
+    messagerecipient: receiver,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(chat)
+    body: JSON.stringify(chat),
   };
 
   let fetchResChat = fetch("http://localhost:8080/chat", options);
@@ -532,6 +539,7 @@ const saveChat = function getChatContents() {
     return response.text();
   });
   // showChat();
+  getNotfication();
 };
 
 // Sends the user's post to the server
@@ -541,15 +549,15 @@ function createPost() {
 
   let post = {
     postBody: document.getElementById("postBody").value,
-    Hashtag: hashtag
+    Hashtag: hashtag,
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(post)
+    body: JSON.stringify(post),
   };
 
   let fetchRes = fetch("http://localhost:8080/post", options);
@@ -661,15 +669,15 @@ function createCom(postID) {
 
   let commentObj = {
     postid: postID,
-    commentBody: comBody.value
+    commentBody: comBody.value,
   };
   console.log(commentObj);
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(commentObj)
+    body: JSON.stringify(commentObj),
   };
   let fetchRes = fetch("http://localhost:8080/comment", options);
   fetchRes.then((response) => {
@@ -686,13 +694,17 @@ function createCom(postID) {
 
 function getComments(comments, postID) {
   // update comments counter
-  let commentsCounter = document.querySelector("#\\3" + postID + "  > div.footer > div.stats > div:nth-child(1) > p");
+  let commentsCounter = document.querySelector(
+    "#\\3" + postID + "  > div.footer > div.stats > div:nth-child(1) > p"
+  );
   commentsCounter.innerHTML = comments.length;
 
   console.log(comments);
   console.log("first com", comments[1]);
 
-  commentsWrap = document.querySelector("#\\3" + postID + "  > div.comments > div.comments-wrap");
+  commentsWrap = document.querySelector(
+    "#\\3" + postID + "  > div.comments > div.comments-wrap"
+  );
 
   // Clear all posts printed
   commentsWrap.innerHTML = "";
@@ -723,15 +735,15 @@ function updateHashtagTable() {
 
   let hashtag = {
     Name: hashtag_value,
-    Count: "1"
+    Count: "1",
   };
 
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(hashtag)
+    body: JSON.stringify(hashtag),
   };
 
   let fetchRes = fetch("http://localhost:8080/updateHashtag", options);
@@ -796,7 +808,7 @@ const logout = function logoutUser() {
   console.log(username);
 
   let logoutData = {
-    ok: ""
+    ok: "",
   };
 
   logoutData.ok = username;
@@ -804,9 +816,9 @@ const logout = function logoutUser() {
   let options = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(logoutData)
+    body: JSON.stringify(logoutData),
   };
 
   let fetchRes = fetch("http://localhost:8080/logout", options);
@@ -839,7 +851,11 @@ const postsWrapper = document.querySelector(".posts-wrap");
 postsWrapper.addEventListener("click", (event) => {
   console.log(event.target);
   // Check if the clicked element is a post, header, body, or footer
-  if (event.target.matches("img, .name, .timestamp, .category-option-wrap, .post, .body, .stat-wrapper, .stats, .author, p, .create-comment-wrap, .header, .footer")) {
+  if (
+    event.target.matches(
+      "img, .name, .timestamp, .category-option-wrap, .post, .body, .stat-wrapper, .stats, .author, p, .create-comment-wrap, .header, .footer"
+    )
+  ) {
     // Save the ID of the clicked post to a variable
     const clickedPostId = event.target.id;
 
@@ -867,15 +883,15 @@ function checkCookies() {
 
   if (cookie != "") {
     let data = {
-      cookieValue: cookieValue
+      cookieValue: cookieValue,
     };
 
     let options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     };
 
     fetch("http://localhost:8080/checkCookie", options)

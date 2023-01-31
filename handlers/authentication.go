@@ -48,9 +48,20 @@ func (data *Forum) CheckCookie(w http.ResponseWriter, r *http.Request) {
 
 func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
 	// Send user information back to client using JSON format
+
+	x, err := r.Cookie("session_token")
+	if err != nil {
+		log.Fatal(err)
+	}
+	sessionvalue := x.Value
+
+	sess := data.GetSession(sessionvalue)
+
+
 	onlineactivity := OnlineActivity{
 		Online:  data.OnlineUsers(),
 		Offline: data.OfflineUser(),
+		Notifications: data.GetNotifications(sess.username),
 	}
 
 	js, err := json.Marshal(onlineactivity)
@@ -140,7 +151,7 @@ func (data *Forum) Post(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) { 
+func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 	var chat Chat
 
 	json.NewDecoder(r.Body).Decode(&chat)
@@ -159,6 +170,14 @@ func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 	recipient := chat.MessageRecipient
 
 	sess := data.GetSession(sessionvalue)
+
+	if !data.CheckNotifications(sess.username, recipient){
+			data.SaveNotifications(Notifications{
+				Sender: sess.username,
+				Recipient: recipient,
+				Notification: 1,
+			})
+		}
 
 	chat = data.SaveChat(Chat{
 		MessageSender:    sess.username,
@@ -370,6 +389,7 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		sess.session = (uuid.NewV4().String() + "&" + strconv.Itoa(sess.userID))
 		user.LoggedIn = "true"
 
+
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
 			Name:   "session_token",
@@ -447,11 +467,13 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// w.Write([]byte("chat ok"))
-	fmt.Println(loading.SendersUsername,loading.RecipientsUsername)
+	fmt.Println(loading.SendersUsername, loading.RecipientsUsername)
 	conv := data.SelectingLoadingMessage(
 		loading.SendersUsername,
 		loading.RecipientsUsername,
 	)
+
+	data.DeleteNotification(loading.RecipientsUsername,loading.SendersUsername)
 
 	js, err := json.Marshal(conv)
 	if err != nil {
@@ -462,4 +484,16 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 
 	// w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))
+}
+
+func (data *Forum) SendNotification(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Sending Notifications")
+	var notification Notifications
+
+	err := json.NewDecoder(r.Body).Decode(&notification)
+	if err != nil {
+		log.Fatal("SendNotification Handler error: ", err)
+	}
+	fmt.Println("This should be our notifications: ", notification)
+	w.Write([]byte("ok from noti handler"))
 }
