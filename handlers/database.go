@@ -76,7 +76,7 @@ func (data *Forum) OnlineUsers() []User {
 	var onlineuser User
 	var onlineusers []User
 
-	row, err1 := data.DB.Query(`SELECT userID, firstname, lastname, loggedin , username FROM users WHERE loggedin = 'true';`)
+	row, err1 := data.DB.Query(`SELECT userID, firstname, lastname, loggedin , username FROM users WHERE loggedin = 'true' ORDER BY username ASC;`)
 	if err1 != nil {
 		fmt.Println("Error with OnlineUsers func")
 		return nil
