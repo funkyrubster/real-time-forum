@@ -83,7 +83,7 @@ function showFeed() {
     var messages = JSON.parse(evt.data);
     // console.log("Notification:", messages.notification);
     console.log("receiving msg", messages);
-    let notification = document.querySelector("#" + messages.messagesender.slice(1)+ "-notification");
+    let notification = document.querySelector("#" + messages.messagesender.slice(1) + "-notification");
     notification.classList.add("-newNotification");
     let chatReceiver = document.querySelector("#chatReceiver");
     // console.log(chatReceiver);
@@ -110,13 +110,14 @@ function showFeed() {
           document.querySelector(".chat").style.display === "flex"
             ? true
             : false;
-        if (isChatOpen) {
+        if (!isChatOpen || chatReceiver.innerHTML !== messages.messagesender.slice(1)) {
           console.log(
             chatReceiver.innerHTML,
             messages.messagesender.slice(1),
             chatReceiver.innerHTML === messages.messagesender.slice(1)
           );
         } else {
+          notification.classList.remove("-newNotification");
           console.log(
             chatReceiver.innerHTML,
             messages.messagesender.slice(1),
@@ -125,6 +126,9 @@ function showFeed() {
         }
       }
     }
+
+
+
     // if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
     //   item.innerHTML +=
     //     `  <div class="bubbleWrapper">
