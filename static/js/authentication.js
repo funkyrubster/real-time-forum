@@ -229,10 +229,15 @@ function fetchAllMessages() {
     method: "POST"
   })
     .then((response) => {
-      response.text().then(function (data) {
-        let messages = JSON.parse(data);
-        console.log("all messages:", messages);
-      });
+      response.text()
+        .then(data => {
+          console.log("Data received:", data);
+          let messages = JSON.parse(data);
+          console.log("Data parsed:", messages);
+
+          return data
+        });
+
     })
     .catch((error) => {
       console.log(error);
@@ -293,7 +298,7 @@ function onlineActivity() {
         for (let i = 0; i < allUsers.length; i++) {
           let className = allUsers[i].LoggedIn === "true" ? "online-status" : "offline-status";
           userActivityWrapper.innerHTML += `
-    <div class="user" data-reciverid="${allUsers[i].userID}" onclick="startChat(${i}, ${allUsers[i].userID});removeNot(${allUsers[i].userID})">
+    <div class="user" data-reciverid="${allUsers[i].userID}" onclick="startChat(${i}, ${allUsers[i].userID})">
       <div class="${className}"></div>
       <p id="${allUsers[i].userID}">${allUsers[i].username}</p>
       <div class="notification" id="${allUsers[i].username + "-notification"}">!</div>
@@ -303,7 +308,7 @@ function onlineActivity() {
           if (dataNotif !== null) {
             for (let k = 0; k < dataNotif.length; k++) {
               if (dataNotif[k].sendernotification === allUsers[i].username) {
-                let notification = document.querySelector("#" + allUsers[i].username + "-notification");
+                let notification = document.querySelector("#" + allUsers[i].username + "notification");
                 notification.classList.add("-newNotification");
               }
             }
@@ -322,7 +327,7 @@ function onlineActivity() {
         //       <p>` +
         //       status.Offline[i].username +
         //       `</p>
-        //     <div class="notification" id = "${status.Offline[i].username + "-notification"}"></div>
+        //     <div class="notification" id = "${status.Offline[i].username + "notification"}"></div>
         //     `;
         //   }
         // }
@@ -349,7 +354,7 @@ function removeNot(idNmbr) {
   console.log(idNmbr);
   let q = document.getElementById(idNmbr);
   let usname = q.textContent;
-  let idStr = " #" + usname + "-notification";
+  let idStr = " #" + usname + "notification";
   let x = document.querySelector(idStr);
   console.log({ x });
   if (x.classList.contains("-newNotification")) {
@@ -394,7 +399,6 @@ function startChat(index, id) {
 
       document.querySelector("#log").innerHTML = ""; // clears the chat box
       chatDiv = document.querySelector(".chat");
-
       if (chatDiv.style.display !== "flex") {
         toggleChat();
       }
@@ -402,6 +406,12 @@ function startChat(index, id) {
       // currentChat.reverse()
 
       displayMessages(currentChat);
+      let notification = document.querySelector("#" + currentChat[0].messagerecipient + "notification");
+      if (notification != null) {
+        console.log(notification)
+        notification.className = "notification"
+      }
+
     });
 }
 
@@ -414,11 +424,12 @@ function displayMessages(messages) {
   let chats = messages;
   // console.log("I'm Here: ", chats);
 
+
   let start = document.querySelector("#log").childElementCount;
   let prevHeight = document.getElementById("log").scrollHeight;
 
   let currUser = document.querySelector("#username-id").textContent;
-
+  console.log(currUser)
   // document.querySelector("#log").innerHTML = "";
 
   // gets the latest 10 messages in database
@@ -441,7 +452,6 @@ function displayMessages(messages) {
         </div>
     ` + document.querySelector("#log").innerHTML;
     } else {
-      console.log(messages[i].messagesender);
       document.querySelector("#log").innerHTML =
         `
       <div class="bubbleWrapper">

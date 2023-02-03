@@ -33,7 +33,7 @@ function appendLog(item) {
 }
 
 document.getElementById("form").onsubmit = function () {
-  console.log("form");
+  // console.log("form");
   if (!socket) {
     return false;
   }
@@ -54,10 +54,8 @@ document.getElementById("form").onsubmit = function () {
     SenderID: senderID,
     createdAt: newDate,
   };
-  console.log("Our Message Object: ", msgObj);
-  var item = document.querySelector("#log");
-  console.log("item from form onsubmit");
-  console.log(msgObj.createdAt);
+  // console.log("Our Message Object: ", msgObj);
+  // console.log("item from form onsubmit");
   document.querySelector("#log").innerHTML += `
   <div class="bubbleWrapper">
     <div class="inlineContainer own">
@@ -83,27 +81,27 @@ function showFeed() {
   };
   socket.onmessage = function (evt) {
     var messages = JSON.parse(evt.data);
-
+    // console.log("Notification:", messages.notification);
     console.log("receiving msg", messages);
-
+    let notification = document.querySelector("#" + messages.messagesender.slice(1)+ "-notification");
+    notification.classList.add("-newNotification");
     let chatReceiver = document.querySelector("#chatReceiver");
-
-    console.log(chatReceiver);
+    // console.log(chatReceiver);
 
     var item = document.querySelector("#log");
     chatDiv = document.querySelector(".chat");
 
-    console.log(
-      "xxxxx",
-      messages.messagesender.slice(1),
-      chatReceiver.innerHTML
-    );
-    console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
+    // console.log(
+    //   "xxxxx",
+    //   messages.messagesender.slice(1),
+    //   chatReceiver.innerHTML
+    // );
+    // console.log(messages.messagesender.slice(1) === chatReceiver.innerHTML);
 
     let onlineusers = Array.from(document.querySelectorAll(".notification"));
-    console.log("online users", onlineusers);
+    // console.log("online users", onlineusers);
     for (let i = 0; i < onlineusers.length; i++) {
-      console.log(onlineusers[i].messages);
+      // console.log(onlineusers[i].messages);
       if (
         onlineusers[i].id ==
         messages.messagesender.slice(1) + "-notification"
@@ -157,8 +155,3 @@ function showFeed() {
   };
 }
 
-// let messengerButton = document.getElementById("messenger");
-// messengerButton.addEventListener("click", () => {
-//   document.getElementById("log").style.display = "block";
-//   document.getElementById("form").style.display = "block";
-// });
