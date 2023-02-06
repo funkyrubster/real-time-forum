@@ -27,15 +27,15 @@ type User struct {
 }
 
 type OnlineActivity struct {
-	Online  []User
-	Offline []User
+	Online        []User
+	Offline       []User
 	Notifications []Notifications
 }
 
 type UserProfile struct {
-	User         User
-	CreatedPosts []Post
-	Hashtags     []Hashtag
+	User          User
+	CreatedPosts  []Post
+	Hashtags      []Hashtag
 	Notifications []Notifications
 }
 
@@ -52,11 +52,11 @@ type Post struct {
 }
 
 type Message struct {
-	messageID    int
-	sender  string
-	recipient   string
-	message   string
-	creationDate time.Time
+	MessageID    int       `json:"message_id"`
+	Sender       string    `json:"sender"`
+	Recipient    string    `json:"recipient"`
+	Message      string    `json:"message"`
+	CreationDate time.Time `json:"creation_date"`
 }
 
 type Hashtag struct {
@@ -97,7 +97,7 @@ type Chat struct {
 	CreatedAt        time.Time //`json:"chatDate"`
 	UserWithHistroy  []Chat    `json:"userwithhistory"`
 	User             []User    `json:"users"`
-	Notifications  []Notifications
+	Notifications    []Notifications
 }
 
 type CookieValue struct {

@@ -149,8 +149,8 @@ func (data *Forum) DeleteNotification(sender, recipient string) {
 		log.Fatal("ERROR Deleting Noti", err)
 	}
 	defer rows.Close()
-	rows.Exec(sender,recipient)
-fmt.Println("DELETING ROW", sender, recipient)
+	rows.Exec(sender, recipient)
+	fmt.Println("DELETING ROW", sender, recipient)
 }
 
 func (data *Forum) CheckNotifications(sender, recipient string) bool {
@@ -159,7 +159,7 @@ func (data *Forum) CheckNotifications(sender, recipient string) bool {
 
 	fmt.Println("inside notification", recipient, sender)
 
-	rows, err := data.DB.Query(`SELECT * FROM notifications WHERE recipient = ? AND sender = ?`,recipient, sender)
+	rows, err := data.DB.Query(`SELECT * FROM notifications WHERE recipient = ? AND sender = ?`, recipient, sender)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -241,7 +241,6 @@ func (data *Forum) getLatestPosts() []Post {
 	return posts
 }
 
-
 func (data *Forum) getAllMessages() []Message {
 	// Used to store all of the messages
 	var messages []Message
@@ -256,7 +255,7 @@ func (data *Forum) getAllMessages() []Message {
 	// Scans through every post
 	for rows.Next() {
 		// Populates post var with data from each post found in table
-		err := rows.Scan(&message.messageID, &message.sender, &message.recipient, &message.message, &message.creationDate)
+		err := rows.Scan(&message.MessageID, &message.Sender, &message.Recipient, &message.Message, &message.CreationDate)
 		if err != nil {
 			log.Fatal(err)
 		}
