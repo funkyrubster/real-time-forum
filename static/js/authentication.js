@@ -308,7 +308,7 @@ function onlineActivity() {
           if (dataNotif !== null) {
             for (let k = 0; k < dataNotif.length; k++) {
               if (dataNotif[k].sendernotification === allUsers[i].username) {
-                let notification = document.querySelector("#" + allUsers[i].username + "notification");
+                let notification = document.querySelector("#" + allUsers[i].username + "-notification");
                 notification.classList.add("-newNotification");
               }
             }
