@@ -1,7 +1,7 @@
 // Used for sending notifications
 var notyf = new Notyf();
 
-let currentChat;
+let currentChat = [];
 let offlineUsers;
 let dataNotif;
 
@@ -196,7 +196,7 @@ loginData.addEventListener("submit", function () {
     })
     .then(function (data) {
       userData = data;
-      console.log(userData);
+      console.log("USER data when logged in: ", userData);
       // dataNotif = userData.Notifications;
       // console.log(dataNotif);
       onlineActivity();
@@ -231,9 +231,9 @@ function fetchAllMessages() {
     .then((response) => {
       response.text()
         .then(data => {
-          console.log("Data received:", data);
+          // console.log("Data received:", data);
           let messages = JSON.parse(data);
-          console.log("Data parsed:", messages);
+          // console.log("Data parsed:", messages);
 
           return data
         });
@@ -255,10 +255,12 @@ function onlineActivity() {
     .then((response) => {
       response.text().then(function (data) {
         let status = JSON.parse(data);
+        console.log("Online & Offline users: ", status);
+
         dataNotif = status.Notifications;
-        console.log(dataNotif);
+        console.log("NOTI INFO: ", dataNotif);
+
         offlineUsers = status.Offline;
-        console.log(status);
 
         allUsers = status.Online.concat(status.Offline);
 
@@ -402,16 +404,19 @@ function startChat(index, id) {
       if (chatDiv.style.display !== "flex") {
         toggleChat();
       }
-      currentChat = data.reverse();
-      // currentChat.reverse()
 
-      displayMessages(currentChat);
-      let notification = document.querySelector("#" + currentChat[0].messagerecipient + "notification");
-      if (notification != null) {
-        console.log(notification)
-        notification.className = "notification"
+      if (data != null) {
+        currentChat = data.reverse();
+
+        displayMessages(currentChat);
+        let notification = document.querySelector("#" + currentChat[0].messagerecipient + "notification");
+        if (notification != null) {
+          console.log(notification)
+          notification.className = "notification"
+        }
+      } else {
+        currentChat = []
       }
-
     });
 }
 
@@ -422,8 +427,7 @@ function displayMessages(messages) {
   // console.log("Inside display func: ", messages);
 
   let chats = messages;
-  // console.log("I'm Here: ", chats);
-
+  console.log("I'm Here: ", chats);
 
   let start = document.querySelector("#log").childElementCount;
   let prevHeight = document.getElementById("log").scrollHeight;
