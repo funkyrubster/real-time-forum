@@ -5,6 +5,7 @@ let currentChat = [];
 let offlineUsers;
 let dataNotif;
 
+
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
   let yyyy = date.slice(0, 4);
@@ -258,10 +259,7 @@ function onlineActivity() {
         console.log("Online & Offline users: ", status);
 
         dataNotif = status.Notifications;
-        console.log("NOTI INFO: ", dataNotif);
-
         offlineUsers = status.Offline;
-
         allUsers = status.Online.concat(status.Offline);
 
         // remove loggedInUsername from allUsers
@@ -294,18 +292,52 @@ function onlineActivity() {
 
         console.log("all users:", allUsers);
 
+        // Filter the users
+        const onUsers = allUsers.filter(x => x.LoggedIn == "true")
+        onUsers.sort(function (a, b) {
+          var nameA = a.username.toUpperCase();
+          var nameB = b.username.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        });
+
+        const offUsers = allUsers.filter(x => x.LoggedIn == "false")
+        offUsers.sort(function (a, b) {
+          var nameA = a.username.toUpperCase();
+          var nameB = b.username.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        });
+
+        offUsers.push(...onUsers);
+
+        // // something like this to sort list by last message
+        // onUsers.sort((a, b) => b.lastMessageReceived - a.lastMessageReceived);
+        // offUsers.sort((a, b) => b.lastMessageReceived - a.lastMessageReceived);
+
+        // console.log(offUsers, "Hello")
         userActivityWrapper = document.querySelector("#recently-joined > div");
 
         userActivityWrapper.innerHTML = "";
-        for (let i = 0; i < allUsers.length; i++) {
-          let className = allUsers[i].LoggedIn === "true" ? "online-status" : "offline-status";
+        for (let i = 0; i < offUsers.length; i++) {
+          let className = offUsers[i].LoggedIn === "true" ? "online-status" : "offline-status";
           userActivityWrapper.innerHTML += `
-    <div class="user" data-reciverid="${allUsers[i].userID}" onclick="startChat(${i}, ${allUsers[i].userID})">
-      <div class="${className}"></div>
-      <p id="${allUsers[i].userID}">${allUsers[i].username}</p>
-      <div class="notification" id="${allUsers[i].username + "-notification"}">!</div>
-    </div>
-  `;
+          <div class="user" data-reciverid="${offUsers[i].userID}" onclick="startChat(${i}, ${offUsers[i].userID})">
+            <div class="${className}"></div>
+            <p id="${offUsers[i].userID}">${offUsers[i].username}</p>
+            <div class="notification" id="${offUsers[i].username + "-notification"}">!</div>
+          </div>
+        `;
 
           if (dataNotif !== null) {
             for (let k = 0; k < dataNotif.length; k++) {
@@ -316,23 +348,6 @@ function onlineActivity() {
             }
           }
         }
-
-        // if (status.Offline == null) {
-        //   // console.log("empty");
-        // } else {
-        //   for (let i = 0; i < status.Offline.length; i++) {
-        //     // console.log(status.Offline[i].firstName);
-        //     userActivityWrapper.innerHTML +=
-        //       `
-        //     <div class="user" data-reciverid="${status.Offline[i].userID}" onclick="startChat(${i + status.Online.length}, ${status.Offline[i].userID})">
-        //       <div class="offline-status"></div>
-        //       <p>` +
-        //       status.Offline[i].username +
-        //       `</p>
-        //     <div class="notification" id = "${status.Offline[i].username + "notification"}"></div>
-        //     `;
-        //   }
-        // }
       });
     })
     .catch((error) => {
@@ -397,6 +412,7 @@ function startChat(index, id) {
     })
     // console.log("starting fetch")
     .then(function (data) {
+      sortByTime = data;
       // problem solved. Code wasn't reachable beause of print statement above.
 
       document.querySelector("#log").innerHTML = ""; // clears the chat box
@@ -426,8 +442,8 @@ function startChat(index, id) {
 function displayMessages(messages) {
   // console.log("Inside display func: ", messages);
 
-  let chats = messages;
-  console.log("I'm Here: ", chats);
+  // let chats = messages;
+  // console.log("I'm Here: ", chats);
 
   let start = document.querySelector("#log").childElementCount;
   let prevHeight = document.getElementById("log").scrollHeight;
