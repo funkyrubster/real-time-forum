@@ -5,7 +5,6 @@ let currentChat = [];
 let offlineUsers;
 let dataNotif;
 
-
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
   let yyyy = date.slice(0, 4);
@@ -222,23 +221,22 @@ function updateUserDetails(data) {
 }
 
 function fetchAllMessages() {
+  const loggedInUsername = document.querySelector("p.username").innerHTML.slice(1);
+
   fetch("/fetchAllMessages", {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json"
     },
-    method: "POST"
+    method: "POST",
+    body: JSON.stringify({ username: loggedInUsername })
   })
     .then((response) => {
-      response.text()
-        .then(data => {
-          // console.log("Data received:", data);
-          let messages = JSON.parse(data);
-          // console.log("Data parsed:", messages);
-
-          return data
-        });
-
+      response.text().then((data) => {
+        let messages = JSON.parse(data);
+        console.log("Messages:", messages);
+        return data;
+      });
     })
     .catch((error) => {
       console.log(error);
@@ -293,7 +291,7 @@ function onlineActivity() {
         console.log("all users:", allUsers);
 
         // Filter the users
-        const onUsers = allUsers.filter(x => x.LoggedIn == "true")
+        const onUsers = allUsers.filter((x) => x.LoggedIn == "true");
         onUsers.sort(function (a, b) {
           var nameA = a.username.toUpperCase();
           var nameB = b.username.toUpperCase();
@@ -306,7 +304,7 @@ function onlineActivity() {
           return 0;
         });
 
-        const offUsers = allUsers.filter(x => x.LoggedIn == "false")
+        const offUsers = allUsers.filter((x) => x.LoggedIn == "false");
         offUsers.sort(function (a, b) {
           var nameA = a.username.toUpperCase();
           var nameB = b.username.toUpperCase();
@@ -427,11 +425,11 @@ function startChat(index, id) {
         displayMessages(currentChat);
         let notification = document.querySelector("#" + currentChat[0].messagerecipient + "notification");
         if (notification != null) {
-          console.log(notification)
-          notification.className = "notification"
+          console.log(notification);
+          notification.className = "notification";
         }
       } else {
-        currentChat = []
+        currentChat = [];
       }
     });
 }
@@ -449,7 +447,7 @@ function displayMessages(messages) {
   let prevHeight = document.getElementById("log").scrollHeight;
 
   let currUser = document.querySelector("#username-id").textContent;
-  console.log(currUser)
+  console.log(currUser);
   // document.querySelector("#log").innerHTML = "";
 
   // gets the latest 10 messages in database

@@ -205,8 +205,15 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (data *Forum) FetchAllMessages(w http.ResponseWriter, r *http.Request) {
+	var username Username
+
+  // Decode the JSON data from the request body into the requestData struct
+  json.NewDecoder(r.Body).Decode(&username)
+
+  fmt.Println("Username received:", username.Username)
+
 	// Send user information back to client using JSON format
-	messages := data.getAllMessages()
+	messages := data.getAllMessages(username.Username)
 
 	fmt.Println(messages)
 	

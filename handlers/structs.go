@@ -59,6 +59,10 @@ type Message struct {
 	CreationDate time.Time `json:"creation_date"`
 }
 
+type Username struct {
+	Username string `json:"username"`
+  }
+
 type Hashtag struct {
 	ID    int
 	Name  string `json:"name"`

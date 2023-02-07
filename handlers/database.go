@@ -241,29 +241,30 @@ func (data *Forum) getLatestPosts() []Post {
 	return posts
 }
 
-func (data *Forum) getAllMessages() []Message {
+func (data *Forum) getAllMessages(username string) []Message {
 	// Used to store all of the messages
 	var messages []Message
-	// Used to store invidiual post data
+	// Used to store individual post data
 	var message Message
-
-	rows, err := data.DB.Query(`SELECT * FROM messages`)
+  
+	rows, err := data.DB.Query(`SELECT * FROM messages WHERE Sender = ? OR Recipient = ?`, username, username)
 	if err != nil {
-		log.Fatal(err)
+	  log.Fatal(err)
 	}
-
+  
 	// Scans through every post
 	for rows.Next() {
-		// Populates post var with data from each post found in table
-		err := rows.Scan(&message.MessageID, &message.Sender, &message.Recipient, &message.Message, &message.CreationDate)
-		if err != nil {
-			log.Fatal(err)
-		}
-		// Adds each post found from specific user to messages slice
-		messages = append(messages, message)
+	  // Populates post var with data from each post found in table
+	  err := rows.Scan(&message.MessageID, &message.Sender, &message.Recipient, &message.Message, &message.CreationDate)
+	  if err != nil {
+		log.Fatal(err)
+	  }
+	  // Adds each post found from specific user to messages slice
+	  messages = append(messages, message)
 	}
 	return messages
-}
+  }
+  
 
 // ----------------------- COMMENTS -------------------------//
 
