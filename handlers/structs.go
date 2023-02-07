@@ -37,7 +37,9 @@ type UserProfile struct {
 	CreatedPosts  []Post
 	Hashtags      []Hashtag
 	Notifications []Notifications
+	Messages []Message
 }
+
 
 type Hashtags struct {
 	Hashtags []Hashtag
@@ -58,10 +60,6 @@ type Message struct {
 	Message      string    `json:"message"`
 	CreationDate time.Time `json:"creation_date"`
 }
-
-type Username struct {
-	Username string `json:"username"`
-  }
 
 type Hashtag struct {
 	ID    int

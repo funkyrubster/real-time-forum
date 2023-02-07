@@ -83,10 +83,21 @@ function showFeed() {
     var messages = JSON.parse(evt.data);
     // console.log("Notification:", messages.notification);
     console.log("receiving msg", messages);
+    let receiver = messages.messagesender
+    receiver = receiver.replace("@", "#")
+    let rec = document.querySelector(receiver)
+    let userlist = document.querySelector(".user-prompt")
+    userlist.insertBefore(rec.parentElement, userlist.firstChild)
+
+
+
+    //////
     let notification = document.querySelector("#" + messages.messagesender.slice(1) + "-notification");
     notification.classList.add("-newNotification");
     let chatReceiver = document.querySelector("#chatReceiver");
     // console.log(chatReceiver);
+    let allUsersInList = Array.from(document.getElementById("recently-joined"));
+    console.log("ALL USERS IN LIST: ", allUsersInList);
 
     var item = document.querySelector("#log");
     chatDiv = document.querySelector(".chat");
@@ -126,7 +137,6 @@ function showFeed() {
         }
       }
     }
-
 
 
     // if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {

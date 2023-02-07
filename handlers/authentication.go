@@ -57,10 +57,9 @@ func (data *Forum) SendLatestActivity(w http.ResponseWriter, r *http.Request) {
 
 	sess := data.GetSession(sessionvalue)
 
-
 	onlineactivity := OnlineActivity{
-		Online:  data.OnlineUsers(),
-		Offline: data.OfflineUser(),
+		Online:        data.OnlineUsers(),
+		Offline:       data.OfflineUser(),
 		Notifications: data.GetNotifications(sess.username),
 	}
 
@@ -171,13 +170,13 @@ func (data *Forum) Chat(w http.ResponseWriter, r *http.Request) {
 
 	sess := data.GetSession(sessionvalue)
 
-	if !data.CheckNotifications(sess.username, recipient){
-			data.SaveNotifications(Notifications{
-				Sender: sess.username,
-				Recipient: recipient,
-				Notification: 1,
-			})
-		}
+	if !data.CheckNotifications(sess.username, recipient) {
+		data.SaveNotifications(Notifications{
+			Sender:       sess.username,
+			Recipient:    recipient,
+			Notification: 1,
+		})
+	}
 
 	chat = data.SaveChat(Chat{
 		MessageSender:    sess.username,
@@ -204,26 +203,20 @@ func (data *Forum) SendLatestPosts(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(js))
 }
 
-func (data *Forum) FetchAllMessages(w http.ResponseWriter, r *http.Request) {
-	var username Username
-
-  // Decode the JSON data from the request body into the requestData struct
-  json.NewDecoder(r.Body).Decode(&username)
-
-  fmt.Println("Username received:", username.Username)
-
+func (data *Forum) FetchTime(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("in function")
 	// Send user information back to client using JSON format
-	messages := data.getAllMessages(username.Username)
+	// orderByTime := data.getMessages()
 
-	fmt.Println(messages)
-	
+	// fmt.Println("Fetching time from message struct: ", orderByTime)
+
 	// fmt.Println(userInfo)
-	js, err := json.Marshal(messages)
-	if err != nil {
-		log.Fatal(err)
-	}
-	w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
-	w.Write([]byte(js))
+	// js, err := json.Marshal(orderByTime)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
+	// w.Write([]byte(js))
 }
 
 // Updates hashtag count for specific hashtag when called
@@ -411,7 +404,6 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		sess.session = (uuid.NewV4().String() + "&" + strconv.Itoa(sess.userID))
 		user.LoggedIn = "true"
 
-
 		// Set client cookie for "session_token" as session token we just generated, also set expiry time to 120 minutes
 		http.SetCookie(w, &http.Cookie{
 			Name:   "session_token",
@@ -430,10 +422,12 @@ func (data *Forum) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		y := data.OnlineUsers()
 		fmt.Println("online:", y)
-
+		z := data.getMessages(user.Username)
+		fmt.Println("User details: ", z)
 		// Send user information back to client using JSON format
 		userInfo := data.GetUserProfile(user.Username)
 		// fmt.Println(userInfo)
+		fmt.Println("---All Noti", userInfo.Notifications)
 		js, err := json.Marshal(userInfo)
 		if err != nil {
 			log.Fatal(err)
@@ -495,14 +489,14 @@ func (data *Forum) LoadingMessage(w http.ResponseWriter, r *http.Request) {
 		loading.RecipientsUsername,
 	)
 
-	data.DeleteNotification(loading.RecipientsUsername,loading.SendersUsername)
+	data.DeleteNotification(loading.RecipientsUsername, loading.SendersUsername)
 
 	js, err := json.Marshal(conv)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Conversation in auth: ", conv)
+	// fmt.Println("Conversation in auth: ", conv)
 
 	// w.WriteHeader(http.StatusOK) // Checked in authentication.js, alerts user
 	w.Write([]byte(js))

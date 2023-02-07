@@ -3,7 +3,11 @@ var notyf = new Notyf();
 
 let currentChat = [];
 let offlineUsers;
+let onlineUsers;
 let dataNotif;
+let fetchedMessages;
+let loggedInUser;
+let chatOrderByLastMessage = [];
 
 function convertTime(date) {
   // Seperate year, day, hour and minutes into vars
@@ -196,7 +200,8 @@ loginData.addEventListener("submit", function () {
     })
     .then(function (data) {
       userData = data;
-      console.log("USER data when logged in: ", userData);
+
+      fetchedMessages = userData.Messages.reverse()
       // dataNotif = userData.Notifications;
       // console.log(dataNotif);
       onlineActivity();
@@ -218,29 +223,8 @@ function updateUserDetails(data) {
   document.querySelector("p.username").innerHTML = `@` + data.User.username;
   document.querySelector("p.username").setAttribute("data-userId", data.User.userID);
   document.querySelector("#postBody").placeholder = `What's new, ` + data.User.firstName + `?`;
-}
 
-function fetchAllMessages() {
-  const loggedInUsername = document.querySelector("p.username").innerHTML.slice(1);
-
-  fetch("/fetchAllMessages", {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    method: "POST",
-    body: JSON.stringify({ username: loggedInUsername })
-  })
-    .then((response) => {
-      response.text().then((data) => {
-        let messages = JSON.parse(data);
-        console.log("Messages:", messages);
-        return data;
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  loggedInUser = document.querySelector("p.username").innerHTML = `@` + data.User.username;
 }
 
 function onlineActivity() {
@@ -256,9 +240,32 @@ function onlineActivity() {
         let status = JSON.parse(data);
         console.log("Online & Offline users: ", status);
 
+        // fetchedMessages
+        // console.log(" ======== ", fetchedMessages);
+
         dataNotif = status.Notifications;
-        offlineUsers = status.Offline;
+        offlineUsers = status.Offline
+        console.log("OFFLINE ----- ", offlineUsers);
+
+        onlineUsers = status.Online;
         allUsers = status.Online.concat(status.Offline);
+
+        loggedInUser = loggedInUser.replace("@", "")
+
+        console.log("USER data when logged in: ", userData);
+        for (let i = 0; i < fetchedMessages.length; i++) {
+          if (loggedInUser === fetchedMessages[i].sender) {
+            if (!chatOrderByLastMessage.includes(fetchedMessages[i].recipient)) {
+              chatOrderByLastMessage.push(fetchedMessages[i].recipient)
+            }
+          } else if (loggedInUser === fetchedMessages[i].recipient) {
+            if (!chatOrderByLastMessage.includes(fetchedMessages[i].sender)) {
+              chatOrderByLastMessage.push(fetchedMessages[i].sender)
+            }
+          }
+        }
+        console.log("USER ", loggedInUser);
+        console.log("ARRAY ------- : ", chatOrderByLastMessage);
 
         // remove loggedInUsername from allUsers
         loggedInUsername = document.querySelector("p.username").innerHTML.slice(1);
@@ -291,7 +298,7 @@ function onlineActivity() {
         console.log("all users:", allUsers);
 
         // Filter the users
-        const onUsers = allUsers.filter((x) => x.LoggedIn == "true");
+        const onUsers = allUsers.filter(x => x.LoggedIn == "true")
         onUsers.sort(function (a, b) {
           var nameA = a.username.toUpperCase();
           var nameB = b.username.toUpperCase();
@@ -304,7 +311,7 @@ function onlineActivity() {
           return 0;
         });
 
-        const offUsers = allUsers.filter((x) => x.LoggedIn == "false");
+        const offUsers = allUsers.filter(x => x.LoggedIn == "false")
         offUsers.sort(function (a, b) {
           var nameA = a.username.toUpperCase();
           var nameB = b.username.toUpperCase();
@@ -319,32 +326,89 @@ function onlineActivity() {
 
         offUsers.push(...onUsers);
 
-        // // something like this to sort list by last message
-        // onUsers.sort((a, b) => b.lastMessageReceived - a.lastMessageReceived);
-        // offUsers.sort((a, b) => b.lastMessageReceived - a.lastMessageReceived);
-
         // console.log(offUsers, "Hello")
         userActivityWrapper = document.querySelector("#recently-joined > div");
 
-        userActivityWrapper.innerHTML = "";
-        for (let i = 0; i < offUsers.length; i++) {
-          let className = offUsers[i].LoggedIn === "true" ? "online-status" : "offline-status";
-          userActivityWrapper.innerHTML += `
-          <div class="user" data-reciverid="${offUsers[i].userID}" onclick="startChat(${i}, ${offUsers[i].userID})">
-            <div class="${className}"></div>
-            <p id="${offUsers[i].userID}">${offUsers[i].username}</p>
-            <div class="notification" id="${offUsers[i].username + "-notification"}">!</div>
-          </div>
-        `;
 
-          if (dataNotif !== null) {
-            for (let k = 0; k < dataNotif.length; k++) {
-              if (dataNotif[k].sendernotification === allUsers[i].username) {
-                let notification = document.querySelector("#" + allUsers[i].username + "-notification");
-                notification.classList.add("-newNotification");
-              }
+        console.log(offlineUsers);
+
+        userActivityWrapper.innerHTML = "";
+        let className;
+        let userID
+        for (let k = 0; k < chatOrderByLastMessage.length; k++) {
+          // console.log("chat length; ", chatOrderByLastMessage.length);
+          for (let j = 0; j < offlineUsers.length; j++) {
+            if (chatOrderByLastMessage[k] === offlineUsers[j].username) {
+              userID = offlineUsers[j].userID
+              console.log("USERID --- : ", userID);
+              className = "offline-status"
+              console.log("----===AA :", className);
             }
           }
+          for (let i = 0; i < onlineUsers.length; i++) {
+            if (chatOrderByLastMessage[k] === onlineUsers[i].username) {
+              className = "online-status"
+              userID = onlineUsers[i].userID
+              console.log("----===AA :", className);
+            }
+          }
+          userActivityWrapper.innerHTML += `
+          <div class="user" data-reciverid="${userID}" onclick="startChat(${chatOrderByLastMessage[k]}, ${userID})">
+          <div class=${className}></div>
+            <p id="${chatOrderByLastMessage[k]}">${chatOrderByLastMessage[k]}</p>
+            <div class="notification" id="${chatOrderByLastMessage[k] + "-notification"}">!</div>
+          </div>
+        `;
+        }
+        let allUsernames = [];
+        allUsers.forEach(element => {
+          allUsernames.push(element.username)
+
+        });
+        let alphUsers = allUsernames.filter(function (obj) { return chatOrderByLastMessage.indexOf(obj) == -1 })
+
+        console.log({ alphUsers })
+        let useriD
+        ///////////
+        for (let k = 0; k < alphUsers.length; k++) {
+          // console.log("chat length; ", chatOrderByLastMessage.length);
+          for (let j = 0; j < offlineUsers.length; j++) {
+            if (alphUsers[k] === offlineUsers[j].username) {
+              useriD = offlineUsers[j].userID
+              className = "offline-status"
+              console.log("----===AA :", className);
+            }
+          }
+          for (let i = 0; i < onlineUsers.length; i++) {
+            if (alphUsers[k] === onlineUsers[i].username) {
+              useriD = onlineUsers[i].userID
+              className = "online-status"
+              console.log("----===AA :", className);
+            }
+          }
+          userActivityWrapper.innerHTML += `
+          <div class="user" data-reciverid="${useriD}" onclick="startChat(${alphUsers[k]}, ${useriD})" >
+          <div class=${className}></div>
+            <p id="${alphUsers[k]}">${alphUsers[k]}</p>
+            <div class="notification" id="${alphUsers[k] + "-notification"}">!</div>
+          </div>
+        `;
+        }
+        //   let kla = document.getElementById("klaudia")
+        //   console.log(kla.parentElement)
+        //  let userlist = document.querySelector(".user-prompt") 
+        //  userlist.insertBefore(kla.parentElement, userlist.firstChild)
+        /////////////////
+
+        if (dataNotif !== null) {
+          for (let k = 0; k < dataNotif.length; k++) {
+            if (dataNotif[k].sendernotification === allUsers[i].username) {
+              let notification = document.querySelector("#" + allUsers[i].username + "-notification");
+              notification.classList.add("-newNotification");
+            }
+          }
+
+
         }
       });
     })
@@ -377,13 +441,10 @@ function removeNot(idNmbr) {
   }
 }
 
-function startChat(index, id) {
+function startChat(fullName, id) {
   onlineActivity();
-  let arrayOfOnlineUsers = Array.from(document.querySelectorAll(".user p")); // changed here
-  // let arrayOfUsers = Array.from(document.querySelector("#recently-joined > div"))
-  // console.log(arrayOfUsers);
-  let fullName = arrayOfOnlineUsers[index].textContent;
-  document.querySelector("#chat > div.profile-header > div > p").innerHTML = fullName;
+  let usname = fullName.id
+  document.querySelector("#chat > div.profile-header > div > p").innerHTML = usname;
   document.querySelector("#chat > div.profile-header > div > p").setAttribute("data-reciverid", id);
   //document.querySelector("#online > li").dataset.reciverid
   let sendername = document.querySelector("#username-id").textContent;
@@ -391,7 +452,7 @@ function startChat(index, id) {
   let newStr = sendername.replace("@", "");
   let senderuser = {
     sendersusername: newStr,
-    recipientsusername: fullName
+    recipientsusername: usname
   };
 
   let options = {
@@ -425,11 +486,11 @@ function startChat(index, id) {
         displayMessages(currentChat);
         let notification = document.querySelector("#" + currentChat[0].messagerecipient + "notification");
         if (notification != null) {
-          console.log(notification);
-          notification.className = "notification";
+          console.log(notification)
+          notification.className = "notification"
         }
       } else {
-        currentChat = [];
+        currentChat = []
       }
     });
 }
@@ -447,7 +508,7 @@ function displayMessages(messages) {
   let prevHeight = document.getElementById("log").scrollHeight;
 
   let currUser = document.querySelector("#username-id").textContent;
-  console.log(currUser);
+  console.log(currUser)
   // document.querySelector("#log").innerHTML = "";
 
   // gets the latest 10 messages in database
@@ -575,6 +636,10 @@ const saveChat = function getChatContents() {
   // console.log(document.getElementById("log"));// toDO: check if the user is online/offline
 
   let receiver = document.querySelector("#chatReceiver").textContent;
+  let receiver2 = "#" + receiver
+  let rec = document.querySelector(receiver2)
+  let userlist = document.querySelector(".user-prompt")
+  userlist.insertBefore(rec.parentElement, userlist.firstChild)
   let chat = {
     message: document.getElementById("msg").value,
     messagerecipient: receiver
@@ -945,7 +1010,6 @@ function checkCookies() {
       .then((data) => {
         updateUserDetails(data);
         showFeed();
-        fetchAllMessages();
         onlineActivity();
         refreshPosts();
         refreshHashtags();

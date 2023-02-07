@@ -56,6 +56,7 @@ func (data *Forum) GetUserProfile(username string) UserProfile {
 			},
 			CreatedPosts:  data.GetPosts(username),
 			Notifications: data.GetNotifications(username),
+			Messages:      data.getMessages(username),
 		}
 	}
 	return user
@@ -100,14 +101,14 @@ func (data *Forum) OfflineUser() []User {
 	var offlineuser User
 	var offlineusers []User
 
-	row, err1 := data.DB.Query(`SELECT firstname, lastname, loggedin, username FROM users WHERE loggedin = 'false';`)
+	row, err1 := data.DB.Query(`SELECT userID, firstname, lastname, loggedin, username FROM users WHERE loggedin = 'false';`)
 	if err1 != nil {
 		fmt.Println("Error with OfflineUsers func")
 		return nil
 	}
 	// Scans through each column in the 'users' row and stores the data in the variables above
 	for row.Next() {
-		err := row.Scan(&offlineuser.Firstname, &offlineuser.Lastname, &offlineuser.LoggedIn, &offlineuser.Username)
+		err := row.Scan(&offlineuser.UserID, &offlineuser.Firstname, &offlineuser.Lastname, &offlineuser.LoggedIn, &offlineuser.Username)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -120,7 +121,6 @@ func (data *Forum) OfflineUser() []User {
 // ------------------ notifications--------------------//
 
 func (data *Forum) GetNotifications(username string) []Notifications {
-
 	var noti Notifications
 
 	var notifi []Notifications
@@ -143,7 +143,6 @@ func (data *Forum) GetNotifications(username string) []Notifications {
 }
 
 func (data *Forum) DeleteNotification(sender, recipient string) {
-
 	rows, err := data.DB.Prepare("DELETE FROM notifications WHERE sender=? AND recipient=?")
 	if err != nil {
 		log.Fatal("ERROR Deleting Noti", err)
@@ -154,7 +153,6 @@ func (data *Forum) DeleteNotification(sender, recipient string) {
 }
 
 func (data *Forum) CheckNotifications(sender, recipient string) bool {
-
 	var noti Notifications
 
 	fmt.Println("inside notification", recipient, sender)
@@ -241,30 +239,29 @@ func (data *Forum) getLatestPosts() []Post {
 	return posts
 }
 
-func (data *Forum) getAllMessages(username string) []Message {
+func (data *Forum) getMessages(username string) []Message {
 	// Used to store all of the messages
 	var messages []Message
-	// Used to store individual post data
+	// Used to store invidiual post data
 	var message Message
-  
-	rows, err := data.DB.Query(`SELECT * FROM messages WHERE Sender = ? OR Recipient = ?`, username, username)
+
+	rows, err := data.DB.Query(`SELECT * FROM messages WHERE recipient=? OR sender=?`, username, username)
 	if err != nil {
-	  log.Fatal(err)
+		log.Fatal(err)
 	}
-  
+
 	// Scans through every post
 	for rows.Next() {
-	  // Populates post var with data from each post found in table
-	  err := rows.Scan(&message.MessageID, &message.Sender, &message.Recipient, &message.Message, &message.CreationDate)
-	  if err != nil {
-		log.Fatal(err)
-	  }
-	  // Adds each post found from specific user to messages slice
-	  messages = append(messages, message)
+		// Populates post var with data from each post found in table
+		err := rows.Scan(&message.MessageID, &message.Sender, &message.Recipient, &message.Message, &message.CreationDate)
+		if err != nil {
+			log.Fatal(err)
+		}
+		// Adds each post found from specific user to messages slice
+		messages = append(messages, message)
 	}
 	return messages
-  }
-  
+}
 
 // ----------------------- COMMENTS -------------------------//
 
