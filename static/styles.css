@@ -5,7 +5,6 @@ div[class*="-newNotification"] {
   background: #c822ff;
 }
 
-
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 9px;
@@ -1608,7 +1607,7 @@ ul li {
   min-width: 30px;
   max-width: 350px;
   padding: 7px 15px;
-  margin: 6px 8px;
+  margin: 6px 0px;
   background-color: #6c8ea4;
   border-radius: 16px 16px 16px 0;
   border: 1px solid #54788e;
@@ -1625,7 +1624,7 @@ ul li {
 span.own,
 span.other {
   font-size: 14px;
-  color: grey;
+  color: #76889d;
 }
 
 /* Media Queries */

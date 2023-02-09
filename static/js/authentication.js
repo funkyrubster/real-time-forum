@@ -29,6 +29,17 @@ function convertDate(date) {
   return formattedDate;
 }
 
+function convertDateTime(date) {
+  const dateObject = new Date(date);
+  const dateString = dateObject.toLocaleDateString();
+  let timeString = dateObject.toLocaleTimeString();
+
+  // Remove seconds from time string
+  timeString = timeString.slice(0, 5);
+
+  return `${timeString}, ${dateString}`;
+}
+
 /* ---------------------------------------------------------------- */
 /*                         REGISTERING USERS                        */
 /* ---------------------------------------------------------------- */
@@ -666,7 +677,7 @@ function displayMessages(messages) {
             </div>
           </div>
           <span class="other">
-            ${convertTime(messages[i].CreatedAt)}
+            ${convertDateTime(messages[i].CreatedAt)}
           </span>
         </div>
     ` + document.querySelector("#log").innerHTML;
@@ -680,7 +691,7 @@ function displayMessages(messages) {
           </div>
         </div>
         <span class="own">
-          ${convertTime(messages[i].CreatedAt)}
+          ${convertDateTime(messages[i].CreatedAt)}
         </span>
       </div>
       ` + document.querySelector("#log").innerHTML;
