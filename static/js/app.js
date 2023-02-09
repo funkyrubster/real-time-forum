@@ -83,16 +83,16 @@ function showFeed() {
     var messages = JSON.parse(evt.data);
     // console.log("Notification:", messages.notification);
     console.log("receiving msg", messages);
-    let receiver = messages.messagesender
-    receiver = receiver.replace("@", "#")
-    let rec = document.querySelector(receiver)
-    let userlist = document.querySelector(".user-prompt")
-    userlist.insertBefore(rec.parentElement, userlist.firstChild)
-
-
+    let receiver = messages.messagesender;
+    receiver = receiver.replace("@", "#");
+    let rec = document.querySelector(receiver);
+    let userlist = document.querySelector(".user-prompt");
+    userlist.insertBefore(rec.parentElement, userlist.firstChild);
 
     //////
-    let notification = document.querySelector("#" + messages.messagesender.slice(1) + "-notification");
+    let notification = document.querySelector(
+      "#" + messages.messagesender.slice(1) + "-notification"
+    );
     notification.classList.add("-newNotification");
     let chatReceiver = document.querySelector("#chatReceiver");
     // console.log(chatReceiver);
@@ -121,7 +121,11 @@ function showFeed() {
           document.querySelector(".chat").style.display === "flex"
             ? true
             : false;
-        if (!isChatOpen || chatReceiver.innerHTML !== messages.messagesender.slice(1)) {
+        if (
+          !isChatOpen ||
+          chatReceiver.innerHTML !== messages.messagesender.slice(1)
+        ) {
+          // notification.classList.remove("-newNotification");
           console.log(
             chatReceiver.innerHTML,
             messages.messagesender.slice(1),
@@ -137,7 +141,6 @@ function showFeed() {
         }
       }
     }
-
 
     // if (messages.messagesender.slice(1) === chatReceiver.innerHTML) {
     //   item.innerHTML +=
@@ -168,4 +171,3 @@ function showFeed() {
     // appendLog(item);
   };
 }
-
