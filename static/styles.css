@@ -552,9 +552,6 @@ select:focus {
   padding: 0.7rem;
   cursor: pointer;
   width: 100%;
-  backface-visibility: hidden;
-  transform: scale(1);
-  transition: transform 0.2s ease-in-out;
 }
 
 .nav-item:hover {
@@ -732,14 +729,14 @@ select:focus {
   line-height: 19px;
   color: #4b607c;
 
-  /* backface-visibility: hidden;
+  /* backface-visibility: hidden; */
   transform: scale(1);
-  transition: transform 0.1s ease-in-out; */
+  transition: transform 0.1s ease-in-out;
 }
 
-/* .category:hover {
+.category:hover {
   transform: scale(1.075);
-} */
+}
 
 .category.selected {
   background: #a6b3c1;
@@ -793,7 +790,7 @@ select:focus {
 }
 
 .create-post #submit:hover {
-  transform: scale(1.075);
+  transform: scale(1.05);
 }
 
 /* Posts */
@@ -1232,6 +1229,7 @@ img#composeCommentAuthor {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  cursor: pointer;
 }
 
 .user-prompt .user p {
